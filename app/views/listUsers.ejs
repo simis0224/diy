@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>所有用户</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+    </head>
+    <body>
+    <% if(locals.users) {%>
+        <% for(var i=0; i<users.length; i++) {%>
+            电子邮件：<%= users[i].email %>
+            用户名：<%= users[i].userName %>
+            注册时间：<%=  users[i].createdDate %><br>
+        <% } %>
+    <% } %>
+    <% if(locals.message) {%>
+        <%= message %>
+    <% } %>
+    </body>
+</html>

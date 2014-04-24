@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户注册</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+
+    <form method="post" id="registerForm" action="/register">
+        电子邮件：<input type="text" name="email" value="<% if(locals.user && locals.user.email) {%><%= user.email %><% } %>" aria-label="电子邮件"/><br>
+        用户名：<input type="text" name="userName" value="<% if(locals.user && locals.user.userName) {%><%= user.userName %><% } %>" aria-label="用户名"/><br>
+        密码：<input type="password" name="password" aria-label="账户密码"/><br>
+        注册时间：<% if(locals.user && locals.user.createdDate) {%><%= user.createdDate %><% } %><br>
+        <button type="submit" name="update">注册</button><br>
+    </form>
+
+    <% if(locals.message) {%>
+        <%= message %>
+    <% } %>
+    </body>
+</html>
