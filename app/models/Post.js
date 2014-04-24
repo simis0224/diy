@@ -1,28 +1,16 @@
-var Base = require('./Base');
-var util = require('util');
+var mongoose = global.mongoose;
 
-const ENTITY_NAME = 'post';
-const FIELDS = [
-  '_id',
-  'body',
-  'pic',
-  'createdBy',
-  'createdDate',
-  'lastUpdatedDate'
-];
+// define the schema for our user model
+var postSchema = mongoose.Schema({
+  subject: String,
+  description: String,
+  pic: String,
+  createdBy: String,
+  createdDate: Date,
+  lastModifedDate: Date
+});
 
+var Post = mongoose.model('Post', postSchema);
+
+// create the model for users and expose it to our app
 module.exports = Post;
-
-function Post() {
-  Base.call(this);
-}
-
-util.inherits(Post, Base);
-
-Post.prototype.getCollectionName = function() {
-  return ENTITY_NAME;
-}
-
-Post.prototype.getFields = function() {
-  return FIELDS;
-}

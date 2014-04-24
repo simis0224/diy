@@ -1,9 +1,7 @@
 var traverse = require('traverse');
-var BaseController = require("./BaseController");
 var Post = require("../models/Post");
 var model = new Post();
 
-module.exports = BaseController.extend({});
 
 function renderNewPostPage(req, res, next) {
   res.render('createPost', {});
@@ -11,34 +9,34 @@ function renderNewPostPage(req, res, next) {
 
 function createPost(req, res, next) {
   var postData = {
-    subject: 'subject',
-    body: 'body',
-    pic: 'pic',
-    createdBy: 'createdBy'
+    subject: traverse(req).get(['body','subject']),
+    description: traverse(req).get(['body','description']),
+    pic: traverse(req).get(['body','pic']),
+    createdBy: 'simis0224',
+    createdDate: new Date(),
+    lastModifedDate: new Date()
   };
 
-  model.setDB(traverse(req).get(['db']));
-  model.setData(postData, true);
+  var newPost = new Post(postData);
 
-  model.insert(function() {
+  newPost.save(function(err) {
+    if (err) {
+      console.error(err);
+      res.render('createPost', {
+        user: postData,
+        message: '内部错误'
+      });
+      return;
+    }
     res.render('createPost', {
-      user: postData
-    })
+      user: postData,
+      message: '作品发布成功'
+    });
   });
 }
 
 function updatePost(req, res, next) {
-  var postData = {
-  };
 
-  model.setDB(traverse(req).get(['db']))
-  model.setData(postData, false);
-
-  model.insert(function() {
-    res.render('createPost', {
-      user: postData
-    })
-  });
 }
 
 module.exports.renderNewPostPage = renderNewPostPage;

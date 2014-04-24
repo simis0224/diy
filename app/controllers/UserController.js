@@ -1,127 +1,154 @@
 var traverse = require('traverse');
-var BaseController = require('./BaseController');
 var User = require('../models/User');
-var bcrypt = require('bcrypt');
-var validator = require("validator");
-var _ = require("lodash");
-var mongo = require('mongodb');
-var BSON = mongo.BSONPure;
-
-var model = new User();
-
-module.exports = BaseController.extend({});
 
 function createUser(req, res, next) {
   var userData = {
     email: traverse(req).get(['body','email']),
-    userName: traverse(req).get(['body','userName']),
-    password: generateEncryptedPassword(traverse(req).get(['body','password']))
-  };
-
-  model.setDB(traverse(req).get(['db']));
-  model.setData(userData, true);
-
-  if(!validator.isEmail(userData.email)) {
-    res.render('createUser', {
-      message: '错误电子邮件格式'
-    })
-    return;
+    username: traverse(req).get(['body','username']),
+    password: User.generateHash(traverse(req).get(['body','password'])),
+    createdDate: new Date(),
+    lastModifedDate: new Date()
   }
 
-  doesUserExist(userData, function(err, items) {
-    if(err) {
-      console.log(err);
-    }
-    var message;
-    if(items.length > 0) {
-      res.render('createUser', {
-        user: userData,
-        message: '该用户名或邮件已存在'
-      });
-    } else {
-      model.insert(function() {
+  User
+    .findOne( { $or: [ { username: userData.username}, { email: userData.email } ] })
+    .exec(function(err, user) {
+      // if there are any errors, return the error
+      if (err) {
+        console.error(err);
         res.render('createUser', {
           user: userData,
-          message: '用户注册成功'
-        })
-      });
-    }
-  });
+          message: '内部错误'
+        });
+      }
+
+      // check to see if theres already a user with that email
+      if (user) {
+        res.render('createUser', {
+          user: userData,
+          message: '该用户名或邮件已存在'
+        });
+      } else {
+
+        // if there is no user with that email
+        // create the user
+        var newUser = new User(userData);
+
+        // save the user
+        newUser.save(function(err) {
+          if (err) {
+            console.error(err);
+            var message = "";
+            // TODO fix validation
+            if (err.name === 'ValidationError') {
+              message = err.errors[Object.keys(err.errors)[0]].message;
+            } else {
+              message = '内部错误';
+            }
+            res.render('createUser', {
+              user: userData,
+              message: message
+            });
+            return;
+          }
+          res.render('createUser', {
+            user: userData,
+            message: '用户注册成功'
+          });
+        });
+      }
+    });
 }
 
 function viewUser(req, res, isView, next) {
-  model.setDB(traverse(req).get(['db']));
-  var userName = traverse(req).get(['params','userName']);
+  var username = traverse(req).get(['params','userName']);
   var view = isView ? 'viewUser' : 'editUser';
-  if(!userName) {
+  if(!username) {
     res.render(view, {
       message: '无效用户名'
     })
   }
 
-  getUserByUserName(userName, function(err, items) {
-    if(err) {
-      console.log(err);
-    }
-    var message;
-    var user;
-    if(items.length === 0) {
-      message = '用户' + userName + '不存在';
-    } else {
-      user = items[0];
-    }
-    res.render(view, {
-      message: message,
-      user: user
-    })
-  })
+  User
+    .findOne( { username: username })
+    .exec(function(err, user) {
+      // if there are any errors, return the error
+      if (err) {
+        console.error(err);
+        res.render(view, {
+          message: '内部错误'
+        });
+      }
+
+      // check to see if theres already a user with that email
+      var message;
+      if(!user) {
+        message = '用户' + username + '不存在';
+      }
+      res.render(view, {
+        message: message,
+        user: user
+      });
+    });
 }
 
 function updateUser(req, res, next) {
   var userData = {
     _id: traverse(req).get(['body','id']),
     email: traverse(req).get(['body','email']),
-    userName: traverse(req).get(['body','userName']),
+    username: traverse(req).get(['body','username'])
   };
 
-  var password = generateEncryptedPassword(traverse(req).get(['body','password']));
+  var password = traverse(req).get(['body','password']);
   if(password) {
-    userData.password = password;
+    userData.password = User.generateHash(password);
   }
 
-  model.setDB(traverse(req).get(['db']))
-  model.setData(userData, false);
-
-  if(!validator.isEmail(userData.email)) {
-    res.render('editUser', {
-      user: data,
-      message: '错误电子邮件格式'
-    })
-    return;
-  }
-
-  doesUserExist(userData, function(err, items) {
-    if(err) {
-      console.log(err);
-    }
-    var message;
-    if(items.length > 0 &&
-      _.some(items, function(item) {
-        return item._id != userData._id
-    })) {
-      res.render('editUser', {
-        user: userData,
-        message: '该用户名或邮件已存在'
-      });
-    } else {
-      updateUserById(userData._id, function() {
+  User
+    .findOne( { _id: userData._id })
+    .exec(function (err, user) {
+      // if there are any errors, return the error
+      if (err) {
+        console.error(err);
         res.render('editUser', {
           user: userData,
-          message: '更新用户资料成功'
-        })
-      });
+          message: '内部错误'
+        });
+      }
+
+      // check to see if theres already a user with that email
+      if (!user) {
+        message = '用户不存在';
+      } else {
+
+        user.set(userData);
+        // if there is no user with that email
+        // create the user
+        // save the user
+        user.save(function (err) {
+          if (err) {
+            console.error(err);
+            var message = "";
+            // TODO fix validation
+            if (err.name === 'ValidationError') {
+              message = err.errors[Object.keys(err.errors)[0]].message;
+            } else {
+              message = '内部错误';
+            }
+            res.render('editUser', {
+              user: userData,
+              message: message
+            });
+            return;
+          }
+          res.render('editUser', {
+            user: userData,
+            message: '用户资料修改成功'
+          });
+        });
+      }
     }
-  });
+  );
 }
 
 function renderRegisterPage(req, res, next) {
@@ -129,41 +156,16 @@ function renderRegisterPage(req, res, next) {
 }
 
 function listUsers(req, res, next) {
-  model.setDB(traverse(req).get(['db']));
-
-  getAllUsers(function(err, items) {
-    if(err) {
-      console.log(err);
-    }
-    res.render('listUsers', {
-      users: items
+  User
+    .find()
+    .exec(function(err, items) {
+      if(err) {
+        console.log(err);
+      }
+      res.render('listUsers', {
+        users: items
+      })
     })
-  })
-}
-
-function doesUserExist(data, callback) {
-  model.get({ $or: [ { userName: data.userName}, { email: data.email } ] }, callback);
-}
-
-function getUserByUserName(userName, callback) {
-  model.get({ userName: userName }, callback);
-}
-
-function getAllUsers(callback) {
-  model.get({}, callback);
-}
-
-function updateUserById(userId, callback) {
-  model.update( { _id: new BSON.ObjectID(userId) }, callback);
-}
-
-function generateEncryptedPassword(password) {
-  if(!password) {
-    return password;
-  }
-
-  var salt = bcrypt.genSaltSync(10);
-  return bcrypt.hashSync(password, salt);
 }
 
 module.exports.createUser = createUser;

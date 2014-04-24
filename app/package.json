@@ -14,8 +14,12 @@
     "ejs": "*",
     "lodash": "*",
     "traverse": "*",
-    "bcrypt": "*",
+    "bcrypt-nodejs": "*",
     "validator": "*",
-    "util": "*"
+    "util": "*",
+    "mongoose" : "*",
+    "passport" : "*",
+    "passport-local" : "*",
+    "connect-flash" : "*"
   }
 }
