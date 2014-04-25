@@ -9,10 +9,9 @@ var express = require('express');
 var	http = require('http');
 var	path = require('path');
 var passport = require('passport');
-var flash = require('connect-flash');
 var	config = require('./config/config.js')();
 
-
+var flash = require('connect-flash');
 var app = express();
 
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
@@ -33,10 +32,10 @@ app.configure(function() {
   app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
   app.use(passport.initialize());
   app.use(passport.session()); // persistent login sessions
-  app.use(app.router);
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(flash());
+  app.use(app.router);
 
 // development only
   if ('development' == app.get('env')) {

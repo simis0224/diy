@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>所有作品</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+    </head>
+    <body>
+    <% if(locals.posts) {%>
+        <% for(var i = 0; i < posts.length; i++) {%>
+            标题：<%= posts[i].subject %>
+            图片：<%= posts[i].pic %>
+            发布时间：<%=  posts[i].createdDate %><br>
+        <% } %>
+    <% } %>
+    <% if(locals.message) {%>
+        <%= message %>
+    <% } %>
+    </body>
+</html>

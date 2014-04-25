@@ -11,9 +11,8 @@ function createUser(req, res, next) {
   }
 
   User
-    .findOne( { $or: [ { username: userData.username}, { email: userData.email } ] })
+    .findOne({ $or: [ { username: userData.username}, { email: userData.email } ] })
     .exec(function(err, user) {
-      // if there are any errors, return the error
       if (err) {
         console.error(err);
         res.render('createUser', {
@@ -71,7 +70,6 @@ function viewUser(req, res, isView, next) {
   User
     .findOne( { username: username })
     .exec(function(err, user) {
-      // if there are any errors, return the error
       if (err) {
         console.error(err);
         res.render('viewUser', {
@@ -79,7 +77,6 @@ function viewUser(req, res, isView, next) {
         });
       }
 
-      // check to see if theres already a user with that email
       var message;
       if(!user) {
         message = '用户' + username + '不存在';
@@ -150,12 +147,16 @@ function updateUser(req, res, next) {
   );
 }
 
-function renderRegisterPage(req, res, next) {
-  res.render('createUser', {});
+function renderSignupPage(req, res, next) {
+  res.render('createUser', {
+    message: req.flash('signupMessage')
+  });
 }
 
 function renderLoginPage(req, res, next) {
-  res.render('login', {});
+  res.render('login', {
+    message: req.flash('loginMessage')
+  });
 }
 
 function listUsers(req, res, next) {
@@ -174,7 +175,7 @@ function listUsers(req, res, next) {
 module.exports.createUser = createUser;
 module.exports.updateUser = updateUser;
 module.exports.viewUser = viewUser;
-module.exports.renderRegisterPage = renderRegisterPage;
+module.exports.renderSignupPage = renderSignupPage;
 module.exports.listUsers = listUsers;
 module.exports.renderLoginPage = renderLoginPage;
 

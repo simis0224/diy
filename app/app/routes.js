@@ -12,12 +12,7 @@ module.exports = function(app, passport) {
     UserController.renderLoginPage(req, res, next);
   });
 
-  app.get('/register', function(req, res, next) {
-    UserController.renderRegisterPage(req, res, next);
-  });
-  app.post('/register', function(req, res, next) {
-    UserController.createUser(req, res, next);
-  });
+
 
   app.get('/editUser/:username', function(req, res, next) {
     UserController.viewUser(req, res, false, next);
@@ -33,10 +28,10 @@ module.exports = function(app, passport) {
     UserController.listUsers(req, res, next);
   });
 
-  app.get('/createPost', function(req, res, next) {
+  app.get('/createPost', isLoggedIn, function(req, res, next) {
     PostController.renderNewPostPage(req, res, next);
   });
-  app.post('/createPost', function(req, res, next) {
+  app.post('/createPost', isLoggedIn, function(req, res, next) {
     PostController.createPost(req, res, next);
   });
 
@@ -44,17 +39,28 @@ module.exports = function(app, passport) {
     PostController.viewPost(req, res, next);
   });
 
+  app.get('/listPosts/:username', function(req, res, next) {
+    PostController.listPosts(req, res, next);
+  });
+
+  app.get('/listPosts', function(req, res, next) {
+    PostController.listPosts(req, res, next);
+  });
+
+  app.get('/signup', function(req, res, next) {
+    UserController.renderSignupPage(req, res, next);
+  });
+
   app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect : '/profile', // redirect to the secure profile section
-    failureRedirect : '/signup', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
+    successRedirect : '/',
+    failureRedirect : '/signup',
+    failureFlash : true
   }));
 
-  // process the login form
   app.post('/login', passport.authenticate('local-login', {
-    successRedirect : '/', // redirect to the secure profile section
-    failureRedirect : '/login', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
+    successRedirect : '/',
+    failureRedirect : '/login',
+    failureFlash : true
   }));
 
   app.get('/logout', function(req, res) {
@@ -64,11 +70,8 @@ module.exports = function(app, passport) {
 }
 
 function isLoggedIn(req, res, next) {
-
-  // if user is authenticated in the session, carry on
   if (req.isAuthenticated())
     return next();
 
-  // if they aren't redirect them to the home page
   res.redirect('/');
 }

@@ -1,112 +1,93 @@
-// config/passport.js
-
-// load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
-
-// load up the user model
 var User = require('../models/User');
-//var UserController = require('../controllers/UserController')
+var Labels = require('../labels/Labels');
+var traverse = require('traverse');
 
-// expose this function to our app using module.exports
 module.exports = function(passport) {
 
-  // =========================================================================
-  // passport session setup ==================================================
-  // =========================================================================
-  // required for persistent login sessions
-  // passport needs ability to serialize and unserialize users out of session
-
-  // used to serialize the user for the session
   passport.serializeUser(function(user, done) {
     done(null, user.id);
   });
 
-  // used to deserialize the user
   passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {
       done(err, user);
     });
   });
 
-  // =========================================================================
-  // LOCAL SIGNUP ============================================================
-  // =========================================================================
-  // we are using named strategies since we have one for login and one for signup
-  // by default, if there was no name, it would just be called 'local'
-
   passport.use('local-signup', new LocalStrategy({
-      // by default, local strategy uses username and password, we will override with email
-      usernameField : 'email',
+      usernameField : 'username',
       passwordField : 'password',
-      passReqToCallback : true // allows us to pass back the entire request to the callback
+      passReqToCallback : true
     },
-    function(req, email, password, done) {
+    function(req, username, password, done) {
 
-      // asynchronous
-      // User.findOne wont fire unless data is sent back
       process.nextTick(function() {
+        // username and password are default params. We can only get email from req.
+        var email = traverse(req).get(['body','email']);
 
-        // find a user whose email is the same as the forms email
-        // we are checking to see if the user trying to login already exists
-        User.findOne({ 'email' :  email }, function(err, user) {
-          // if there are any errors, return the error
-          if (err)
-            return done(err);
+        User
+          .findOne({ $or: [ { username: username }, { email: email } ] })
+          .exec(function(err, user) {
+            if (err) {
+              return
+            }
 
-          // check to see if theres already a user with that email
-          if (user) {
-            return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
-          } else {
+            if (user) {
+              return done(null, false, req.flash('signupMessage', Labels.signUpMessage.usernameExists));
+            } else {
 
-            // if there is no user with that email
-            // create the user
-            var newUser            = new User();
+              var userData = {
+                email: email,
+                username: username,
+                password: User.generateHash(password),
+                createdDate: new Date(),
+                lastModifedDate: new Date()
+              }
 
-            // set the user's local credentials
-            newUser.local.email    = email;
-            newUser.local.password = newUser.generateHash(password);
+              var newUser = new User(userData);
 
-            // save the user
-            newUser.save(function(err) {
-              if (err)
-                throw err;
-              return done(null, newUser);
-            });
-          }
+              newUser.save(function(err) {
+                if (err) {
+                  // TODO fix validation
+                  if (err.name === 'ValidationError') {
+                    return done(null, false, req.flash('signupMessage', err.errors[Object.keys(err.errors)[0]].message));
+                  } else {
+                    throw err;
+                  }
+                }
 
-        });
-
+                req.session.username = username;
+                done(null, newUser);
+              });
+            }
+          });
       });
-
     }));
 
   passport.use('local-login', new LocalStrategy({
-      // by default, local strategy uses username and password, we will override with email
-      usernameField : 'email',
+      usernameField : 'username',
       passwordField : 'password',
-      passReqToCallback : true // allows us to pass back the entire request to the callback
+      passReqToCallback : true
     },
-    function(req, email, password, done) { // callback with email and password from our form
+    function(req, username, password, done) {
+      User
+        .findOne({ $or: [ { username: username}, { email: username } ] })
+        .exec(function(err, user) {
+          if (err) {
+            return done(err);
+          }
 
-      // find a user whose email is the same as the forms email
-      // we are checking to see if the user trying to login already exists
-      User.findOne({ 'email' :  email }, function(err, user) {
-        // if there are any errors, return the error before anything else
-        if (err)
-          return done(err);
+          if (!user) {
+            return done(null, false, req.flash('loginMessage', Labels.loginMessage.userNotFound));
+          }
 
-        // if no user is found, return the message
-        if (!user)
-          return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+          if (!User.validatePassword(password, user.password)) {
+            return done(null, false, req.flash('loginMessage', Labels.loginMessage.wrongPassword));
+          }
 
-        // if the user is found but the password is wrong
-        if (!User.validatePassword(password, user.password))
-          return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-
-        // all is well, return successful user
-        return done(null, user);
-      });
-
+          req.session.username = user.username;
+          return done(null, user);
+        });
     }));
-
 };

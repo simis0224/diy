@@ -10,7 +10,7 @@ function createPost(req, res, next) {
     subject: traverse(req).get(['body','subject']),
     description: traverse(req).get(['body','description']),
     pic: traverse(req).get(['body','pic']),
-    createdBy: 'simis0224',
+    createdBy: req.session.username,
     createdDate: new Date(),
     lastModifedDate: new Date()
   };
@@ -64,8 +64,31 @@ function viewPost(req, res, isView, next) {
     });
 }
 
+function listPosts(req, res, next) {
+  var username = traverse(req).get(['params','username']);
+
+  var query = {};
+  if(username) {
+    query = {
+      createdBy: username
+    }
+  }
+
+  Post
+    .find(query)
+    .exec(function(err, items) {
+      if(err) {
+        console.log(err);
+      }
+      res.render('listPosts', {
+        posts: items
+      })
+    })
+}
+
 module.exports.renderNewPostPage = renderNewPostPage;
 module.exports.createPost = createPost;
 module.exports.viewPost = viewPost;
+module.exports.listPosts = listPosts;
 
 
