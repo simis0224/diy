@@ -18,8 +18,8 @@ function generateHash(password) {
 };
 
 // checking if password is valid
-function validatePassword(password) {
-  return bcrypt.compareSync(password, this.local.password);
+function validatePassword(password1, password2) {
+  return bcrypt.compareSync(password1, password2);
 };
 
 var User = mongoose.model('User', userSchema);

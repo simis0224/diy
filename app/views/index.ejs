@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>首页</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+    </head>
+    <body>
+        <a href="/login">Login</a>
+        <% if(locals.isLoggedIn) {%>
+            You'are logged in.
+            <a href="/logout">Logout</a>
+        <%}%>
+    </body>
+</html>

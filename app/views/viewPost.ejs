@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>浏览作品</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+    </head>
+    <body>
+    名称：<% if(locals.post && locals.post.subject) {%><%= post.subject %><% } %><br>
+    主图：<% if(locals.post && locals.post.pic) {%><%= post.pic %><% } %><br>
+    描述：<% if(locals.post && locals.post.description) {%><%= post.description %><% } %><br>
+    <% if(locals.message) {%>
+        <%= message %>
+    <% } %>
+    </body>
+</html>

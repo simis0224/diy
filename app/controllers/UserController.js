@@ -61,10 +61,9 @@ function createUser(req, res, next) {
 }
 
 function viewUser(req, res, isView, next) {
-  var username = traverse(req).get(['params','userName']);
-  var view = isView ? 'viewUser' : 'editUser';
+  var username = traverse(req).get(['params','username']);
   if(!username) {
-    res.render(view, {
+    res.render('viewUser', {
       message: '无效用户名'
     })
   }
@@ -75,7 +74,7 @@ function viewUser(req, res, isView, next) {
       // if there are any errors, return the error
       if (err) {
         console.error(err);
-        res.render(view, {
+        res.render('viewUser', {
           message: '内部错误'
         });
       }
@@ -85,7 +84,7 @@ function viewUser(req, res, isView, next) {
       if(!user) {
         message = '用户' + username + '不存在';
       }
-      res.render(view, {
+      res.render('viewUser', {
         message: message,
         user: user
       });
@@ -155,6 +154,10 @@ function renderRegisterPage(req, res, next) {
   res.render('createUser', {});
 }
 
+function renderLoginPage(req, res, next) {
+  res.render('login', {});
+}
+
 function listUsers(req, res, next) {
   User
     .find()
@@ -173,4 +176,6 @@ module.exports.updateUser = updateUser;
 module.exports.viewUser = viewUser;
 module.exports.renderRegisterPage = renderRegisterPage;
 module.exports.listUsers = listUsers;
+module.exports.renderLoginPage = renderLoginPage;
+
 
