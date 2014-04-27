@@ -45,6 +45,7 @@ app.configure(function() {
 
 require('./app/passport')(passport);
 require('./app/routes.js')(app, passport);
+require('./app/userInfo.js')();
 
 http.createServer(app).listen(config.port, function() {
     console.log('Express server listening on port ' + config.mongodb.port);
