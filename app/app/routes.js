@@ -12,18 +12,18 @@ module.exports = function(app, passport) {
     UserController.renderLoginPage(req, res, next);
   });
 
-  app.get('/editUser/:username', function(req, res, next) {
-    UserController.viewUser(req, res, false, next);
+  app.get('/editUser/:username', isLoggedIn, function(req, res, next) {
+    UserController.renderEditUserPage(req, res, next);
   });
-  app.post('/editUser/:username', function(req, res, next) {
+  app.post('/editUser/:username', isLoggedIn, function(req, res, next) {
     UserController.updateUser(req, res, next);
   });
 
   app.get('/viewUser/:username', function(req, res, next) {
-    UserController.viewUser(req, res, true, next);
+    UserController.renderViewUserPage(req, res, next);
   });
   app.get('/listUsers', function(req, res, next) {
-    UserController.listUsers(req, res, next);
+    UserController.renderUserListPage(req, res, next);
   });
 
   app.get('/createPost', isLoggedIn, function(req, res, next) {

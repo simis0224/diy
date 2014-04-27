@@ -1,7 +1,9 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var User = require('../models/User');
-var Labels = require('../labels/Labels');
+var labels = require('../labels/labels');
 var traverse = require('traverse');
+var util = require('util');
+var userHelper = require('../helpers/userHelper');
 
 module.exports = function(passport) {
 
@@ -30,11 +32,12 @@ module.exports = function(passport) {
           .findOne({ $or: [ { username: username }, { email: email } ] })
           .exec(function(err, user) {
             if (err) {
-              return
+              req.flash('loginMessage', labels.error.internalError);
+              return;
             }
 
             if (user) {
-              return done(null, false, req.flash('signupMessage', Labels.signUpMessage.usernameExists));
+              return done(null, false, req.flash('message', labels.user.usernameExists));
             } else {
 
               var userData = {
@@ -47,17 +50,16 @@ module.exports = function(passport) {
 
               var newUser = new User(userData);
 
-              newUser.save(function(err) {
+              newUser.save(function(err, user) {
                 if (err) {
                   // TODO fix validation
                   if (err.name === 'ValidationError') {
-                    return done(null, false, req.flash('signupMessage', err.errors[Object.keys(err.errors)[0]].message));
+                    return done(null, false, req.flash('message', err.errors[Object.keys(err.errors)[0]].message));
                   } else {
                     throw err;
                   }
                 }
-
-                req.session.username = username;
+                userHelper.updateCurrentUserInfo(req, user);
                 done(null, newUser);
               });
             }
@@ -75,18 +77,18 @@ module.exports = function(passport) {
         .findOne({ $or: [ { username: username}, { email: username } ] })
         .exec(function(err, user) {
           if (err) {
+            req.flash('loginMessage', labels.error.internalError);
             return done(err);
           }
 
           if (!user) {
-            return done(null, false, req.flash('loginMessage', Labels.loginMessage.userNotFound));
+            return done(null, false, req.flash('message', util.format(labels.user.userNotFound, username)));
           }
 
           if (!User.validatePassword(password, user.password)) {
-            return done(null, false, req.flash('loginMessage', Labels.loginMessage.wrongPassword));
+            return done(null, false, req.flash('message', labels.user.wrongPassword));
           }
-
-          req.session.username = user.username;
+          userHelper.updateUserInSession(req, user);
           return done(null, user);
         });
     }));

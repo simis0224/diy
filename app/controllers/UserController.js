@@ -1,92 +1,8 @@
 var traverse = require('traverse');
 var User = require('../models/User');
-
-function createUser(req, res, next) {
-  var userData = {
-    email: traverse(req).get(['body','email']),
-    username: traverse(req).get(['body','username']),
-    password: User.generateHash(traverse(req).get(['body','password'])),
-    createdDate: new Date(),
-    lastModifedDate: new Date()
-  }
-
-  User
-    .findOne({ $or: [ { username: userData.username}, { email: userData.email } ] })
-    .exec(function(err, user) {
-      if (err) {
-        console.error(err);
-        res.render('createUser', {
-          user: userData,
-          message: '内部错误'
-        });
-      }
-
-      // check to see if theres already a user with that email
-      if (user) {
-        res.render('createUser', {
-          user: userData,
-          message: '该用户名或邮件已存在'
-        });
-      } else {
-
-        // if there is no user with that email
-        // create the user
-        var newUser = new User(userData);
-
-        // save the user
-        newUser.save(function(err) {
-          if (err) {
-            console.error(err);
-            var message = "";
-            // TODO fix validation
-            if (err.name === 'ValidationError') {
-              message = err.errors[Object.keys(err.errors)[0]].message;
-            } else {
-              message = '内部错误';
-            }
-            res.render('createUser', {
-              user: userData,
-              message: message
-            });
-            return;
-          }
-          res.render('createUser', {
-            user: userData,
-            message: '用户注册成功'
-          });
-        });
-      }
-    });
-}
-
-function viewUser(req, res, isView, next) {
-  var username = traverse(req).get(['params','username']);
-  if(!username) {
-    res.render('viewUser', {
-      message: '无效用户名'
-    })
-  }
-
-  User
-    .findOne( { username: username })
-    .exec(function(err, user) {
-      if (err) {
-        console.error(err);
-        res.render('viewUser', {
-          message: '内部错误'
-        });
-      }
-
-      var message;
-      if(!user) {
-        message = '用户' + username + '不存在';
-      }
-      res.render('viewUser', {
-        message: message,
-        user: user
-      });
-    });
-}
+var userHelper = require('../helpers/userHelper.js');
+var labels = require('../labels/labels');
+var util = require('util');
 
 function updateUser(req, res, next) {
   var userData = {
@@ -103,25 +19,19 @@ function updateUser(req, res, next) {
   User
     .findOne( { _id: userData._id })
     .exec(function (err, user) {
-      // if there are any errors, return the error
       if (err) {
         console.error(err);
-        res.render('editUser', {
-          user: userData,
-          message: '内部错误'
-        });
+        req.flash('message', labels.error.internalError);
+        res.redirect('/editUser/' + userData.username);
       }
 
-      // check to see if theres already a user with that email
       if (!user) {
-        message = '用户不存在';
+        req.flash('message', labels.user.userNotFound);
+        res.redirect('/viewUser/' + userData.username);
       } else {
 
         user.set(userData);
-        // if there is no user with that email
-        // create the user
-        // save the user
-        user.save(function (err) {
+        user.save(function (err, user) {
           if (err) {
             console.error(err);
             var message = "";
@@ -129,7 +39,8 @@ function updateUser(req, res, next) {
             if (err.name === 'ValidationError') {
               message = err.errors[Object.keys(err.errors)[0]].message;
             } else {
-              message = '内部错误';
+              console.error(err);
+              req.flash('message', labels.error.internalError);
             }
             res.render('editUser', {
               user: userData,
@@ -137,10 +48,9 @@ function updateUser(req, res, next) {
             });
             return;
           }
-          res.render('editUser', {
-            user: userData,
-            message: '用户资料修改成功'
-          });
+          userHelper.updateCurrentUserInfo(req, user);
+          req.flash('message', labels.user.updateSuccessful);
+          res.redirect('/editUser/' + user.username);
         });
       }
     }
@@ -149,34 +59,98 @@ function updateUser(req, res, next) {
 
 function renderSignupPage(req, res, next) {
   res.render('createUser', {
-    message: req.flash('signupMessage')
+    message: req.flash('message')
   });
 }
 
 function renderLoginPage(req, res, next) {
   res.render('login', {
-    message: req.flash('loginMessage')
+    message: req.flash('message')
   });
 }
 
-function listUsers(req, res, next) {
+function renderUserListPage(req, res, next) {
   User
     .find()
     .exec(function(err, items) {
+      var message = req.flash('message')
       if(err) {
         console.log(err);
       }
       res.render('listUsers', {
+        message: message,
         users: items
       })
     })
 }
 
-module.exports.createUser = createUser;
+
+function renderViewUserPage(req, res, next) {
+  var username = traverse(req).get(['params','username']);
+  if(!username) {
+    req.flash('message', labels.error.pageNotFound);
+    res.render('viewUser', {
+      message: req.flash('message')
+    })
+  }
+
+  User
+    .findOne( { username: username })
+    .exec(function(err, user) {
+      var message = req.flash('message');
+      if (err) {
+        console.error(err);
+        message = labels.error.internalError;
+      }
+
+      if(!user) {
+        message = util.format(labels.user.userNotFound, username);
+      }
+      res.render('viewUser', {
+        message: message,
+        user: user
+      });
+    });
+}
+
+function renderEditUserPage(req, res, next) {
+  var username = traverse(req).get(['params','username']);
+  if(!username) {
+    req.flash('message', labels.error.pageNotFound);
+    res.render('editUser', {
+      message: req.flash('message')
+    })
+  }
+
+  if(userHelper.getCurrentUser(req).username != username) {
+    res.redirect('/viewUser/' + username);
+  }
+
+  User
+    .findOne( { username: username })
+    .exec(function(err, user) {
+      var message = req.flash('message');
+      if (err) {
+        console.error(err);
+        message = labels.error.internalError;
+      }
+
+      if(!user) {
+        message = util.format(labels.user.userNotFound, username);
+      }
+      res.render('editUser', {
+        message: message,
+        user: user
+      });
+    });
+}
+
 module.exports.updateUser = updateUser;
-module.exports.viewUser = viewUser;
-module.exports.renderSignupPage = renderSignupPage;
-module.exports.listUsers = listUsers;
+
+module.exports.renderUserListPage = renderUserListPage;
 module.exports.renderLoginPage = renderLoginPage;
+module.exports.renderEditUserPage = renderEditUserPage;
+module.exports.renderViewUserPage = renderViewUserPage;
+module.exports.renderSignupPage = renderSignupPage;
 
 

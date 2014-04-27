@@ -9,10 +9,11 @@ var express = require('express');
 var	http = require('http');
 var	path = require('path');
 var passport = require('passport');
-var	config = require('./config/config.js')();
+var	config = require('./config/config')();
 
 var flash = require('connect-flash');
 var app = express();
+var userHelper = require('./helpers/userHelper');
 
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', function callback () {
@@ -45,7 +46,7 @@ app.configure(function() {
 
 require('./app/passport')(passport);
 require('./app/routes.js')(app, passport);
-require('./app/userInfo.js')();
+userHelper.startUserCache();
 
 http.createServer(app).listen(config.port, function() {
     console.log('Express server listening on port ' + config.mongodb.port);
