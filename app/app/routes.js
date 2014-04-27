@@ -12,8 +12,6 @@ module.exports = function(app, passport) {
     UserController.renderLoginPage(req, res, next);
   });
 
-
-
   app.get('/editUser/:username', function(req, res, next) {
     UserController.viewUser(req, res, false, next);
   });

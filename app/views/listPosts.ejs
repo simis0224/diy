@@ -7,8 +7,8 @@
     <body>
     <% if(locals.posts) {%>
         <% for(var i = 0; i < posts.length; i++) {%>
-            标题：<%= posts[i].subject %>
-            图片：<%= posts[i].pic %>
+            标题：<a href="/viewPost/<%= posts[i].id %>" ><%= posts[i].subject %></a>
+            图片：<img src="<%= posts[i].pic %>" />
             发布时间：<%=  posts[i].createdDate %><br>
         <% } %>
     <% } %>

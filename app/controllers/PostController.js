@@ -1,5 +1,9 @@
 var traverse = require('traverse');
-var Post = require("../models/Post");
+var Post = require('../models/Post');
+var fs = require('fs');
+var crypto = require('crypto');
+var util = require('util');
+var paths = require('../constants/paths')
 
 function renderNewPostPage(req, res, next) {
   res.render('createPost', {});
@@ -9,7 +13,7 @@ function createPost(req, res, next) {
   var postData = {
     subject: traverse(req).get(['body','subject']),
     description: traverse(req).get(['body','description']),
-    pic: traverse(req).get(['body','pic']),
+    pic: handleFileUpload(req),
     createdBy: req.session.username,
     createdDate: new Date(),
     lastModifedDate: new Date()
@@ -17,7 +21,7 @@ function createPost(req, res, next) {
 
   var newPost = new Post(postData);
 
-  newPost.save(function(err) {
+  newPost.save(function(err, post) {
     if (err) {
       console.error(err);
       res.render('createPost', {
@@ -26,10 +30,7 @@ function createPost(req, res, next) {
       });
       return;
     }
-    res.render('createPost', {
-      post: postData,
-      message: '作品发布成功'
-    });
+    res.redirect('/viewPost/' + post._id);
   });
 }
 
@@ -84,6 +85,19 @@ function listPosts(req, res, next) {
         posts: items
       })
     })
+}
+
+function handleFileUpload(req) {
+  if(!req.files || !req.files.pic || !req.files.pic.name) {
+    return req.body.currentPicture || '';
+  }
+  var data = fs.readFileSync(req.files.pic.path);
+  var fileName = req.files.pic.name;
+  var uid = crypto.randomBytes(10).toString('hex');
+  var dir = paths.UPLOAD_IMAGE_DIR + uid;
+  fs.mkdirSync(dir, '0777');
+  fs.writeFileSync(dir + "/" + fileName, data);
+  return util.format(paths.UPLOAD_IMAGE_ACCESS_SRC, uid, fileName);
 }
 
 module.exports.renderNewPostPage = renderNewPostPage;
