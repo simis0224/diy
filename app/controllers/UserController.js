@@ -3,6 +3,7 @@ var User = require('../models/User');
 var userHelper = require('../helpers/userHelper.js');
 var labels = require('../labels/labels');
 var util = require('util');
+var _ = require('lodash');
 
 function updateUser(req, res, next) {
   var userData = {
@@ -22,30 +23,31 @@ function updateUser(req, res, next) {
       if (err) {
         console.error(err);
         req.flash('message', labels.error.internalError);
-        res.redirect('/editUser/' + userData.username);
+        res.redirect('/editUser/' + user.username);
       }
 
       if (!user) {
         req.flash('message', labels.user.userNotFound);
-        res.redirect('/viewUser/' + userData.username);
+        res.redirect('/viewUser/' + user.username);
       } else {
-
+        var oldUser = user.toObject();
         user.set(userData);
         user.save(function (err, user) {
           if (err) {
             console.error(err);
-            var message = "";
             // TODO fix validation
             if (err.name === 'ValidationError') {
-              message = err.errors[Object.keys(err.errors)[0]].message;
+              req.flash('message', err.errors[Object.keys(err.errors)[0]].message);
+            } else if (err.name === 'MongoError') {
+              if (err.code === 11001) { // mongodb unique index violation error
+                req.flash('message', labels.user.usernameExists);
+              } else {
+                req.flash('message', labels.error.internalError);
+              }
             } else {
-              console.error(err);
               req.flash('message', labels.error.internalError);
             }
-            res.render('editUser', {
-              user: userData,
-              message: message
-            });
+            res.redirect('/editUser/' + oldUser.username);
             return;
           }
           userHelper.updateCurrentUserInfo(req, user);
