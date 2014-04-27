@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>用户注册</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
-<body>
+    <head>
+        <title>用户注册</title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+    </head>
+    <body>
+        <% include header %>
+        <form method="post" id="registerForm" action="/signup">
+            电子邮件：<input type="text" name="email" value="<% if(locals.user && locals.user.email) {%><%= user.email %><% } %>" aria-label="电子邮件"/><br>
+            用户名：<input type="text" name="username" value="<% if(locals.user && locals.user.username) {%><%= user.username %><% } %>" aria-label="用户名"/><br>
+            密码：<input type="password" name="password" aria-label="账户密码"/><br>
+            注册时间：<% if(locals.user && locals.user.createdDate) {%><%= user.createdDate %><% } %><br>
+            <button type="submit" name="update">注册</button><br>
+        </form>
 
-    <form method="post" id="registerForm" action="/signup">
-        电子邮件：<input type="text" name="email" value="<% if(locals.user && locals.user.email) {%><%= user.email %><% } %>" aria-label="电子邮件"/><br>
-        用户名：<input type="text" name="username" value="<% if(locals.user && locals.user.username) {%><%= user.username %><% } %>" aria-label="用户名"/><br>
-        密码：<input type="password" name="password" aria-label="账户密码"/><br>
-        注册时间：<% if(locals.user && locals.user.createdDate) {%><%= user.createdDate %><% } %><br>
-        <button type="submit" name="update">注册</button><br>
-    </form>
-
-    <% if(locals.message) {%>
-        <%= message %>
-    <% } %>
+        <% if(locals.message) {%>
+            <%= message %>
+        <% } %>
+        <% include footer %>
     </body>
 </html>

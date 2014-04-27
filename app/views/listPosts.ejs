@@ -5,15 +5,17 @@
         <link rel='stylesheet' href='/stylesheets/style.css' />
     </head>
     <body>
-    <% if(locals.posts) {%>
-        <% for(var i = 0; i < posts.length; i++) {%>
-            标题：<a href="/viewPost/<%= posts[i].id %>" ><%= posts[i].subject %></a>
-            图片：<img src="<%= posts[i].pic %>" />
-            发布时间：<%=  posts[i].createdDate %><br>
+        <% include header %>
+        <% if(locals.posts) {%>
+            <% for(var i = 0; i < posts.length; i++) {%>
+                标题：<a href="/viewPost/<%= posts[i].id %>" ><%= posts[i].subject %></a>
+                图片：<img src="<%= posts[i].pic %>" />
+                发布时间：<%=  posts[i].createdDate %><br>
+            <% } %>
         <% } %>
-    <% } %>
-    <% if(locals.message) {%>
-        <%= message %>
-    <% } %>
+        <% if(locals.message) {%>
+            <%= message %>
+        <% } %>
+        <% include footer %>
     </body>
 </html>

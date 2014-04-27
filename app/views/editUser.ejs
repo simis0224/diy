@@ -5,6 +5,7 @@
 		<link rel='stylesheet' href='/stylesheets/style.css' />
 	</head>
 	<body>
+        <% include header %>
         <form method="post" id="editForm" action="/editUser/<% if(locals.user) {%><%= user.username %><% } %>">
             电子邮件：<input type="text" name="email" value="<% if(locals.user) {%><%= user.email %><% } %>" aria-label="电子邮件"/><br>
             用户名：<input type="text" name="username" value="<% if(locals.user) {%><%= user.username %><% } %>" aria-label="用户名"/><br>
@@ -15,5 +16,6 @@
         <% if(locals.message) {%>
             <%= message %>
         <% } %>
+        <% include footer %>
 	</body>
 </html>

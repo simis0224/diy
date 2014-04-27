@@ -5,6 +5,7 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
+    <% include header %>
     <% if(locals.user) {%>
         电子邮件：<%= user.email %><br>
         用户名：<%= user.username %><br>
@@ -14,4 +15,5 @@
         <%= message %>
     <% } %>
     </body>
+    <% include footer %>
 </html>

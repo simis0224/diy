@@ -1,8 +1,9 @@
+var userHelper = require('../helpers/userHelper');
+
 function renderHomePage(req, res, next) {
   res.render('index', {
-    isLoggedIn: req.isAuthenticated(),
     message: req.flash('info'),
-    username: req.session.username
+    currentUser: userHelper.getCurrentUser(req)
   });
 }
 

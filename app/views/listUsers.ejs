@@ -5,15 +5,17 @@
         <link rel='stylesheet' href='/stylesheets/style.css' />
     </head>
     <body>
-    <% if(locals.users) {%>
-        <% for(var i=0; i<users.length; i++) {%>
-            电子邮件：<%= users[i].email %>
-            用户名：<%= users[i].username %>
-            注册时间：<%=  users[i].createdDate %><br>
+        <% include header %>
+        <% if(locals.users) {%>
+            <% for(var i=0; i<users.length; i++) {%>
+                电子邮件：<%= users[i].email %>
+                用户名：<%= users[i].username %>
+                注册时间：<%=  users[i].createdDate %><br>
+            <% } %>
         <% } %>
-    <% } %>
-    <% if(locals.message) {%>
-        <%= message %>
-    <% } %>
+        <% if(locals.message) {%>
+            <%= message %>
+        <% } %>
+    <% include footer %>
     </body>
 </html>

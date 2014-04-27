@@ -92,7 +92,8 @@ function renderViewUserPage(req, res, next) {
   if(!username) {
     req.flash('message', labels.error.pageNotFound);
     res.render('viewUser', {
-      message: req.flash('message')
+      message: req.flash('message'),
+      currentUser: userHelper.getCurrentUser(req)
     })
   }
 
@@ -110,7 +111,8 @@ function renderViewUserPage(req, res, next) {
       }
       res.render('viewUser', {
         message: message,
-        user: user
+        user: user,
+        currentUser: userHelper.getCurrentUser(req)
       });
     });
 }
@@ -120,7 +122,8 @@ function renderEditUserPage(req, res, next) {
   if(!username) {
     req.flash('message', labels.error.pageNotFound);
     res.render('editUser', {
-      message: req.flash('message')
+      message: req.flash('message'),
+      currentUser: userHelper.getCurrentUser(req)
     })
   }
 
@@ -142,7 +145,8 @@ function renderEditUserPage(req, res, next) {
       }
       res.render('editUser', {
         message: message,
-        user: user
+        user: user,
+        currentUser: userHelper.getCurrentUser(req)
       });
     });
 }

@@ -22,17 +22,19 @@ var updateCurrentUserInfo = function(req, user) {
 }
 
 var updateUserInSession = function(req, user) {
-  req.session.username = user.username;
+  if (req && req.session) {
+    req.session.user = {
+      id: user.id,
+      username: user.username
+    }
+  }
 }
 
 var getCurrentUser = function(req) {
   if(req && req.session) {
-    return {
-      id: req.session.id,
-      username: req.session.username
-    }
+    return req.session.user;
   } else {
-      return null;
+    return null;
   }
 }
 

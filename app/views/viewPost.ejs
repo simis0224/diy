@@ -5,11 +5,13 @@
         <link rel='stylesheet' href='/stylesheets/style.css' />
     </head>
     <body>
+    <% include header %>
     名称：<% if(locals.post && locals.post.subject) {%><%= post.subject %><% } %><br>
     主图：<% if(locals.post && locals.post.pic) {%><img src="<%= post.pic %>"/><br><% } %>
     描述：<% if(locals.post && locals.post.description) {%><%= post.description %><% } %><br>
     <% if(locals.message) {%>
         <%= message %>
     <% } %>
+    <% include footer %>
     </body>
 </html>
