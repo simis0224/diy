@@ -1,0 +1,18 @@
+form.login {
+    width: 555px;
+    margin: 0 auto;
+}
+
+form.login button {
+    float: right;
+    margin: 10px;
+}
+
+form.login p.error {
+    width: 360px;
+    margin: 15px;
+    min-height: 22px;
+    float: left;
+    color: #d40000;
+    font-size: 14px;
+}

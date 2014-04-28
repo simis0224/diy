@@ -2,26 +2,19 @@
 <html>
     <head>
         <title>用户登录</title>
-        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link rel='stylesheet' href='/stylesheets/main.css' />
+        <link rel='stylesheet' href='/stylesheets/login.css' />
     </head>
     <body>
         <% include header %>
-        <form action="/login" method="post">
-            <div>
-                <label>用户名</label>
-                <input type="text" name="username" />
-            </div>
-            <div>
-                <label>密码</label>
-                <input type="password" name="password"/>
-            </div>
-
-            <button type="submit" >登陆</button>
-        </form>
-
-        <% if (message) { %>
-        <p><%= message %></p>
-        <% } %>
+        <div class="content">
+            <form action="/login" method="post" class="login">
+                <input type="text" name="username" placeholder="用户名或电子邮件"/>
+                <input type="password" name="password" placeholder="密码"/>
+                <p class="error"><%= message %></p>
+                <button type="submit">登录</button>
+            </form>
+        </div>
         <% include footer %>
     </body>
 </html>
