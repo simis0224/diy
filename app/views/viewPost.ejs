@@ -5,13 +5,16 @@
         <link rel='stylesheet' href='/stylesheets/main.css' />
     </head>
     <body>
-    <% include header %>
-    名称：<% if(locals.post && locals.post.subject) {%><%= post.subject %><% } %><br>
-    主图：<% if(locals.post && locals.post.pic) {%><img src="<%= post.pic %>"/><br><% } %>
-    描述：<% if(locals.post && locals.post.description) {%><%= post.description %><% } %><br>
-    <% if(locals.message) {%>
-        <%= message %>
-    <% } %>
-    <% include footer %>
+        <% include header %>
+        <div class="content">
+        名称：<% if(locals.post && locals.post.subject) {%><%= post.subject %><% } %><br>
+        分类：<% if(locals.post && locals.post.categoryInLabel) {%><%= post.categoryInLabel %><% } %><br>
+        主图：<% if(locals.post && locals.post.pic) {%><img src="<%= post.pic %>"/><br><% } %>
+        描述：<% if(locals.post && locals.post.description) {%><%= post.description %><% } %><br>
+        <% if(locals.message) {%>
+            <%= message %>
+        <% } %>
+        </div>
+        <% include footer %>
     </body>
 </html>

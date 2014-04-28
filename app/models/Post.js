@@ -5,6 +5,7 @@ var postSchema = mongoose.Schema({
   subject: String,
   description: String,
   pic: String,
+  category: Number,
   createdBy: String,
   createdDate: Date,
   lastModifedDate: Date

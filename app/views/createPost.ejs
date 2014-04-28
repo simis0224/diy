@@ -6,16 +6,22 @@
     </head>
     <body>
         <% include header %>
-        <form method="post" id="post" action="/createPost" enctype="multipart/form-data">
-            名称：<input type="text" name="subject" value="<% if(locals.post && locals.post.subject) {%><%= post.subject %><% } %>" aria-label="名称"/><br>
-            主图：<input type="file" name="pic" value="<% if(locals.post && locals.post.pic) {%><%= post.pic %><% } %>" aria-label="主图"/><br>
-            描述：<textarea name="description" aria-label="描述" rows="4" cols="50"></textarea><br>
-            <button type="submit" name="update">发布</button><br>
-        </form>
-
-        <% if(locals.message) {%>
-            <%= message %>
-        <% } %>
+        <div class="content">
+            <form method="post" id="post" action="/createPost" enctype="multipart/form-data">
+                <input type="text" name="subject" value="<% if(locals.post && locals.post.subject) {%><%= post.subject %><% } %>" placeholder="作品名称"/>
+                <select name="category">
+                    <% for(var i = 0; i < categories.length; i++) {%>
+                        <option value="<%= categories[i].value.dbValue %>"><%= categories[i].value.label %></option>
+                    <% } %>
+                </select><br>
+                <input type="file" name="pic" value="<% if(locals.post && locals.post.pic) {%><%= post.pic %><% } %>" aria-label="主图"/><br>
+                <textarea name="description" placeholder="简述" rows="4" cols="50"></textarea><br>
+                <p class="error">
+                    <%= message %>
+                </p>
+                <button type="submit" name="update">发布</button><br>
+            </form>
+        </div>
         <% include footer %>
     </body>
 </html>

@@ -6,16 +6,21 @@ var util = require('util');
 var paths = require('../constants/paths');
 var userHelper = require('../helpers/userHelper');
 var labels = require('../labels/labels');
+var categoryEnum = require('../models/CategoryEnum');
 
 function renderNewPostPage(req, res, next) {
+
   res.render('createPost', {
-    currentUser: userHelper.getCurrentUser(req)
+    categories: categoryEnum.enums,
+    currentUser: userHelper.getCurrentUser(req),
+    message: req.flash('message')
   });
 }
 
 function createPost(req, res, next) {
   var postData = {
     subject: traverse(req).get(['body','subject']),
+    category: traverse(req).get(['body', 'category']),
     description: traverse(req).get(['body','description']),
     pic: handleFileUpload(req),
     createdBy: userHelper.getCurrentUser(req).id,
@@ -59,6 +64,11 @@ function renderViewPostPage(req, res, isView, next) {
       if(!post) {
         message = '作品不存在';
       }
+
+      if(post.category) {
+        post.categoryInLabel = traverse(categoryEnum.getEnumByDbValue(post.category)).get(['value', 'label']);
+      }
+
       res.render('viewPost', {
         message: message,
         post: post,
