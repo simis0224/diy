@@ -9,7 +9,6 @@ var labels = require('../labels/labels');
 var categoryEnum = require('../models/CategoryEnum');
 
 function renderNewPostPage(req, res, next) {
-
   res.render('createPost', {
     categories: categoryEnum.enums,
     currentUser: userHelper.getCurrentUser(req),
@@ -40,32 +39,63 @@ function createPost(req, res, next) {
   });
 }
 
+function deletePost(req, res, next) {
+  var postId = traverse(req).get(['params','id']);
+
+  if(!postId) {
+    req.flash('message', labels.error.internalError);
+    res.redirect('/listPosts');
+    return;
+  }
+
+  Post
+    .findOne( { _id: postId })
+    .exec(function(err, post) {
+      if(err) {
+        console.error(err);
+        req.flash('message', labels.error.internalError);
+        res.redirect('/viewPost/' + postId)
+        return;
+      }
+
+      if(!post) {
+        req.flash('message', labels.post.postNotFound);
+        res.redirect('/viewPost/' + postId);
+      } else {
+        post.remove(function(err, post) {
+          if(err) {
+            req.flash('message', labels.error.internalError);
+            res.redirect('/viewPost/' + postId)
+          }
+          req.flash('message', labels.post.deleteSuccessful);
+          res.redirect('/listPosts/' + userHelper.getCurrentUser(req).username);
+        });
+      }
+    });
+}
+
 function renderViewPostPage(req, res, isView, next) {
   var id = traverse(req).get(['params','id']);
   if(!id) {
-    res.render('viewPost', {
-      message: '该作品不存在'
-    })
+    req.flash('message', labels.post.postNotFound);
+    res.redirect('/viewPost');
   }
 
   Post
     .findOne( { _id: id })
     .exec(function(err, post) {
-      // if there are any errors, return the error
       if (err) {
         console.error(err);
-        res.render('viewPost', {
-          message: '内部错误'
-        });
+        req.flash('message', labels.error.internalError);
+        res.redirect('/viewPost');
       }
 
-      // check to see if theres already a user with that email
-      var message;
+      var message = req.flash('message');
       if(!post) {
-        message = '作品不存在';
+        message = labels.post.postNotFound;
       }
 
-      if(post.category) {
+      if(post && post.category) {
         post.categoryInLabel = traverse(categoryEnum.getEnumByDbValue(post.category)).get(['value', 'label']);
       }
 
@@ -91,11 +121,13 @@ function renderPostListPage(req, res, next) {
     .find(query)
     .exec(function(err, items) {
       if(err) {
+        req.flash('message', labels.error.internalError);
         console.log(err);
       }
       res.render('listPosts', {
         posts: items,
-        currentUser: userHelper.getCurrentUser(req)
+        currentUser: userHelper.getCurrentUser(req),
+        message: req.flash("message")
       })
     })
 }
@@ -115,6 +147,7 @@ function handleFileUpload(req) {
 
 
 module.exports.createPost = createPost;
+module.exports.deletePost = deletePost;
 
 module.exports.renderNewPostPage = renderNewPostPage;
 module.exports.renderViewPostPage = renderViewPostPage;

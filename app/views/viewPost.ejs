@@ -7,13 +7,17 @@
     <body>
         <% include header %>
         <div class="content">
-        名称：<% if(locals.post && locals.post.subject) {%><%= post.subject %><% } %><br>
-        分类：<% if(locals.post && locals.post.categoryInLabel) {%><%= post.categoryInLabel %><% } %><br>
-        主图：<% if(locals.post && locals.post.pic) {%><img src="<%= post.pic %>"/><br><% } %>
-        描述：<% if(locals.post && locals.post.description) {%><%= post.description %><% } %><br>
-        <% if(locals.message) {%>
-            <%= message %>
-        <% } %>
+            <% if(locals.post) {%>
+                <form action="/deletePost/<%= locals.post.id %>" method="post">
+                    <a href="javascript:;" onclick="parentNode.submit();">删除作品</a><br>
+                </form>
+
+                名称：<%= post.subject %><br>
+                分类：<%= post.categoryInLabel %><br>
+                主图：<img src="<%= post.pic %>"/><br>
+                描述：<%= post.description %><br>
+            <% } %>
+                <p><%= message %><p>
         </div>
         <% include footer %>
     </body>

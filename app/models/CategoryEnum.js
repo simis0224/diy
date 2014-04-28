@@ -4,35 +4,35 @@ var _ = require('lodash');
 
 var categoryEnum = new Enum({
   'Cooking': {
-    dbValue: 0,
+    dbValue: 1,
     label: labels.categories.cooking
   },
   'Home': {
-    dbValue: 1,
+    dbValue: 2,
     label: labels.categories.home
   },
   'Handcraft': {
-    dbValue: 2,
+    dbValue: 3,
     label: labels.categories.handcraft
   },
   'Baking': {
-    dbValue: 3,
+    dbValue: 4,
     label: labels.categories.baking
   },
   'Gardening': {
-    dbValue: 4,
+    dbValue: 5,
     label: labels.categories.gardening
   },
   'Pets': {
-    dbValue: 5,
+    dbValue: 6,
     label: labels.categories.pets
   },
   'Automobile': {
-    dbValue: 6,
+    dbValue: 7,
     label: labels.categories.automobile
   },
   'Technology': {
-    dbValue: 7,
+    dbValue: 8,
     label: labels.categories.technology
   }
 });

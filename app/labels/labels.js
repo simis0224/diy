@@ -6,11 +6,19 @@ var user = {
   createSuccessful: '注册用户成功'
 }
 
+var post = {
+  postNotFound: '作品不存在',
+  updateSuccessful: '更新作品成功',
+  publishSuccessful: '发布作品成功',
+  deleteSuccessful: '删除作品成功'
+}
+
 var error = {
   internalError: '内部错误',
   pageNotFound: '页面不存在'
 }
 
 module.exports.user = user;
+module.exports.post = post;
 module.exports.error = error;
 

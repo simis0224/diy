@@ -45,6 +45,10 @@ module.exports = function(app, passport) {
     PostController.renderPostListPage(req, res, next);
   });
 
+  app.post('/deletePost/:id', isLoggedIn, function(req, res, next) {
+    PostController.deletePost(req, res, next);
+  });
+
   app.get('/signup', function(req, res, next) {
     UserController.renderSignupPage(req, res, next);
   });
