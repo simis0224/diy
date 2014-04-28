@@ -9,11 +9,19 @@
         <% include header %>
         <div class="content">
             <form action="/login" method="post" class="login">
+                <h2>登录</h2>
                 <input type="text" name="username" placeholder="用户名或电子邮件"/>
                 <input type="password" name="password" placeholder="密码"/>
-                <p class="error"><%= message %></p>
+                <p class="error">
+                    <%= message %>
+                </p>
                 <button type="submit">登录</button>
             </form>
+            <div class="otherLink">
+                <p>
+                    没有账号，<a href="/signup">从这里注册</a>
+                </p>
+            </div>
         </div>
         <% include footer %>
     </body>
