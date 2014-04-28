@@ -34,15 +34,15 @@ module.exports = function(app, passport) {
   });
 
   app.get('/viewPost/:id', function(req, res, next) {
-    PostController.viewPost(req, res, next);
+    PostController.renderViewPostPage(req, res, next);
   });
 
   app.get('/listPosts/:username', function(req, res, next) {
-    PostController.listPosts(req, res, next);
+    PostController.renderPostListPage(req, res, next);
   });
 
   app.get('/listPosts', function(req, res, next) {
-    PostController.listPosts(req, res, next);
+    PostController.renderPostListPage(req, res, next);
   });
 
   app.get('/signup', function(req, res, next) {

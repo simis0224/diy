@@ -3,7 +3,9 @@ var Post = require('../models/Post');
 var fs = require('fs');
 var crypto = require('crypto');
 var util = require('util');
-var paths = require('../constants/paths')
+var paths = require('../constants/paths');
+var userHelper = require('../helpers/userHelper');
+var labels = require('../labels/labels');
 
 function renderNewPostPage(req, res, next) {
   res.render('createPost', {});
@@ -14,27 +16,24 @@ function createPost(req, res, next) {
     subject: traverse(req).get(['body','subject']),
     description: traverse(req).get(['body','description']),
     pic: handleFileUpload(req),
-    createdBy: req.session.username,
+    createdBy: userHelper.getCurrentUser(req).id,
     createdDate: new Date(),
     lastModifedDate: new Date()
   };
 
   var newPost = new Post(postData);
-
   newPost.save(function(err, post) {
     if (err) {
       console.error(err);
-      res.render('createPost', {
-        user: postData,
-        message: '内部错误'
-      });
+      req.flash('message', labels.error.internalError);
+      // TODO pass postData
       return;
     }
     res.redirect('/viewPost/' + post._id);
   });
 }
 
-function viewPost(req, res, isView, next) {
+function renderViewPostPage(req, res, isView, next) {
   var id = traverse(req).get(['params','id']);
   if(!id) {
     res.render('viewPost', {
@@ -65,13 +64,13 @@ function viewPost(req, res, isView, next) {
     });
 }
 
-function listPosts(req, res, next) {
+function renderPostListPage(req, res, next) {
   var username = traverse(req).get(['params','username']);
-
+  var userId = traverse(userHelper.getUserByUsername(username)).get(['id']);
   var query = {};
-  if(username) {
+  if(userId) {
     query = {
-      createdBy: username
+      createdBy: userId
     }
   }
 
@@ -100,9 +99,11 @@ function handleFileUpload(req) {
   return util.format(paths.UPLOAD_IMAGE_ACCESS_SRC, uid, fileName);
 }
 
-module.exports.renderNewPostPage = renderNewPostPage;
+
 module.exports.createPost = createPost;
-module.exports.viewPost = viewPost;
-module.exports.listPosts = listPosts;
+
+module.exports.renderNewPostPage = renderNewPostPage;
+module.exports.renderViewPostPage = renderViewPostPage;
+module.exports.renderPostListPage = renderPostListPage;
 
 
