@@ -16,7 +16,7 @@ var startUserCache = function() {
 }
 
 var updateCurrentUserInfo = function(req, user) {
-  if(global.userInfo && user && user.id && user.username) {
+  if(user && user.id && user.username) {
     updateUserInfoCache(user);
     updateUserInSession(req, user);
   } else {
