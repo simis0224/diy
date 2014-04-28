@@ -151,7 +151,14 @@ function renderEditUserPage(req, res, next) {
     });
 }
 
+var logout = function(req, res, next) {
+  userHelper.deleteUserInSession(req);
+  req.logout();
+  res.redirect('/');
+}
+
 module.exports.updateUser = updateUser;
+module.exports.logout = logout;
 
 module.exports.renderUserListPage = renderUserListPage;
 module.exports.renderLoginPage = renderLoginPage;

@@ -8,7 +8,9 @@ var userHelper = require('../helpers/userHelper');
 var labels = require('../labels/labels');
 
 function renderNewPostPage(req, res, next) {
-  res.render('createPost', {});
+  res.render('createPost', {
+    currentUser: userHelper.getCurrentUser(req)
+  });
 }
 
 function createPost(req, res, next) {
@@ -59,7 +61,8 @@ function renderViewPostPage(req, res, isView, next) {
       }
       res.render('viewPost', {
         message: message,
-        post: post
+        post: post,
+        currentUser: userHelper.getCurrentUser(req)
       });
     });
 }
@@ -81,7 +84,8 @@ function renderPostListPage(req, res, next) {
         console.log(err);
       }
       res.render('listPosts', {
-        posts: items
+        posts: items,
+        currentUser: userHelper.getCurrentUser(req)
       })
     })
 }

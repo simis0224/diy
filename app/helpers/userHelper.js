@@ -33,6 +33,10 @@ var updateUserInSession = function(req, user) {
   }
 }
 
+var deleteUserInSession = function(req) {
+  delete req.session.user;
+}
+
 var getCurrentUser = function(req) {
   if(req && req.session) {
     return req.session.user;
@@ -76,5 +80,6 @@ module.exports.startUserCache = startUserCache;
 module.exports.getCurrentUser = getCurrentUser;
 module.exports.updateCurrentUserInfo = updateCurrentUserInfo;
 module.exports.updateUserInSession = updateUserInSession;
+module.exports.deleteUserInSession = deleteUserInSession;
 module.exports.getUserById = getUserById;
 module.exports.getUserByUsername = getUserByUsername;
