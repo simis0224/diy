@@ -1,8 +1,10 @@
 var UserController2 = require('../controllers/UserController2');
-var PostController = require('../controllers/PostController');
+var PostController2 = require('../controllers/PostController2');
 var HomeController = require('../controllers/HomeController');
 var UserController = require('../controllers/userController');
 var userController = new UserController();
+var PostController = require('../controllers/postController');
+var postController = new PostController();
 
 module.exports = function(app, passport) {
 
@@ -29,33 +31,33 @@ module.exports = function(app, passport) {
   });
 
   app.get('/createPost', isLoggedIn, function(req, res, next) {
-    PostController.renderNewPostPage(req, res, next);
+    PostController2.renderNewPostPage(req, res, next);
   });
   app.post('/createPost', isLoggedIn, function(req, res, next) {
-    PostController.createPost(req, res, next);
+    PostController2.createPost(req, res, next);
   });
 
   app.get('/viewPost/:id', function(req, res, next) {
-    PostController.renderViewPostPage(req, res, next);
+    postController.renderViewPage(req, res, next);
   });
 
   app.get('/editPost/:id', isLoggedIn, function(req, res, next) {
-    PostController.renderEditPostPage(req, res, next);
+    PostController2.renderEditPostPage(req, res, next);
   });
   app.post('/editPost/:id', isLoggedIn, function(req, res, next) {
-    PostController.updatePost(req, res, next);
+    PostController2.updatePost(req, res, next);
   });
 
   app.get('/listPosts/:username', function(req, res, next) {
-    PostController.renderPostListPage(req, res, next);
+    PostController2.renderPostListPage(req, res, next);
   });
 
   app.get('/listPosts', function(req, res, next) {
-    PostController.renderPostListPage(req, res, next);
+    PostController2.renderPostListPage(req, res, next);
   });
 
   app.post('/deletePost/:id', isLoggedIn, function(req, res, next) {
-    PostController.deletePost(req, res, next);
+    PostController2.deletePost(req, res, next);
   });
 
   app.get('/signup', function(req, res, next) {

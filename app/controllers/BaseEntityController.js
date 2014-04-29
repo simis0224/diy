@@ -31,6 +31,9 @@ BaseEntityController.prototype.renderViewPage = function(req, res, next) {
       if(!item) {
         message = util.format(labels.error.itemNotFound, that.getEntityNameLabel());
       }
+
+      item = that.addExtraItemData(item);
+
       res.render('view' + that.getEntityName(), {
         message: message,
         item: item,
@@ -45,6 +48,10 @@ BaseEntityController.prototype.getViewPageQuery = function(id) {
 
 BaseEntityController.prototype.getIdFromParamsOnViewPage = function(req) {
   return traverse(req).get(['params','id']);
+}
+
+BaseEntityController.prototype.addExtraItemData = function(item) {
+  return item;
 }
 
 /**
