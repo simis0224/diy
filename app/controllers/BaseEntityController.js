@@ -56,7 +56,8 @@ BaseEntityController.prototype.renderListPage = function(req, res, next) {
       }
       res.render('list' + that.getEntityName(), {
         message: message,
-        items: items
+        items: items,
+        currentUser: userHelper.getCurrentUser(req)
       })
     })
 }
