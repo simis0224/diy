@@ -8,10 +8,12 @@
         <% include header %>
         <div class="content">
             <% if(locals.post) {%>
-                <form action="/deletePost/<%= locals.post.id %>" method="post">
-                    <a href="javascript:;" onclick="parentNode.submit();">删除作品</a><br>
-                </form>
-                <a href="/editPost/<%= locals.post.id %>" >修改作品</a><br>
+                <% if(post.createdBy === currentUser.id) { %>
+                    <form action="/deletePost/<%= post.id %>" method="post">
+                        <a href="javascript:;" onclick="parentNode.submit();">删除作品</a><br>
+                    </form>
+                    <a href="/editPost/<%= post.id %>" >修改作品</a><br>
+                <% } %>
 
                 名称：<%= post.subject %><br>
                 分类：<%= post.categoryInLabel %><br>

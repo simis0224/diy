@@ -24,11 +24,13 @@ function updateUser(req, res, next) {
         console.error(err);
         req.flash('message', labels.error.internalError);
         res.redirect('/editUser/' + user.username);
+        return;
       }
 
       if (!user) {
         req.flash('message', labels.user.userNotFound);
         res.redirect('/viewUser/' + user.username);
+        return;
       } else {
         var oldUser = user.toObject();
         user.set(userData);
@@ -129,6 +131,7 @@ function renderEditUserPage(req, res, next) {
 
   if(userHelper.getCurrentUser(req).username != username) {
     res.redirect('/viewUser/' + username);
+    return;
   }
 
   User

@@ -33,29 +33,37 @@ function updatePost(req, res, next) {
         console.error(err);
         req.flash('message', labels.error.internalError);
         res.redirect('/editPost/' + postData._id);
+        return;
       }
 
       if (!post) {
         req.flash('message', labels.post.postNotFound);
         res.redirect('/listPosts/' + userhelper.getCurrentUser(req).username);
-      } else {
-        post.set(postData);
-        post.save(function (err, post) {
-          if (err) {
-            console.error(err);
-            // TODO fix validation
-            if (err.name === 'ValidationError') {
-              req.flash('message', err.errors[Object.keys(err.errors)[0]].message);
-            } else {
-              req.flash('message', labels.error.internalError);
-            }
-            res.redirect('/editPost/' + postData._id);
-            return;
-          }
-          req.flash('message', labels.post.updateSuccessful);
-          res.redirect('/viewPost/' + postData._id);
-        });
+        return;
       }
+
+      if(post.createdBy !== userHelper.getCurrentUser(req).id) {
+        req.flash('message', labels.error.noPrivilege);
+        res.redirect('/viewPost/' + postId);
+        return;
+      }
+
+      post.set(postData);
+      post.save(function (err, post) {
+        if (err) {
+          console.error(err);
+          // TODO fix validation
+          if (err.name === 'ValidationError') {
+            req.flash('message', err.errors[Object.keys(err.errors)[0]].message);
+          } else {
+            req.flash('message', labels.error.internalError);
+          }
+          res.redirect('/editPost/' + postData._id);
+          return;
+        }
+        req.flash('message', labels.post.updateSuccessful);
+        res.redirect('/viewPost/' + postData._id);
+      });
     }
   );
 }
@@ -105,16 +113,24 @@ function deletePost(req, res, next) {
       if(!post) {
         req.flash('message', labels.post.postNotFound);
         res.redirect('/viewPost/' + postId);
-      } else {
-        post.remove(function(err, post) {
-          if(err) {
-            req.flash('message', labels.error.internalError);
-            res.redirect('/viewPost/' + postId)
-          }
-          req.flash('message', labels.post.deleteSuccessful);
-          res.redirect('/listPosts/' + userHelper.getCurrentUser(req).username);
-        });
+        return;
       }
+
+      if(post.createdBy !== userHelper.getCurrentUser(req).id) {
+        req.flash('message', labels.error.noPrivilege);
+        res.redirect('/viewPost/' + postId);
+        return;
+      }
+
+      post.remove(function(err, post) {
+        if(err) {
+          req.flash('message', labels.error.internalError);
+          res.redirect('/viewPost/' + postId)
+          return;
+        }
+        req.flash('message', labels.post.deleteSuccessful);
+        res.redirect('/listPosts/' + userHelper.getCurrentUser(req).username);
+      });
     });
 }
 
@@ -131,6 +147,7 @@ function renderViewPostPage(req, res, isView, next) {
   if(!id) {
     req.flash('message', labels.post.postNotFound);
     res.redirect('/viewPost');
+    return;
   }
 
   Post
@@ -140,6 +157,7 @@ function renderViewPostPage(req, res, isView, next) {
         console.error(err);
         req.flash('message', labels.error.internalError);
         res.redirect('/viewPost');
+        return
       }
 
       var message = req.flash('message');
@@ -172,14 +190,15 @@ function renderPostListPage(req, res, next) {
   Post
     .find(query)
     .exec(function(err, items) {
+      var message = req.flash("message");
       if(err) {
-        req.flash('message', labels.error.internalError);
+        message = labels.error.internalError;
         console.log(err);
       }
       res.render('listPosts', {
         posts: items,
         currentUser: userHelper.getCurrentUser(req),
-        message: req.flash("message")
+        message: message
       })
     })
 }

@@ -15,7 +15,8 @@ var post = {
 
 var error = {
   internalError: '内部错误',
-  pageNotFound: '页面不存在'
+  pageNotFound: '页面不存在',
+  noPrivilege: '您没有权限执行该操作'
 }
 
 module.exports.user = user;
