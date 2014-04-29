@@ -1,6 +1,8 @@
-var UserController = require('../controllers/UserController');
+var UserController2 = require('../controllers/UserController2');
 var PostController = require('../controllers/PostController');
 var HomeController = require('../controllers/HomeController');
+var UserController = require('../controllers/userController');
+var userController = new UserController();
 
 module.exports = function(app, passport) {
 
@@ -9,21 +11,21 @@ module.exports = function(app, passport) {
   });
 
   app.get('/login', function(req, res, next) {
-    UserController.renderLoginPage(req, res, next);
+    UserController2.renderLoginPage(req, res, next);
   });
 
   app.get('/editUser/:username', isLoggedIn, function(req, res, next) {
-    UserController.renderEditUserPage(req, res, next);
+    UserController2.renderEditUserPage(req, res, next);
   });
   app.post('/editUser/:username', isLoggedIn, function(req, res, next) {
-    UserController.updateUser(req, res, next);
+    UserController2.updateUser(req, res, next);
   });
 
   app.get('/viewUser/:username', function(req, res, next) {
-    UserController.renderViewUserPage(req, res, next);
+    userController.renderViewPage(req, res, next);
   });
   app.get('/listUsers', function(req, res, next) {
-    UserController.renderUserListPage(req, res, next);
+    UserController2.renderUserListPage(req, res, next);
   });
 
   app.get('/createPost', isLoggedIn, function(req, res, next) {
@@ -57,7 +59,7 @@ module.exports = function(app, passport) {
   });
 
   app.get('/signup', function(req, res, next) {
-    UserController.renderSignupPage(req, res, next);
+    UserController2.renderSignupPage(req, res, next);
   });
 
   app.post('/signup', passport.authenticate('local-signup', {
@@ -73,7 +75,7 @@ module.exports = function(app, passport) {
   }));
 
   app.get('/logout', function(req, res) {
-    UserController.logout(req, res);
+    UserController2.logout(req, res);
   });
 }
 

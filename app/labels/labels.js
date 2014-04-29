@@ -1,4 +1,5 @@
 var user = {
+  name: '用户',
   userNotFound: '用户%s不存在',
   wrongPassword: '密码错误',
   usernameExists: '用户名或邮件已存在',
@@ -16,7 +17,8 @@ var post = {
 var error = {
   internalError: '内部错误',
   pageNotFound: '页面不存在',
-  noPrivilege: '您没有权限执行该操作'
+  noPrivilege: '您没有权限执行该操作',
+  itemNotFound: '%s不存在'
 }
 
 module.exports.user = user;

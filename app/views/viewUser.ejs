@@ -6,14 +6,14 @@
 </head>
 <body>
     <% include header %>
-    <% if(locals.user) {%>
-        电子邮件：<%= user.email %><br>
-        用户名：<%= user.username %><br>
-        注册时间：<%=  user.createdDate %><br>
-    <% } %>
-    <% if(locals.message) {%>
-        <%= message %>
-    <% } %>
+    <div class="content">
+        <p><%= message %></p>
+        <% if(locals.item) {%>
+            电子邮件：<%= item.email %><br>
+            用户名：<%= item.username %><br>
+            注册时间：<%=  item.createdDate %><br>
+        <% } %>
+    </div>
     </body>
     <% include footer %>
 </html>
