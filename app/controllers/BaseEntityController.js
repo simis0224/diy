@@ -9,8 +9,8 @@ module.exports = BaseEntityController;
 function BaseEntityController() {}
 
 BaseEntityController.prototype.renderViewPage = function(req, res, next) {
-  var id = this.getIdFromParamsOnViewPage(req);
-  if(!id) {
+  var param = this.getUrlParamOnViewPage(req);
+  if(!param) {
     req.flash('message', labels.error.pageNotFound);
     res.render('view' + this.getEntityName(), {
       message: req.flash('message'),
@@ -20,7 +20,7 @@ BaseEntityController.prototype.renderViewPage = function(req, res, next) {
 
   that = this;
   this.getEntityModel()
-    .findOne(this.getViewPageQuery(id))
+    .findOne(this.getViewPageQuery(param))
     .exec(function(err, item) {
       var message = req.flash('message');
       if (err) {
@@ -42,12 +42,44 @@ BaseEntityController.prototype.renderViewPage = function(req, res, next) {
     });
 }
 
-BaseEntityController.prototype.getViewPageQuery = function(id) {
-  return { _id: id};
+BaseEntityController.prototype.renderListPage = function(req, res, next) {
+  var param = this.getUrlParamOnListPage(req);
+
+  that = this;
+  this.getEntityModel()
+    .find(this.getListPageQuery(param))
+    .exec(function(err, items) {
+      var message = req.flash('message')
+      if(err) {
+        message = labels.error.internalError;
+        console.log(err);
+      }
+      res.render('list' + that.getEntityName(), {
+        message: message,
+        items: items
+      })
+    })
 }
 
-BaseEntityController.prototype.getIdFromParamsOnViewPage = function(req) {
+BaseEntityController.prototype.getViewPageQuery = function(param) {
+  return { _id: param};
+}
+
+BaseEntityController.prototype.getListPageQuery = function(param) {
+  if(param) {
+    return { createdBy: param };
+  } else {
+    return {};
+  }
+}
+
+BaseEntityController.prototype.getUrlParamOnViewPage = function(req) {
   return traverse(req).get(['params','id']);
+}
+
+BaseEntityController.prototype.getUrlParamOnListPage = function(req) {
+  var username = traverse(req).get(['params','username']);
+  return  traverse(userHelper.getUserByUsername(username)).get(['id']);
 }
 
 BaseEntityController.prototype.addExtraItemData = function(item) {

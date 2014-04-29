@@ -26,8 +26,8 @@ module.exports = function(app, passport) {
   app.get('/viewUser/:username', function(req, res, next) {
     userController.renderViewPage(req, res, next);
   });
-  app.get('/listUsers', function(req, res, next) {
-    UserController2.renderUserListPage(req, res, next);
+  app.get('/listUser', function(req, res, next) {
+    userController.renderListPage(req, res, next);
   });
 
   app.get('/createPost', isLoggedIn, function(req, res, next) {
@@ -48,12 +48,12 @@ module.exports = function(app, passport) {
     PostController2.updatePost(req, res, next);
   });
 
-  app.get('/listPosts/:username', function(req, res, next) {
-    PostController2.renderPostListPage(req, res, next);
+  app.get('/listPost/:username', function(req, res, next) {
+    postController.renderListPage(req, res, next);
   });
 
-  app.get('/listPosts', function(req, res, next) {
-    PostController2.renderPostListPage(req, res, next);
+  app.get('/listPost', function(req, res, next) {
+    postController.renderListPage(req, res, next);
   });
 
   app.post('/deletePost/:id', isLoggedIn, function(req, res, next) {

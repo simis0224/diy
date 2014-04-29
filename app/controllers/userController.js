@@ -24,10 +24,10 @@ UserController.prototype.getEntityNameLabel = function() {
   return userLabels.name;
 }
 
-UserController.prototype.getViewPageQuery = function(username) {
-  return { username: username };
+UserController.prototype.getViewPageQuery = function(param) {
+  return { username: param };
 }
 
-UserController.prototype.getIdFromParamsOnViewPage = function(req) {
+UserController.prototype.getUrlParamOnViewPage = function(req) {
   return traverse(req).get(['params','username']);
 }
