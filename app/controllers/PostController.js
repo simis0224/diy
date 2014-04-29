@@ -8,12 +8,56 @@ var userHelper = require('../helpers/userHelper');
 var labels = require('../labels/labels');
 var categoryEnum = require('../models/CategoryEnum');
 
-function renderNewPostPage(req, res, next) {
-  res.render('createPost', {
-    categories: categoryEnum.enums,
-    currentUser: userHelper.getCurrentUser(req),
-    message: req.flash('message')
-  });
+function updatePost(req, res, next) {
+  var postData = {
+    _id: traverse(req).get(['body','id']),
+    subject: traverse(req).get(['body','subject']),
+    category: traverse(req).get(['body', 'category']),
+    description: traverse(req).get(['body','description']),
+    lastModifedDate: new Date()
+  };
+
+  var password = traverse(req).get(['body','password']);
+  if(password) {
+    userData.password = User.generateHash(password);
+  }
+
+  if(req.files && req.files.pic && req.files.pic.name) {
+    postData.pic = handleFileUpload(req);
+  }
+
+  Post
+    .findOne( { _id: postData._id })
+    .exec(function (err, post) {
+      if (err) {
+        console.error(err);
+        req.flash('message', labels.error.internalError);
+        res.redirect('/editPost/' + postData._id);
+      }
+
+      if (!post) {
+        req.flash('message', labels.post.postNotFound);
+        res.redirect('/listPosts/' + userhelper.getCurrentUser(req).username);
+      } else {
+        post.set(postData);
+        post.save(function (err, post) {
+          if (err) {
+            console.error(err);
+            // TODO fix validation
+            if (err.name === 'ValidationError') {
+              req.flash('message', err.errors[Object.keys(err.errors)[0]].message);
+            } else {
+              req.flash('message', labels.error.internalError);
+            }
+            res.redirect('/editPost/' + postData._id);
+            return;
+          }
+          req.flash('message', labels.post.updateSuccessful);
+          res.redirect('/viewPost/' + postData._id);
+        });
+      }
+    }
+  );
 }
 
 function createPost(req, res, next) {
@@ -74,6 +118,14 @@ function deletePost(req, res, next) {
     });
 }
 
+function renderNewPostPage(req, res, next) {
+  res.render('createPost', {
+    categories: categoryEnum.enums,
+    currentUser: userHelper.getCurrentUser(req),
+    message: req.flash('message')
+  });
+}
+
 function renderViewPostPage(req, res, isView, next) {
   var id = traverse(req).get(['params','id']);
   if(!id) {
@@ -132,6 +184,38 @@ function renderPostListPage(req, res, next) {
     })
 }
 
+function renderEditPostPage(req, res, next) {
+  var postId = traverse(req).get(['params','id']);
+  if(!postId) {
+    req.flash('message', labels.error.pageNotFound);
+    res.render('editPost', {
+      message: req.flash('message'),
+      currentUser: userHelper.getCurrentUser(req)
+    })
+  }
+
+  Post
+    .findOne( { _id: postId })
+    .exec(function(err, post) {
+      var message = req.flash('message');
+      if (err) {
+        console.error(err);
+        message = labels.error.internalError;
+      }
+
+      if(!post) {
+        message = labels.post.postNotFound;
+      }
+
+      res.render('editPost', {
+        message: message,
+        post: post,
+        currentUser: userHelper.getCurrentUser(req),
+        categories: categoryEnum.enums
+      });
+    });
+}
+
 function handleFileUpload(req) {
   if(!req.files || !req.files.pic || !req.files.pic.name) {
     return req.body.currentPicture || '';
@@ -148,8 +232,10 @@ function handleFileUpload(req) {
 
 module.exports.createPost = createPost;
 module.exports.deletePost = deletePost;
+module.exports.updatePost = updatePost;
 
 module.exports.renderNewPostPage = renderNewPostPage;
+module.exports.renderEditPostPage = renderEditPostPage;
 module.exports.renderViewPostPage = renderViewPostPage;
 module.exports.renderPostListPage = renderPostListPage;
 

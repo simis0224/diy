@@ -37,6 +37,13 @@ module.exports = function(app, passport) {
     PostController.renderViewPostPage(req, res, next);
   });
 
+  app.get('/editPost/:id', isLoggedIn, function(req, res, next) {
+    PostController.renderEditPostPage(req, res, next);
+  });
+  app.post('/editPost/:id', isLoggedIn, function(req, res, next) {
+    PostController.updatePost(req, res, next);
+  });
+
   app.get('/listPosts/:username', function(req, res, next) {
     PostController.renderPostListPage(req, res, next);
   });

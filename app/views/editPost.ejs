@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>发布作品</title>
+        <link rel='stylesheet' href='/stylesheets/main.css' />
+    </head>
+    <body>
+        <% include header %>
+        <div class="content">
+            <p class="error"><%= message %></p>
+            <% if(locals.post) { %>
+                <form method="post" id="post" action="/editPost/<%= post.id%>" enctype="multipart/form-data">
+                    <input type="text" name="subject" value="<%= post.subject %>" placeholder="作品名称"/>
+                    <select name="category">
+                        <% for(var i = 0; i < categories.length; i++) {%>
+                        <option value="<%= categories[i].value.dbValue %>"
+                                <% if(categories[i].value.dbValue === post.category) { %>
+                                    selected="selected"
+                                <% } %>>
+                            <%= categories[i].value.label %>
+                        </option>
+                        <% } %>
+                    </select><br>
+                    <img src="<%= post.pic%>"/>
+                    <input type="file" name="pic" value="<%= post.pic %>" aria-label="主图"/><br>
+                    <textarea name="description" placeholder="简述" rows="4" cols="50"><%= post.description %></textarea><br>
+                    <input type="hidden" name="id" value="<%= post._id %>"/>
+                    <button type="submit" name="update">发布</button><br>
+                </form>
+            <% } %>
+        </div>
+        <% include footer %>
+    </body>
+</html>
