@@ -8,10 +8,10 @@ var user = {
 }
 
 var post = {
+  name: '作品',
   postNotFound: '作品不存在',
   updateSuccessful: '更新作品成功',
-  publishSuccessful: '发布作品成功',
-  deleteSuccessful: '删除作品成功'
+  publishSuccessful: '发布作品成功'
 }
 
 var error = {
@@ -21,7 +21,12 @@ var error = {
   itemNotFound: '%s不存在'
 }
 
+var crud = {
+  deleteSuccessful: '删除%s成功'
+}
+
 module.exports.user = user;
 module.exports.post = post;
 module.exports.error = error;
+module.exports.crud = crud;
 

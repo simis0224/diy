@@ -8,6 +8,50 @@ module.exports = BaseEntityController;
 
 function BaseEntityController() {}
 
+BaseEntityController.prototype.delete = function(req, res, next) {
+  var id = traverse(req).get(['params','id']);
+
+  if(!id) {
+    req.flash('message', labels.error.internalError);
+    res.redirect('/list' + this.getEntityName());
+    return;
+  }
+
+  that = this;
+  this.getEntityModel()
+    .findOne( { _id: id })
+    .exec(function(err, item) {
+      if(err) {
+        console.error(err);
+        req.flash('message', labels.error.internalError);
+        res.redirect('/view' + that.getEntityName() + '/' + id)
+        return;
+      }
+
+      if(!item) {
+        req.flash('message', labels.post.postNotFound);
+        res.redirect('/view' + that.getEntityName() + '/' + id);
+        return;
+      }
+
+      if(item.createdBy !== userHelper.getCurrentUser(req).id) {
+        req.flash('message', labels.error.noPrivilege);
+        res.redirect('/view' + that.getEntityName() + '/' + id);
+        return;
+      }
+
+      item.remove(function(err) {
+        if(err) {
+          req.flash('message', labels.error.internalError);
+          res.redirect('/view' + that.getEntityName() + '/' + id)
+          return;
+        }
+        req.flash('message', util.format(labels.crud.deleteSuccessful, that.getEntityNameLabel()));
+        res.redirect('/list' + that.getEntityName() + '/' + userHelper.getCurrentUser(req).username);
+      });
+    });
+}
+
 BaseEntityController.prototype.renderViewPage = function(req, res, next) {
   var param = this.getUrlParamOnViewPage(req);
   if(!param) {
@@ -167,7 +211,7 @@ BaseEntityController.prototype.addExtraPageDataOnEditPage = function(pageData) {
 BaseEntityController.prototype.validateBeforeFindOnEditPage = function(req, res, id) {
   return {
     hasValidationError: false
-  };;
+  };
 }
 
 BaseEntityController.prototype.validateAfterFindOnEditPage = function(req, res, item) {

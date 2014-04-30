@@ -57,7 +57,7 @@ module.exports = function(app, passport) {
   });
 
   app.post('/deletePost/:id', isLoggedIn, function(req, res, next) {
-    PostController2.deletePost(req, res, next);
+    postController.delete(req, res, next);
   });
 
   app.get('/signup', function(req, res, next) {
