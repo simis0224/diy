@@ -8,7 +8,7 @@
         <% include header %>
         <div class="content">
             <% if(locals.item) {%>
-                <% if(item.createdBy === currentUser.id) { %>
+                <% if(currentUser && item.createdBy === currentUser.id) { %>
                     <form action="/deletePost/<%= item.id %>" method="post">
                         <a href="javascript:;" onclick="parentNode.submit();">删除作品</a><br>
                     </form>

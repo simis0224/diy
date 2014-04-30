@@ -81,10 +81,13 @@ BaseEntityController.prototype.renderEditPage = function(req, res, next) {
     })
   }
 
-//  if(userHelper.getCurrentUser(req).username != username) {
-//    res.redirect('/viewUser/' + username);
-//    return;
-//  }
+  var validationResult = this.validateBeforeFindOnEditPage(req, res, id);
+  if(validationResult && validationResult.hasValidationError) {
+    req.flash('message', labels.error.noPrivilege);
+    res.redirect('/view' + this.getEntityName() + '/' + id);
+    return;
+  }
+
 
   that = this;
   this.getEntityModel()
@@ -98,6 +101,13 @@ BaseEntityController.prototype.renderEditPage = function(req, res, next) {
 
       if(!item) {
         message = util.format(labels.error.itemNotFound, that.getEntityNameLabel());
+      }
+
+      var validationResult = that.validateAfterFindOnEditPage(req, res, item);
+      if(validationResult && validationResult.hasValidationError) {
+        req.flash('message', labels.error.noPrivilege);
+        res.redirect('/view' + that.getEntityName() + '/' + id);
+        return;
       }
 
       var pageData = {
@@ -152,6 +162,18 @@ BaseEntityController.prototype.addExtraPageDataOnNewPage = function(pageData) {
 
 BaseEntityController.prototype.addExtraPageDataOnEditPage = function(pageData) {
   return pageData;
+}
+
+BaseEntityController.prototype.validateBeforeFindOnEditPage = function(req, res, id) {
+  return {
+    hasValidationError: false
+  };;
+}
+
+BaseEntityController.prototype.validateAfterFindOnEditPage = function(req, res, item) {
+  return {
+    hasValidationError: item.createdBy !== userHelper.getCurrentUser(req).id
+  };
 }
 
 /**

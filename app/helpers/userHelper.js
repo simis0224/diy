@@ -38,7 +38,7 @@ var deleteUserInSession = function(req) {
 }
 
 var getCurrentUser = function(req) {
-  if(req && req.session) {
+  if(req && req.session && req.session.user) {
     return req.session.user;
   } else {
     return null;

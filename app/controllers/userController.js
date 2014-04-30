@@ -3,6 +3,7 @@ var User = require('../models/User');
 var userLabels = require('../labels/labels').user;
 var util = require('util');
 var BaseEntityController = require('./baseEntityController');
+var userHelper = require('../helpers/userHelper.js');
 
 module.exports = UserController;
 
@@ -38,4 +39,16 @@ UserController.prototype.getUrlParamOnViewPage = function(req) {
 
 UserController.prototype.getUrlParamOnEditPage = function(req) {
   return traverse(req).get(['params','username']);
+}
+
+UserController.prototype.validateBeforeFindOnEditPage = function(req, res, username) {
+  return {
+    hasValidationError: userHelper.getCurrentUser(req).username != username
+  }
+}
+
+UserController.prototype.validateAfterFindOnEditPage = function(req, res, username) {
+  return {
+    hasValidationError: false
+  }
 }
