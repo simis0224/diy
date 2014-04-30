@@ -8,12 +8,12 @@
         <% include header %>
         <div class="content">
             <p><%= message %></p>
-            <% if(locals.user) { %>
-                <form method="post" id="editForm" action="/editUser/<%= user.username %>">
-                    电子邮件：<input type="text" name="email" value="<%= user.email %>" aria-label="电子邮件"/><br>
-                    用户名：<input type="text" name="username" value="<%= user.username %>" aria-label="用户名"/><br>
+            <% if(locals.item) { %>
+                <form method="post" id="editForm" action="/editUser/<%= item.username %>">
+                    电子邮件：<input type="text" name="email" value="<%= item.email %>" aria-label="电子邮件"/><br>
+                    用户名：<input type="text" name="username" value="<%= item.username %>" aria-label="用户名"/><br>
                     密码：<input type="password" name="password" aria-label="账户密码"/><br>
-                    <input type="hidden" name="id" value="<% if(locals.user) {%><%= user._id %><% } %>"/>
+                    <input type="hidden" name="id" value="<%= item._id %>"/>
                     <button type="submit" name="signUp">更新</button><br>
                 </form>
             <% } %>

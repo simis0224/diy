@@ -9,14 +9,14 @@
         <div class="content">
             <p class="error"><%= message %></p>
             <form method="post" id="post" action="/createPost" enctype="multipart/form-data">
-                <input type="text" name="subject" value="<% if(locals.post) { %><%= post.subject %><% } %>" placeholder="作品名称"/>
+                <input type="text" name="subject" value="<% if(locals.item) { %><%= item.subject %><% } %>" placeholder="作品名称"/>
                 <select name="category">
                     <% for(var i = 0; i < categories.length; i++) {%>
                         <option value="<%= categories[i].value.dbValue %>"><%= categories[i].value.label %></option>
                     <% } %>
                 </select><br>
-                <input type="file" name="pic" value="<% if(locals.post) { %><%= post.pic %><% } %>" aria-label="主图"/><br>
-                <textarea name="description" placeholder="简述" rows="4" cols="50" ><% if(locals.post) { %><%= post.description %><% } %></textarea><br>
+                <input type="file" name="pic" value="<% if(locals.item) { %><%= item.pic %><% } %>" aria-label="主图"/><br>
+                <textarea name="description" placeholder="简述" rows="4" cols="50" ><% if(locals.item) { %><%= item.description %><% } %></textarea><br>
                 <button type="submit" name="update">发布</button><br>
             </form>
         </div>

@@ -17,7 +17,7 @@ module.exports = function(app, passport) {
   });
 
   app.get('/editUser/:username', isLoggedIn, function(req, res, next) {
-    UserController2.renderEditUserPage(req, res, next);
+    userController.renderEditPage(req, res, next);
   });
   app.post('/editUser/:username', isLoggedIn, function(req, res, next) {
     UserController2.updateUser(req, res, next);
@@ -31,7 +31,7 @@ module.exports = function(app, passport) {
   });
 
   app.get('/createPost', isLoggedIn, function(req, res, next) {
-    PostController2.renderNewPostPage(req, res, next);
+    postController.renderCreatePage(req, res, next);
   });
   app.post('/createPost', isLoggedIn, function(req, res, next) {
     PostController2.createPost(req, res, next);
@@ -42,7 +42,7 @@ module.exports = function(app, passport) {
   });
 
   app.get('/editPost/:id', isLoggedIn, function(req, res, next) {
-    PostController2.renderEditPostPage(req, res, next);
+    postController.renderEditPage(req, res, next);
   });
   app.post('/editPost/:id', isLoggedIn, function(req, res, next) {
     PostController2.updatePost(req, res, next);
@@ -61,7 +61,7 @@ module.exports = function(app, passport) {
   });
 
   app.get('/signup', function(req, res, next) {
-    UserController2.renderSignupPage(req, res, next);
+    userController.renderCreatePage(req, res, next);
   });
 
   app.post('/signup', passport.authenticate('local-signup', {

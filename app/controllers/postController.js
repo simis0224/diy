@@ -30,9 +30,20 @@ PostController.prototype.getIdFromParamsOnViewPage = function(req) {
   return traverse(req).get(['params','id']);
 }
 
-PostController.prototype.addExtraItemData = function(item) {
+PostController.prototype.addExtraItemDataOnViewPage = function(item) {
   if(item && item.category) {
     item.categoryInLabel = traverse(CategoryEnum.getEnumByDbValue(item.category)).get(['value', 'label']);
   }
   return item;
 }
+
+PostController.prototype.addExtraPageDataOnNewPage = function(pageData) {
+  pageData.categories = CategoryEnum.enums;
+  return pageData;
+}
+
+PostController.prototype.addExtraPageDataOnEditPage = function(pageData) {
+  pageData.categories = CategoryEnum.enums;
+  return pageData;
+}
+

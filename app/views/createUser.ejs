@@ -10,8 +10,8 @@
         <div class="content">
             <form method="post" id="signupForm" action="/signup" class="signup">
                 <h2>注册</h2>
-                <input type="text" name="email" value="<% if(locals.user && locals.user.email) {%><%= user.email %><% } %>" placeholder="电子邮件" />
-                <input type="text" name="username" value="<% if(locals.user && locals.user.username) {%><%= user.username %><% } %>" placeholder="用户名"/>
+                <input type="text" name="email" value="<% if(locals.item && locals.item.email) {%><%= item.email %><% } %>" placeholder="电子邮件" />
+                <input type="text" name="itemname" value="<% if(locals.item && locals.item.username) {%><%= item.username %><% } %>" placeholder="用户名"/>
                 <input type="password" name="password" placeholder="账户密码"/>
                 <p class="error">
                     <%= message %>

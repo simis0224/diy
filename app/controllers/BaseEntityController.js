@@ -11,9 +11,8 @@ function BaseEntityController() {}
 BaseEntityController.prototype.renderViewPage = function(req, res, next) {
   var param = this.getUrlParamOnViewPage(req);
   if(!param) {
-    req.flash('message', labels.error.pageNotFound);
     res.render('view' + this.getEntityName(), {
-      message: req.flash('message'),
+      message: labels.error.pageNotFound,
       currentUser: userHelper.getCurrentUser(req)
     })
   }
@@ -32,7 +31,7 @@ BaseEntityController.prototype.renderViewPage = function(req, res, next) {
         message = util.format(labels.error.itemNotFound, that.getEntityNameLabel());
       }
 
-      item = that.addExtraItemData(item);
+      item = that.addExtraItemDataOnViewPage(item);
 
       res.render('view' + that.getEntityName(), {
         message: message,
@@ -62,8 +61,60 @@ BaseEntityController.prototype.renderListPage = function(req, res, next) {
     })
 }
 
+BaseEntityController.prototype.renderCreatePage = function(req, res, next) {
+  var pageData = {
+    currentUser: userHelper.getCurrentUser(req),
+    message: req.flash('message')
+  }
+
+  pageData = this.addExtraPageDataOnNewPage(pageData);
+
+  res.render('create' + this.getEntityName(), pageData);
+}
+
+BaseEntityController.prototype.renderEditPage = function(req, res, next) {
+  var id = this.getUrlParamOnEditPage(req)
+  if(!id) {
+    res.render('edit' + this.getEntityName(), {
+      message: labels.error.pageNotFound,
+      currentUser: userHelper.getCurrentUser(req)
+    })
+  }
+
+//  if(userHelper.getCurrentUser(req).username != username) {
+//    res.redirect('/viewUser/' + username);
+//    return;
+//  }
+
+  that = this;
+  this.getEntityModel()
+    .findOne( this.getEditPageQuery(id) )
+    .exec(function(err, item) {
+      var message = req.flash('message');
+      if (err) {
+        message = labels.error.internalError;
+        console.error(err);
+      }
+
+      if(!item) {
+        message = util.format(labels.error.itemNotFound, that.getEntityNameLabel());
+      }
+
+      var pageData = {
+        message: message,
+        item: item,
+        currentUser: userHelper.getCurrentUser(req)
+      }
+
+      pageData = that.addExtraPageDataOnEditPage(pageData);
+
+      res.render('edit' + that.getEntityName(), pageData);
+    });
+}
+
+
 BaseEntityController.prototype.getViewPageQuery = function(param) {
-  return { _id: param};
+  return { _id: param };
 }
 
 BaseEntityController.prototype.getListPageQuery = function(param) {
@@ -72,6 +123,10 @@ BaseEntityController.prototype.getListPageQuery = function(param) {
   } else {
     return {};
   }
+}
+
+BaseEntityController.prototype.getEditPageQuery = function(param) {
+  return { _id: param };
 }
 
 BaseEntityController.prototype.getUrlParamOnViewPage = function(req) {
@@ -83,8 +138,20 @@ BaseEntityController.prototype.getUrlParamOnListPage = function(req) {
   return  traverse(userHelper.getUserByUsername(username)).get(['id']);
 }
 
-BaseEntityController.prototype.addExtraItemData = function(item) {
+BaseEntityController.prototype.getUrlParamOnEditPage = function(req) {
+  return traverse(req).get(['params','id']);
+}
+
+BaseEntityController.prototype.addExtraItemDataOnViewPage = function(item) {
   return item;
+}
+
+BaseEntityController.prototype.addExtraPageDataOnNewPage = function(pageData) {
+  return pageData;
+}
+
+BaseEntityController.prototype.addExtraPageDataOnEditPage = function(pageData) {
+  return pageData;
 }
 
 /**

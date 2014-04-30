@@ -28,6 +28,14 @@ UserController.prototype.getViewPageQuery = function(param) {
   return { username: param };
 }
 
+UserController.prototype.getEditPageQuery = function(param) {
+  return { username: param };
+}
+
 UserController.prototype.getUrlParamOnViewPage = function(req) {
+  return traverse(req).get(['params','username']);
+}
+
+UserController.prototype.getUrlParamOnEditPage = function(req) {
   return traverse(req).get(['params','username']);
 }
