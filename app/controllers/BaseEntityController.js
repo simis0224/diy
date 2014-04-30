@@ -8,6 +8,30 @@ module.exports = BaseEntityController;
 
 function BaseEntityController() {}
 
+BaseEntityController.prototype.create = function(req, res, next) {
+  var itemData = {
+    createdBy: userHelper.getCurrentUser(req).id,
+    createdDate: new Date(),
+    lastModifedDate: new Date()
+  };
+
+  itemData = this.addItemDataOnCreate(req, itemData);
+
+  that = this;
+  var newItem = new this.getEntityModel()(itemData);
+  newItem.save(function(err, item) {
+    if (err) {
+      console.error(err);
+      req.flash('message', labels.error.internalError);
+      // TODO pass itemData
+      res.redirect('/edit' + that.getEntityName() + '/' + item._id);
+      return;
+    }
+    req.flash('message', util.format(labels.crud.publishSuccessful, that.getEntityNameLabel()));
+    res.redirect('/view' + that.getEntityName() + '/' + item._id);
+  });
+}
+
 BaseEntityController.prototype.delete = function(req, res, next) {
   var id = traverse(req).get(['params','id']);
 
@@ -220,6 +244,10 @@ BaseEntityController.prototype.validateAfterFindOnEditPage = function(req, res, 
   };
 }
 
+BaseEntityController.prototype.addItemDataOnCreate = function(req, item) {
+  return item;
+}
+
 /**
  * Methods below should be implemented in sub class
  */
@@ -228,4 +256,6 @@ BaseEntityController.prototype.getEntityModel = function() {}
 BaseEntityController.prototype.getEntityName = function() {}
 
 BaseEntityController.prototype.getEntityNameLabel = function() {}
+
+
 

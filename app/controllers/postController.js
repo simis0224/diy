@@ -4,7 +4,9 @@ var postLabels = require('../labels/labels').post;
 var util = require('util');
 var BaseEntityController = require('./baseEntityController');
 var CategoryEnum = require('../models/CategoryEnum');
-
+var fs = require('fs');
+var crypto = require('crypto');
+var paths = require('../constants/paths');
 
 module.exports = PostController;
 
@@ -45,5 +47,26 @@ PostController.prototype.addExtraPageDataOnNewPage = function(pageData) {
 PostController.prototype.addExtraPageDataOnEditPage = function(pageData) {
   pageData.categories = CategoryEnum.enums;
   return pageData;
+}
+
+PostController.prototype.addItemDataOnCreate = function(req, item) {
+  item.subject = traverse(req).get(['body','subject']);
+  item.category = traverse(req).get(['body', 'category']);
+  item.description = traverse(req).get(['body','description']);
+  item.pic = handleFileUpload(req);
+  return item;
+}
+
+function handleFileUpload(req) {
+  if(!req.files || !req.files.pic || !req.files.pic.name) {
+    return req.body.currentPicture || '';
+  }
+  var data = fs.readFileSync(req.files.pic.path);
+  var fileName = req.files.pic.name;
+  var uid = crypto.randomBytes(10).toString('hex');
+  var dir = paths.UPLOAD_IMAGE_DIR + uid;
+  fs.mkdirSync(dir, '0777');
+  fs.writeFileSync(dir + "/" + fileName, data);
+  return util.format(paths.UPLOAD_IMAGE_ACCESS_SRC, uid, fileName);
 }
 

@@ -22,7 +22,8 @@ var error = {
 }
 
 var crud = {
-  deleteSuccessful: '删除%s成功'
+  deleteSuccessful: '删除%s成功',
+  publishSuccessful: '发布%s成功'
 }
 
 module.exports.user = user;

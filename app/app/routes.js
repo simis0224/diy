@@ -34,7 +34,7 @@ module.exports = function(app, passport) {
     postController.renderCreatePage(req, res, next);
   });
   app.post('/createPost', isLoggedIn, function(req, res, next) {
-    PostController2.createPost(req, res, next);
+    postController.create(req, res, next);
   });
 
   app.get('/viewPost/:id', function(req, res, next) {
