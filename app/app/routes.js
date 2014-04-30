@@ -1,5 +1,4 @@
 var UserController2 = require('../controllers/UserController2');
-var PostController2 = require('../controllers/PostController2');
 var HomeController = require('../controllers/HomeController');
 var UserController = require('../controllers/userController');
 var userController = new UserController();
@@ -45,7 +44,7 @@ module.exports = function(app, passport) {
     postController.renderEditPage(req, res, next);
   });
   app.post('/editPost/:id', isLoggedIn, function(req, res, next) {
-    PostController2.updatePost(req, res, next);
+    postController.update(req, res, next);
   });
 
   app.get('/listPost/:username', function(req, res, next) {

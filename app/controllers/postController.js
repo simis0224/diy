@@ -57,6 +57,17 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
   return item;
 }
 
+PostController.prototype.addItemDataOnUpdate = function(req, item) {
+  item.subject = traverse(req).get(['body','subject']);
+  item.category = traverse(req).get(['body', 'category']);
+  item.description = traverse(req).get(['body','description']);
+  if(req.files && req.files.pic && req.files.pic.name)
+  {
+    item.pic = handleFileUpload(req);
+  }
+  return item;
+}
+
 function handleFileUpload(req) {
   if(!req.files || !req.files.pic || !req.files.pic.name) {
     return req.body.currentPicture || '';

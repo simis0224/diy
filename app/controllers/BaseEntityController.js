@@ -32,6 +32,58 @@ BaseEntityController.prototype.create = function(req, res, next) {
   });
 }
 
+BaseEntityController.prototype.update = function(req, res, next) {
+  var itemData = {
+    _id: traverse(req).get(['body','id']),
+    lastModifedDate: new Date()
+  };
+
+  itemData = this.addItemDataOnUpdate(req, itemData);
+
+  that = this;
+  this.getEntityModel()
+    .findOne( { _id: itemData._id })
+    .exec(function (err, item) {
+      if (err) {
+        console.error(err);
+        req.flash('message', labels.error.internalError);
+        res.redirect('/edit' + that.getEntityName() + '/' + itemData._id);
+        return;
+      }
+
+      if (!item) {
+        req.flash('message', util.format(labels.error.itemNotFound, that.getEntityNameLabel()));
+        res.redirect('/edit' + that.getEntityName() + '/' + itemData._id);
+        return;
+      }
+
+      if(item.createdBy !== userHelper.getCurrentUser(req).id) {
+        req.flash('message', labels.error.noPrivilege);
+        res.redirect('/view' + that.getEntityName() + '/' + itemData._id);
+        return;
+      }
+
+      item.set(itemData);
+      item.save(function (err, item) {
+        if (err) {
+          console.error(err);
+          // TODO fix validation
+          if (err.name === 'ValidationError') {
+            req.flash('message', err.errors[Object.keys(err.errors)[0]].message);
+          } else {
+            req.flash('message', labels.error.internalError);
+          }
+          res.redirect('/edit' + that.getEntityName() + '/' + itemData._id);
+          return;
+        }
+        req.flash('message', labels.post.updateSuccessful);
+        res.redirect('/view' + that.getEntityName() + '/' + itemData._id);
+      });
+    }
+  );
+}
+
+
 BaseEntityController.prototype.delete = function(req, res, next) {
   var id = traverse(req).get(['params','id']);
 
@@ -245,6 +297,10 @@ BaseEntityController.prototype.validateAfterFindOnEditPage = function(req, res, 
 }
 
 BaseEntityController.prototype.addItemDataOnCreate = function(req, item) {
+  return item;
+}
+
+BaseEntityController.prototype.addItemDataOnUpdate = function(req, item) {
   return item;
 }
 
