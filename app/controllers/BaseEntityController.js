@@ -10,7 +10,6 @@ function BaseEntityController() {}
 
 BaseEntityController.prototype.create = function(req, res, next) {
   var itemData = {
-    createdBy: userHelper.getCurrentUser(req).id,
     createdDate: new Date(),
     lastModifedDate: new Date()
   };
@@ -24,18 +23,18 @@ BaseEntityController.prototype.create = function(req, res, next) {
       console.error(err);
       req.flash('message', labels.error.internalError);
       // TODO pass itemData
-      res.redirect('/edit' + that.getEntityName() + '/' + item._id);
+      res.redirect('/edit' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
       return;
     }
     req.flash('message', util.format(labels.crud.publishSuccessful, that.getEntityNameLabel()));
-    res.redirect('/view' + that.getEntityName() + '/' + item._id);
+    res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
   });
 }
 
 BaseEntityController.prototype.update = function(req, res, next) {
   var itemData = {
     _id: traverse(req).get(['body','id']),
-    lastModifedDate: new Date()
+    lastModifiedDate: new Date()
   };
 
   itemData = this.addItemDataOnUpdate(req, itemData);
@@ -47,37 +46,43 @@ BaseEntityController.prototype.update = function(req, res, next) {
       if (err) {
         console.error(err);
         req.flash('message', labels.error.internalError);
-        res.redirect('/edit' + that.getEntityName() + '/' + itemData._id);
+        res.redirect('/edit' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
         return;
       }
 
       if (!item) {
         req.flash('message', util.format(labels.error.itemNotFound, that.getEntityNameLabel()));
-        res.redirect('/edit' + that.getEntityName() + '/' + itemData._id);
+        res.redirect('/edit' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
         return;
       }
 
-      if(item.createdBy !== userHelper.getCurrentUser(req).id) {
+      if(item.createdBy && item.createdBy !== userHelper.getCurrentUser(req).id) {
         req.flash('message', labels.error.noPrivilege);
-        res.redirect('/view' + that.getEntityName() + '/' + itemData._id);
+        res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
         return;
       }
 
       item.set(itemData);
-      item.save(function (err, item) {
+      item.save(function (err, newItem) {
         if (err) {
           console.error(err);
           // TODO fix validation
           if (err.name === 'ValidationError') {
             req.flash('message', err.errors[Object.keys(err.errors)[0]].message);
+          } else if (err.name === 'MongoError') {
+            that.handleDBErrorOnUpdate(err, req);
           } else {
             req.flash('message', labels.error.internalError);
           }
-          res.redirect('/edit' + that.getEntityName() + '/' + itemData._id);
+
+          res.redirect('/edit' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
           return;
         }
-        req.flash('message', labels.post.updateSuccessful);
-        res.redirect('/view' + that.getEntityName() + '/' + itemData._id);
+
+        that.hook_afterSaveBeforeRedirectOnUpdate(req, item);
+
+        req.flash('message', util.format(labels.crud.updateSuccessful, that.getEntityNameLabel()));
+        res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
       });
     }
   );
@@ -151,7 +156,7 @@ BaseEntityController.prototype.renderViewPage = function(req, res, next) {
         message = util.format(labels.error.itemNotFound, that.getEntityNameLabel());
       }
 
-      item = that.addExtraItemDataOnViewPage(item);
+      item = that.hook_afterFindBeforeRedirectOnViewPage(item);
 
       res.render('view' + that.getEntityName(), {
         message: message,
@@ -175,7 +180,7 @@ BaseEntityController.prototype.renderListPage = function(req, res, next) {
       }
       res.render('list' + that.getEntityName(), {
         message: message,
-        items: items,
+        items: items  ,
         currentUser: userHelper.getCurrentUser(req)
       })
     })
@@ -187,7 +192,7 @@ BaseEntityController.prototype.renderCreatePage = function(req, res, next) {
     message: req.flash('message')
   }
 
-  pageData = this.addExtraPageDataOnNewPage(pageData);
+  pageData = this.hook_afterFindBeforeRedirectOnCreatePage(pageData);
 
   res.render('create' + this.getEntityName(), pageData);
 }
@@ -203,11 +208,8 @@ BaseEntityController.prototype.renderEditPage = function(req, res, next) {
 
   var validationResult = this.validateBeforeFindOnEditPage(req, res, id);
   if(validationResult && validationResult.hasValidationError) {
-    req.flash('message', labels.error.noPrivilege);
-    res.redirect('/view' + this.getEntityName() + '/' + id);
     return;
   }
-
 
   that = this;
   this.getEntityModel()
@@ -226,7 +228,7 @@ BaseEntityController.prototype.renderEditPage = function(req, res, next) {
       var validationResult = that.validateAfterFindOnEditPage(req, res, item);
       if(validationResult && validationResult.hasValidationError) {
         req.flash('message', labels.error.noPrivilege);
-        res.redirect('/view' + that.getEntityName() + '/' + id);
+        res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
         return;
       }
 
@@ -236,7 +238,7 @@ BaseEntityController.prototype.renderEditPage = function(req, res, next) {
         currentUser: userHelper.getCurrentUser(req)
       }
 
-      pageData = that.addExtraPageDataOnEditPage(pageData);
+      pageData = that.hook_afterFindBeforeRedirectOnEditPage(pageData);
 
       res.render('edit' + that.getEntityName(), pageData);
     });
@@ -272,15 +274,17 @@ BaseEntityController.prototype.getUrlParamOnEditPage = function(req) {
   return traverse(req).get(['params','id']);
 }
 
-BaseEntityController.prototype.addExtraItemDataOnViewPage = function(item) {
+BaseEntityController.prototype.hook_afterSaveBeforeRedirectOnUpdate = function(req, item) {}
+
+BaseEntityController.prototype.hook_afterFindBeforeRedirectOnViewPage = function(item) {
   return item;
 }
 
-BaseEntityController.prototype.addExtraPageDataOnNewPage = function(pageData) {
+BaseEntityController.prototype.hook_afterFindBeforeRedirectOnCreatePage = function(pageData) {
   return pageData;
 }
 
-BaseEntityController.prototype.addExtraPageDataOnEditPage = function(pageData) {
+BaseEntityController.prototype.hook_afterFindBeforeRedirectOnEditPage = function(pageData) {
   return pageData;
 }
 
@@ -292,7 +296,7 @@ BaseEntityController.prototype.validateBeforeFindOnEditPage = function(req, res,
 
 BaseEntityController.prototype.validateAfterFindOnEditPage = function(req, res, item) {
   return {
-    hasValidationError: item.createdBy !== userHelper.getCurrentUser(req).id
+    hasValidationError: item.createdBy && item.createdBy !== userHelper.getCurrentUser(req).id
   };
 }
 
@@ -304,6 +308,10 @@ BaseEntityController.prototype.addItemDataOnUpdate = function(req, item) {
   return item;
 }
 
+BaseEntityController.prototype.getRedirectUrlParam = function(item) {
+  return item._id;
+}
+
 /**
  * Methods below should be implemented in sub class
  */
@@ -312,6 +320,10 @@ BaseEntityController.prototype.getEntityModel = function() {}
 BaseEntityController.prototype.getEntityName = function() {}
 
 BaseEntityController.prototype.getEntityNameLabel = function() {}
+
+BaseEntityController.prototype.handleDBErrorOnUpdate = function(err, req) {
+  req.flash('message', labels.error.internalError);
+}
 
 
 

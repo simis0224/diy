@@ -32,19 +32,19 @@ PostController.prototype.getIdFromParamsOnViewPage = function(req) {
   return traverse(req).get(['params','id']);
 }
 
-PostController.prototype.addExtraItemDataOnViewPage = function(item) {
+PostController.prototype.hook_afterFindBeforeRedirectOnViewPage = function(item) {
   if(item && item.category) {
     item.categoryInLabel = traverse(CategoryEnum.getEnumByDbValue(item.category)).get(['value', 'label']);
   }
   return item;
 }
 
-PostController.prototype.addExtraPageDataOnNewPage = function(pageData) {
+PostController.prototype.hook_afterFindBeforeRedirectOnCreatePage = function(pageData) {
   pageData.categories = CategoryEnum.enums;
   return pageData;
 }
 
-PostController.prototype.addExtraPageDataOnEditPage = function(pageData) {
+PostController.prototype.hook_afterFindBeforeRedirectOnEditPage = function(pageData) {
   pageData.categories = CategoryEnum.enums;
   return pageData;
 }

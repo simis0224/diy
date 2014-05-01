@@ -68,10 +68,10 @@ var updateUserInfoCache = function(user) {
     username: user.username
   };
   idToUserCache.set(newUser.id, newUser);
-  usernameToUserCache.set(newUser.username, newUser);
   if(oldUser) {
     usernameToUserCache.del(oldUser.username);
   }
+  usernameToUserCache.set(newUser.username, newUser);
   assert.equal(idToUserCache.stats.keys, usernameToUserCache.stats.keys,
     'Error: idToUsercache and usernameToUsercache have different size!');
 }

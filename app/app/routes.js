@@ -19,7 +19,7 @@ module.exports = function(app, passport) {
     userController.renderEditPage(req, res, next);
   });
   app.post('/editUser/:username', isLoggedIn, function(req, res, next) {
-    UserController2.updateUser(req, res, next);
+    userController.update(req, res, next);
   });
 
   app.get('/viewUser/:username', function(req, res, next) {

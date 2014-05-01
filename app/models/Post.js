@@ -8,7 +8,7 @@ var postSchema = mongoose.Schema({
   category: Number,
   createdBy: String,
   createdDate: Date,
-  lastModifedDate: Date
+  lastModifiedDate: Date
 });
 
 var Post = mongoose.model('Post', postSchema);
