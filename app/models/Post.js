@@ -4,7 +4,7 @@ var mongoose = global.mongoose;
 var postSchema = mongoose.Schema({
   subject: String,
   description: String,
-  pic: String,
+  postImage: String,
   category: Number,
   createdBy: String,
   createdDate: Date,

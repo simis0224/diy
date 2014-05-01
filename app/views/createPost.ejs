@@ -15,7 +15,7 @@
                         <option value="<%= categories[i].value.dbValue %>"><%= categories[i].value.label %></option>
                     <% } %>
                 </select><br>
-                <input type="file" name="pic" value="<% if(locals.item) { %><%= item.pic %><% } %>" aria-label="主图"/><br>
+                <input type="file" name="postImage" value="<% if(locals.item) { %><%= item.postImage %><% } %>" aria-label="主图"/><br>
                 <textarea name="description" placeholder="简述" rows="4" cols="50" ><% if(locals.item) { %><%= item.description %><% } %></textarea><br>
                 <button type="submit" name="update">发布</button><br>
             </form>

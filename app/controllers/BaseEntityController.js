@@ -10,6 +10,7 @@ function BaseEntityController() {}
 
 BaseEntityController.prototype.create = function(req, res, next) {
   var itemData = {
+    createdBy: userHelper.getCurrentUser(req).id,
     createdDate: new Date(),
     lastModifedDate: new Date()
   };
@@ -27,7 +28,7 @@ BaseEntityController.prototype.create = function(req, res, next) {
       return;
     }
     req.flash('message', util.format(labels.crud.publishSuccessful, that.getEntityNameLabel()));
-    res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
+    res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
   });
 }
 
