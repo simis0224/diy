@@ -3,6 +3,13 @@
     <head>
         <title>发布作品</title>
         <link rel='stylesheet' href='/stylesheets/main.css' />
+        <script src="/javascripts/postPage.js"></script>
+        <script src="/javascriptLibraries/jquery-2.1.0.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                onReady();
+            });
+        </script>
     </head>
     <body>
         <% include header %>
@@ -17,6 +24,24 @@
                 </select><br>
                 <input type="file" name="postImage" value="<% if(locals.item) { %><%= item.postImage %><% } %>" aria-label="主图"/><br>
                 <textarea name="description" placeholder="简述" rows="4" cols="50" ><% if(locals.item) { %><%= item.description %><% } %></textarea><br>
+                原料：<br>
+                <div class="materialList">
+                    <div class="material">
+                        <input type="text" name="materialName_0" value="" placeholder="名称"/>
+                        <input type="text" name="materialQuantity_0" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="materialCancel_0">x</a>
+                    </div>
+                    <div class="material">
+                        <input type="text" name="materialName_1" value="" placeholder="名称"/>
+                        <input type="text" name="materialQuantity_1" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="materialCancel_1">x</a>
+                    </div>
+                    <div class="material">
+                        <input type="text" name="materialName_2" value="" placeholder="名称"/>
+                        <input type="text" name="materialQuantity_2" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="materialCancel_2">x</a>
+                    </div>
+                </div>
                 <button type="submit" name="update">发布</button><br>
             </form>
         </div>
