@@ -1,4 +1,3 @@
-var UserController2 = require('../controllers/UserController2');
 var HomeController = require('../controllers/HomeController');
 var UserController = require('../controllers/userController');
 var userController = new UserController();
@@ -12,7 +11,7 @@ module.exports = function(app, passport) {
   });
 
   app.get('/login', function(req, res, next) {
-    UserController2.renderLoginPage(req, res, next);
+    userController.renderLoginPage(req, res, next);
   });
 
   app.get('/editUser/:username', isLoggedIn, function(req, res, next) {
@@ -76,7 +75,7 @@ module.exports = function(app, passport) {
   }));
 
   app.get('/logout', function(req, res) {
-    UserController2.logout(req, res);
+    userController.logout(req, res);
   });
 }
 

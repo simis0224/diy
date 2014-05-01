@@ -94,6 +94,18 @@ UserController.prototype.addItemDataOnUpdate = function(req, itemData) {
   return itemData;
 }
 
+UserController.prototype.logout = function(req, res, next) {
+  userHelper.deleteUserInSession(req);
+  req.logout();
+  res.redirect('/');
+}
+
+UserController.prototype.renderLoginPage = function(req, res, next) {
+  res.render('login', {
+    message: req.flash('message')
+  });
+}
+
 function getIdFromUrlParam(req) {
   var username = traverse(req).get(['params','username']);
   var user = userHelper.getUserByUsername(username);
