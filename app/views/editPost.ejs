@@ -3,6 +3,13 @@
     <head>
         <title>发布作品</title>
         <link rel='stylesheet' href='/stylesheets/main.css' />
+        <script src="/javascripts/postPage.js"></script>
+        <script src="/javascriptLibraries/jquery-2.1.0.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                onReady();
+            });
+        </script>
     </head>
     <body>
         <% include header %>
@@ -24,6 +31,36 @@
                     <img src="<%= item.postImage%>"/>
                     <input type="file" name="pic" value="<%= item.pic %>" aria-label="主图"/><br>
                     <textarea name="description" placeholder="简述" rows="4" cols="50"><%= item.description %></textarea><br>
+                    原料：<br>
+                    <div class="materialList">
+                        <% for(var i = 0; item.materials && i < item.materials.length; i++) {%>
+                        <div class="material">
+                            <input type="text" name="materialName_<%= i %>" value="<%= item.materials[i].name%>" placeholder="名称"/>
+                            <input type="text" name="materialQuantity_<%= i %>" value="<%= item.materials[i].quantity%>" placeholder="数量"/>
+                            <a href="javascript:void(0)" name="materialCancel_<%= i %>">x</a>
+                        </div>
+                        <% } %>
+                        <div class="material">
+                            <input type="text" name="materialName_<%= item.materials.length %>" value="" placeholder="名称"/>
+                            <input type="text" name="materialQuantity_<%= item.materials.length %>" value="" placeholder="数量"/>
+                            <a href="javascript:void(0)" name="materialCancel_<%= item.materials.length %>">x</a>
+                        </div>
+                    </div>
+                    工具：<br>
+                    <div class="toolList">
+                        <% for(var i = 0; item.tools && i < item.tools.length; i++) {%>
+                        <div class="tool">
+                            <input type="text" name="toolName_<%= i %>" value="<%= item.tools[i].name%>" placeholder="名称"/>
+                            <input type="text" name="toolQuantity_<%= i %>" value="<%= item.tools[i].quantity%>" placeholder="数量"/>
+                            <a href="javascript:void(0)" name="toolCancel_<%= i %>">x</a>
+                        </div>
+                        <% } %>
+                        <div class="tool">
+                            <input type="text" name="toolName_<%= item.tools.length %>" value="" placeholder="名称"/>
+                            <input type="text" name="toolQuantity_<%= item.tools.length %>" value="" placeholder="数量"/>
+                            <a href="javascript:void(0)" name="toolCancel_<%= item.tools.length %>">x</a>
+                        </div>
+                    </div>
                     <input type="hidden" name="id" value="<%= item._id %>"/>
                     <button type="submit" name="update">发布</button><br>
                 </form>

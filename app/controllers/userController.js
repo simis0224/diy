@@ -61,16 +61,6 @@ UserController.prototype.validateAfterFindOnEditPage = function(req, res, userna
   }
 }
 
-UserController.prototype.hook_addItemDataOnUpdate = function(req, item) {
-  item.email = traverse(req).get(['body','email']),
-  item.username = traverse(req).get(['body','username'])
-  var password = traverse(req).get(['body','password']);
-  if(password) {
-    item.password = User.generateHash(password);
-  }
-  return item;
-}
-
 UserController.prototype.getRedirectUrlParam = function(item) {
   return item.username;
 }

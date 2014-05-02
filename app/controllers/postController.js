@@ -92,6 +92,33 @@ PostController.prototype.addItemDataOnUpdate = function(req, item) {
   {
     item.postImage = handleFileUpload(req);
   }
+  item.materials = [];
+  item.tools = [];
+
+  Object.keys(req.body).forEach(function(key) {
+    if(MATERIAL_NAME_REGEX.exec(key)) {
+      var index = getParamIndex(key);
+      var materialName = traverse(req).get(['body','materialName_' + index]);
+      var materialQuantity = traverse(req).get(['body','materialQuantity_' + index]);
+      if(materialName) {
+        item.materials.push({
+          name: materialName,
+          quantity: materialQuantity
+        });
+      }
+
+      var toolName = traverse(req).get(['body','toolName_' + index]);
+      var toolQuantity = traverse(req).get(['body','toolQuantity_' + index]);
+      if(toolName) {
+        item.tools.push({
+          name: toolName,
+          quantity: toolQuantity
+        });
+      }
+    }
+  });
+
+
   return item;
 }
 
