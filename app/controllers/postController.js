@@ -7,6 +7,7 @@ var CategoryEnum = require('../models/CategoryEnum');
 var fs = require('fs');
 var crypto = require('crypto');
 var paths = require('../constants/paths');
+const MATERIAL_NAME_REGEX = /materialName*/;
 
 module.exports = PostController;
 
@@ -54,6 +55,22 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
   item.category = traverse(req).get(['body', 'category']);
   item.description = traverse(req).get(['body','description']);
   item.postImage = handleFileUpload(req);
+  item.materials = [];
+
+  Object.keys(req.body).forEach(function(key) {
+      if(MATERIAL_NAME_REGEX.exec(key)) {
+        var index = getParamIndex(key);
+        var materialName = traverse(req).get(['body','materialName_' + index]);
+        var materialQuantity = traverse(req).get(['body','materialQuantity_' + index]);
+        if(materialName) {
+          item.materials.push({
+            name: materialName,
+            quantity: materialQuantity
+          });
+        }
+      }
+    });
+
   return item;
 }
 
@@ -79,5 +96,9 @@ function handleFileUpload(req) {
   fs.mkdirSync(dir, '0777');
   fs.writeFileSync(dir + "/" + fileName, data);
   return util.format(paths.UPLOAD_IMAGE_ACCESS_SRC, uid, fileName);
+}
+
+function getParamIndex(paramName) {
+  return paramName.split('_')[1];
 }
 
