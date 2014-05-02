@@ -19,6 +19,26 @@
                 分类：<%= item.categoryInLabel %><br>
                 主图：<img src="<%= item.postImage %>"/><br>
                 描述：<%= item.description %><br>
+                原料：<br>
+                <div class="materialList">
+                    <% for(var i = 0; item.materials && i < item.materials.length; i++) {%>
+                    <ul>
+                        <li class="material">
+                            <%= item.materials[i].name%><%= item.materials[i].quantity%>
+                        </li>
+                    </ul>
+                    <% } %>
+                </div>
+                工具：<br>
+                <div class="toolList">
+                    <% for(var i = 0; item.tools && i < item.tools.length; i++) {%>
+                    <ul>
+                        <li class="tool">
+                            <%= item.tools[i].name%><%= item.tools[i].quantity%>
+                        </li>
+                    </ul>
+                    <% } %>
+                </div>
             <% } %>
                 <p><%= message %><p>
         </div>
