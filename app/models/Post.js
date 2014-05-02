@@ -7,6 +7,7 @@ var postSchema = mongoose.Schema({
   postImage: String,
   category: Number,
   materials: [{ name: String, quantity: String}],
+  tools: [{ name: String, quantity: String}],
   createdBy: String,
   createdDate: Date,
   lastModifiedDate: Date

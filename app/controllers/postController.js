@@ -56,6 +56,7 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
   item.description = traverse(req).get(['body','description']);
   item.postImage = handleFileUpload(req);
   item.materials = [];
+  item.tools = [];
 
   Object.keys(req.body).forEach(function(key) {
       if(MATERIAL_NAME_REGEX.exec(key)) {
@@ -66,6 +67,15 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
           item.materials.push({
             name: materialName,
             quantity: materialQuantity
+          });
+        }
+
+        var toolName = traverse(req).get(['body','toolName_' + index]);
+        var toolQuantity = traverse(req).get(['body','toolQuantity_' + index]);
+        if(toolName) {
+          item.tools.push({
+            name: toolName,
+            quantity: toolQuantity
           });
         }
       }

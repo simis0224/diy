@@ -1,18 +1,19 @@
 const MATERIAL_LIST_CLASS = '.materialList';
-const MATERIAL_NAME_INPUT_PREFIX = 'materialName_';
-const MATERIAL_QUANTITY_INPUT_PREFIX = 'materialQuantity_';
-const MATERIAL_QUANTITY_CANCEL_PREFIX = 'materialCancel_';
+const TOOL_LIST_CLASS = '.toolList';
+const MATERIAL_PREFIX = 'material';
+const TOOL_PREFIX = 'tool';
 
 
 function onReady() {
-  bindFocusEventOnLastInput(MATERIAL_LIST_CLASS);
+  bindFocusEventOnLastInput(MATERIAL_LIST_CLASS, MATERIAL_PREFIX);
+  bindFocusEventOnLastInput(TOOL_LIST_CLASS, TOOL_PREFIX);
 }
 
-function bindFocusEventOnLastInput(parent) {
+function bindFocusEventOnLastInput(parent, prefix) {
   $(parent).children().each(function(index, child) {
     $(parent).children().eq(index).children().eq(0).focus(function() {
       if(isLastChild(parent, $(this))) {
-        appendChild(parent);
+        appendChild(parent, prefix);
       }
     });
 
@@ -28,20 +29,20 @@ function isLastChild(parent, child) {
   return lastChildName ===  currentElementName;
 }
 
-function appendChild(parent) {
+function appendChild(parent, prefix) {
   var lastChild = $(parent + ' div:last-child');
   var newChild = lastChild.clone();
   var newIndex =  parseInt(lastChild.children().eq(0).attr('name').split('_')[1]) + 1;
   var nameInput = newChild.children().eq(0);
-  nameInput.attr('name', MATERIAL_NAME_INPUT_PREFIX + newIndex);
+  nameInput.attr('name', prefix + 'Name_' + newIndex);
   nameInput.focus(function() {
     if(isLastChild(parent, $(this))) {
       appendChild(parent);
     }
   })
-  newChild.children().eq(1).attr('name', MATERIAL_QUANTITY_INPUT_PREFIX + newIndex);
+  newChild.children().eq(1).attr('name', prefix + 'Quantity_' + newIndex);
   var cancelElement = newChild.children().eq(2);
-  cancelElement.eq(2).attr('name', MATERIAL_QUANTITY_CANCEL_PREFIX + newIndex);
+  cancelElement.eq(2).attr('name', prefix + 'Cancel_' + newIndex);
   cancelElement.click(function() {
     cancelElement.parent().remove();
   })
