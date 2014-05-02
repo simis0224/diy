@@ -23,41 +23,59 @@
                     <% } %>
                 </select><br>
                 <input type="file" name="postImage" value="<% if(locals.item) { %><%= item.postImage %><% } %>" aria-label="主图"/><br>
-                <textarea name="description" placeholder="简述" rows="4" cols="50" ><% if(locals.item) { %><%= item.description %><% } %></textarea><br>
+                <textarea name="summary" placeholder="简述" rows="4" cols="50" ><% if(locals.item) { %><%= item.summary %><% } %></textarea><br>
                 原料：<br>
                 <div class="materialList">
                     <div class="material">
-                        <input type="text" name="materialName_0" value="" placeholder="名称"/>
-                        <input type="text" name="materialQuantity_0" value="" placeholder="数量"/>
-                        <a href="javascript:void(0)" name="materialCancel_0">x</a>
+                        <input type="text" name="materials_name_0" value="" placeholder="名称"/>
+                        <input type="text" name="materials_quantity_0" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="material_cancel_0">x</a>
                     </div>
                     <div class="material">
-                        <input type="text" name="materialName_1" value="" placeholder="名称"/>
-                        <input type="text" name="materialQuantity_1" value="" placeholder="数量"/>
-                        <a href="javascript:void(0)" name="materialCancel_1">x</a>
+                        <input type="text" name="materials_name_1" value="" placeholder="名称"/>
+                        <input type="text" name="materials_quantity_1" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="materials_cancel_1">x</a>
                     </div>
                     <div class="material">
-                        <input type="text" name="materialName_2" value="" placeholder="名称"/>
-                        <input type="text" name="materialQuantity_2" value="" placeholder="数量"/>
-                        <a href="javascript:void(0)" name="materialCancel_2">x</a>
+                        <input type="text" name="materials_name_2" value="" placeholder="名称"/>
+                        <input type="text" name="materials_quantity_2" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="materials_cancel_2">x</a>
                     </div>
                 </div>
                 工具：<br>
                 <div class="toolList">
                     <div class="tool">
-                        <input type="text" name="toolName_0" value="" placeholder="名称"/>
-                        <input type="text" name="toolQuantity_0" value="" placeholder="数量"/>
-                        <a href="javascript:void(0)" name="toolCancel_0">x</a>
+                        <input type="text" name="tools_name_0" value="" placeholder="名称"/>
+                        <input type="text" name="tools_quantity_0" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="tools_cancel_0">x</a>
                     </div>
                     <div class="tool">
-                        <input type="text" name="toolName_1" value="" placeholder="名称"/>
-                        <input type="text" name="toolQuantity_1" value="" placeholder="数量"/>
-                        <a href="javascript:void(0)" name="toolCancel_1">x</a>
+                        <input type="text" name="tools_name_1" value="" placeholder="名称"/>
+                        <input type="text" name="tools_quantity_1" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="tools_cancel_1">x</a>
                     </div>
                     <div class="tool">
-                        <input type="text" name="toolName_2" value="" placeholder="名称"/>
-                        <input type="text" name="toolQuantity_2" value="" placeholder="数量"/>
-                        <a href="javascript:void(0)" name="toolCancel_2">x</a>
+                        <input type="text" name="tools_name_2" value="" placeholder="名称"/>
+                        <input type="text" name="tools_quantity_2" value="" placeholder="数量"/>
+                        <a href="javascript:void(0)" name="tools_cancel_2">x</a>
+                    </div>
+                </div>
+                制作步骤：<br>
+                <div class="stepList">
+                    <div class="step">
+                        <input type="file" name="steps_image_0" value="" aria-label="步骤图"/>
+                        <textarea name="steps_summary_0" placeholder="步骤简述" rows="4" cols="50" ></textarea>
+                        <a href="javascript:void(0)" name="steps_cancel_0">x</a>
+                    </div>
+                    <div class="step">
+                        <input type="file" name="steps_image_1" value="" aria-label="步骤图"/>
+                        <textarea name="steps_summary_1" placeholder="步骤简述" rows="4" cols="50" ></textarea>
+                        <a href="javascript:void(0)" name="steps_cancel_1">x</a>
+                    </div>
+                    <div class="step">
+                        <input type="file" name="steps_image_2" value="" aria-label="步骤图"/>
+                        <textarea name="steps_summary_2" placeholder="步骤简述" rows="4" cols="50" ></textarea>
+                        <a href="javascript:void(0)" name="steps_cancel_2">x</a>
                     </div>
                 </div>
                 <button type="submit" name="update">发布</button><br>

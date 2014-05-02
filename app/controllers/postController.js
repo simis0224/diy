@@ -7,7 +7,7 @@ var CategoryEnum = require('../models/CategoryEnum');
 var fs = require('fs');
 var crypto = require('crypto');
 var paths = require('../constants/paths');
-const MATERIAL_NAME_REGEX = /materialName*/;
+const MATERIAL_NAME_REGEX = /materials_name*/;
 
 module.exports = PostController;
 
@@ -53,7 +53,7 @@ PostController.prototype.hook_afterFindBeforeRedirectOnEditPage = function(pageD
 PostController.prototype.addItemDataOnCreate = function(req, item) {
   item.subject = traverse(req).get(['body','subject']);
   item.category = traverse(req).get(['body', 'category']);
-  item.description = traverse(req).get(['body','description']);
+  item.summary = traverse(req).get(['body','summary']);
   item.postImage = handleFileUpload(req);
   item.materials = [];
   item.tools = [];
@@ -61,8 +61,8 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
   Object.keys(req.body).forEach(function(key) {
       if(MATERIAL_NAME_REGEX.exec(key)) {
         var index = getParamIndex(key);
-        var materialName = traverse(req).get(['body','materialName_' + index]);
-        var materialQuantity = traverse(req).get(['body','materialQuantity_' + index]);
+        var materialName = traverse(req).get(['body','materials_name_' + index]);
+        var materialQuantity = traverse(req).get(['body','materials_quantity_' + index]);
         if(materialName) {
           item.materials.push({
             name: materialName,
@@ -70,8 +70,8 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
           });
         }
 
-        var toolName = traverse(req).get(['body','toolName_' + index]);
-        var toolQuantity = traverse(req).get(['body','toolQuantity_' + index]);
+        var toolName = traverse(req).get(['body','tools_name_' + index]);
+        var toolQuantity = traverse(req).get(['body','tools_quantity_' + index]);
         if(toolName) {
           item.tools.push({
             name: toolName,
@@ -87,7 +87,7 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
 PostController.prototype.addItemDataOnUpdate = function(req, item) {
   item.subject = traverse(req).get(['body','subject']);
   item.category = traverse(req).get(['body', 'category']);
-  item.description = traverse(req).get(['body','description']);
+  item.summary = traverse(req).get(['body','summary']);
   if(req.files && req.files.postImage && req.files.postImage.name)
   {
     item.postImage = handleFileUpload(req);
@@ -98,8 +98,8 @@ PostController.prototype.addItemDataOnUpdate = function(req, item) {
   Object.keys(req.body).forEach(function(key) {
     if(MATERIAL_NAME_REGEX.exec(key)) {
       var index = getParamIndex(key);
-      var materialName = traverse(req).get(['body','materialName_' + index]);
-      var materialQuantity = traverse(req).get(['body','materialQuantity_' + index]);
+      var materialName = traverse(req).get(['body','materials_name_' + index]);
+      var materialQuantity = traverse(req).get(['body','materials_quantity_' + index]);
       if(materialName) {
         item.materials.push({
           name: materialName,
@@ -107,8 +107,8 @@ PostController.prototype.addItemDataOnUpdate = function(req, item) {
         });
       }
 
-      var toolName = traverse(req).get(['body','toolName_' + index]);
-      var toolQuantity = traverse(req).get(['body','toolQuantity_' + index]);
+      var toolName = traverse(req).get(['body','tools_name_' + index]);
+      var toolQuantity = traverse(req).get(['body','tools_quantity_' + index]);
       if(toolName) {
         item.tools.push({
           name: toolName,
@@ -136,6 +136,6 @@ function handleFileUpload(req) {
 }
 
 function getParamIndex(paramName) {
-  return paramName.split('_')[1];
+  return paramName.split('_')[2];
 }
 

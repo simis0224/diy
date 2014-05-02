@@ -1,7 +1,7 @@
 const MATERIAL_LIST_CLASS = '.materialList';
 const TOOL_LIST_CLASS = '.toolList';
-const MATERIAL_PREFIX = 'material';
-const TOOL_PREFIX = 'tool';
+const MATERIAL_PREFIX = 'materials';
+const TOOL_PREFIX = 'tools';
 
 
 function onReady() {
@@ -32,17 +32,17 @@ function isLastChild(parent, child) {
 function appendChild(parent, prefix) {
   var lastChild = $(parent + ' div:last-child');
   var newChild = lastChild.clone();
-  var newIndex =  parseInt(lastChild.children().eq(0).attr('name').split('_')[1]) + 1;
+  var newIndex =  parseInt(lastChild.children().eq(0).attr('name').split('_')[2]) + 1;
   var nameInput = newChild.children().eq(0);
-  nameInput.attr('name', prefix + 'Name_' + newIndex);
+  nameInput.attr('name', prefix + '_name_' + newIndex);
   nameInput.focus(function() {
     if(isLastChild(parent, $(this))) {
       appendChild(parent);
     }
   })
-  newChild.children().eq(1).attr('name', prefix + 'Quantity_' + newIndex);
+  newChild.children().eq(1).attr('name', prefix + '_quantity_' + newIndex);
   var cancelElement = newChild.children().eq(2);
-  cancelElement.eq(2).attr('name', prefix + 'Cancel_' + newIndex);
+  cancelElement.eq(2).attr('name', prefix + '_cancel_' + newIndex);
   cancelElement.click(function() {
     cancelElement.parent().remove();
   })
