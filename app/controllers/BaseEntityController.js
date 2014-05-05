@@ -3,10 +3,119 @@ var User = require('../models/User');
 var userHelper = require('../helpers/userHelper.js');
 var labels = require('../labels/labels');
 var util = require('util');
+var _ = require('lodash');
 
 module.exports = BaseEntityController;
 
 function BaseEntityController() {}
+
+BaseEntityController.prototype.findOne = function(req, res) {
+  var id = traverse(req).get(['params','id']);
+
+  if(!id) {
+    res.json({
+      hasError: true,
+      message: labels.error.internalError
+    });
+    return;
+  }
+
+  this.getEntityModel()
+    .findOne( { _id: id })
+    .exec(function(err, item) {
+      if(err) {
+        console.error(err);
+        res.json({
+          hasError: true,
+          message: labels.error.internalError
+        });
+        return;
+      }
+
+      if(!item) {
+        res.json({
+          hasError: true,
+          message: labels.post.postNotFound
+        });
+        return;
+      }
+
+      retItem = item.toObject();
+      if(item.createdBy) {
+        retItem.createdBy = userHelper.getUserById(item.createdBy);
+      }
+
+      res.json({
+        item: retItem
+      });
+    });
+}
+
+BaseEntityController.prototype.find = function(req, res) {
+  var userId = traverse(req).get(['query','userId']);
+
+  var query = {};
+  if(userId) {
+    query = {
+      createdBy: userId
+    };
+    return;
+  }
+
+  this.getEntityModel()
+    .find(query)
+    .exec(function(err, items) {
+      if(err) {
+        console.error(err);
+        res.json({
+          hasError: true,
+          message: labels.error.internalError
+        });
+        return;
+      }
+
+      var retItems = [];
+      _.forEach(items, function(item) {
+        var retItem = item.toObject();
+        if(item.createdBy) {
+          retItem.createdBy = userHelper.getUserById(item.createdBy);
+        }
+        retItems.push(retItem);
+      });
+
+      res.json({
+        items: retItems
+      });
+    });
+}
+
+BaseEntityController.prototype.apiCreate = function(req, res, next) {
+  var itemData = {
+    createdBy: userHelper.getCurrentUser(req).id,
+    createdDate: new Date(),
+    lastModifedDate: new Date()
+  };
+
+  itemData = this.addItemDataOnCreate(req, itemData);
+
+  that = this;
+  var newItem = new this.getEntityModel()(itemData);
+  newItem.save(function(err, item) {
+    if (err) {
+      console.error(err);
+      res.json({
+        hasError: true,
+        errorMessage: labels.error.internalError,
+        item: item
+      });
+      return;
+    }
+    res.json({
+      message: util.format(labels.crud.publishSuccessful, that.getEntityNameLabel()),
+      item: item
+    });
+  });
+}
 
 BaseEntityController.prototype.create = function(req, res, next) {
   var itemData = {
@@ -244,7 +353,6 @@ BaseEntityController.prototype.renderEditPage = function(req, res, next) {
       res.render('edit' + that.getEntityName(), pageData);
     });
 }
-
 
 BaseEntityController.prototype.getViewPageQuery = function(param) {
   return { _id: param };

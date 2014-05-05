@@ -3,15 +3,46 @@ var UserController = require('../controllers/userController');
 var userController = new UserController();
 var PostController = require('../controllers/postController');
 var postController = new PostController();
+var userHelper = require('../helpers/userHelper.js');
 
 module.exports = function(app, passport) {
 
-  app.get('/', function(req, res, next) {
-    HomeController.renderHomePage(req, res, next);
+  app.get('/api/loggedInUser', function(req, res) {
+    res.send(req.isAuthenticated() ? userHelper.getCurrentUser(req) : '0');
   });
 
   app.get('/login', function(req, res, next) {
     userController.renderLoginPage(req, res, next);
+  });
+
+  app.post('/login', passport.authenticate('local-login', {
+    successRedirect : '/',
+    failureRedirect : '/login',
+    failureFlash : true
+  }));
+
+  app.get('/logout', function(req, res) {
+    userController.logout(req, res);
+  });
+
+  app.get('/api/post/:id', function(req, res) {
+    postController.findOne(req, res);
+  });
+
+  app.get('/api/posts', function(req, res) {
+    postController.find(req, res);
+  });
+
+  app.post('/api/createPost', isLoggedIn, function(req, res, next) {
+    postController.apiCreate(req, res, next);
+  });
+
+  app.get('*', function(req, res) {
+    res.sendfile('./public/components/viewPost.html');
+  });
+
+  app.get('/', function(req, res, next) {
+    HomeController.renderHomePage(req, res, next);
   });
 
   app.get('/editUser/:username', isLoggedIn, function(req, res, next) {
@@ -35,9 +66,9 @@ module.exports = function(app, passport) {
     postController.create(req, res, next);
   });
 
-  app.get('/viewPost/:id', function(req, res, next) {
-    postController.renderViewPage(req, res, next);
-  });
+//  app.get('/viewPost/:id', function(req, res, next) {
+//    postController.renderViewPage(req, res, next);
+//  });
 
   app.get('/editPost/:id', isLoggedIn, function(req, res, next) {
     postController.renderEditPage(req, res, next);
@@ -67,16 +98,6 @@ module.exports = function(app, passport) {
     failureRedirect : '/signup',
     failureFlash : true
   }));
-
-  app.post('/login', passport.authenticate('local-login', {
-    successRedirect : '/',
-    failureRedirect : '/login',
-    failureFlash : true
-  }));
-
-  app.get('/logout', function(req, res) {
-    userController.logout(req, res);
-  });
 }
 
 function isLoggedIn(req, res, next) {

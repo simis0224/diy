@@ -1,0 +1,10 @@
+<div class="content" ng-controller="postCreateController">
+    <p class="error">{{ errorMessage }}</p>
+    <p>{{ message }}</p>
+    <form enctype="multipart/form-data">
+        <input type="text" name="subject" value="" placeholder="作品名称"/><br>
+        <input type="file" name="pic" value="" aria-label="主图"/><br>
+        <textarea name="summary" placeholder="简述" rows="4" cols="50" ></textarea><br>
+        <button type="submit" name="update" ng-click="createPost()">发布</button><br>
+    </form>
+</div>

@@ -47,7 +47,15 @@ var getCurrentUser = function(req) {
 
 var getUserById = function(id) {
   if (id) {
-    return traverse(idToUserCache.get(id)).get([id]);
+    var user = traverse(idToUserCache.get(id)).get([id]);
+    if (user) {
+      return {
+        id: user.id,
+        username: user.username
+      }
+    } else {
+      return null;
+    }
   } else {
     return null;
   }
@@ -55,7 +63,15 @@ var getUserById = function(id) {
 
 var getUserByUsername = function(username) {
   if (username) {
-    return traverse(usernameToUserCache.get(username)).get([username]);
+    var user = traverse(usernameToUserCache.get(username)).get([username]);
+    if (user) {
+      return {
+        id: user.id,
+        username: user.username
+      }
+    } else {
+      return null;
+    }
   } else {
     return null;
   }
