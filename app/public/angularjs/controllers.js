@@ -11,8 +11,6 @@ function postListController($scope, $http, $routeParams, cssInjector) {
 }
 
 function postCreateController($scope, $http, $routeParams) {
-  $scope.formData = {};
-
   $scope.createPost = function () {
     $http.post('/api/createPost', $scope.formData)
       .success(function (res) {
@@ -25,15 +23,19 @@ function postCreateController($scope, $http, $routeParams) {
   }
 }
 
+function postDeleteController($scope, $http, $routeParams) {
+  var id = $routeParams.id;
+
+}
+
 
 function postDetailController($scope, $http, $routeParams) {
-  $scope.formData = {};
-
   var id = $routeParams.id;
   // when landing on the page, get all todos and show them
   $http.get('/api/post/' + id)
     .success(function(res) {
       $scope.item = res.item;
+      $scope.message = res.message;
     })
     .error(function(data) {
       console.log('Error: ' + data);
@@ -48,31 +50,19 @@ function postDetailController($scope, $http, $routeParams) {
       .error(function(data) {
         console.log('Error: ' + data);
       });
-    }
+    };
 
-//  // when submitting the add form, send the text to the node API
-//  $scope.createTodo = function() {
-//    $http.post('/api/todos', $scope.formData)
-//      .success(function(data) {
-//        $scope.formData = {}; // clear the form so our user is ready to enter another
-//        $scope.todos = data;
-//        console.log(data);
-//      })
-//      .error(function(data) {
-//        console.log('Error: ' + data);
-//      });
-//  };
-//
-//  // delete a todo after checking it
-//  $scope.deleteTodo = function(id) {
-//    $http.delete('/api/todos/' + id)
-//      .success(function(data) {
-//        $scope.todos = data;
-//        console.log(data);
-//      })
-//      .error(function(data) {
-//        console.log('Error: ' + data);
-//      });
-//  };
-
+    $scope.deletePost = function () {
+      $http.delete('/api/post/' + id)
+        .success(function (res) {
+          if(!res.hasError) {
+            $scope.item = null;
+          }
+          $scope.message = res.message;
+          console.log(res.message);
+        })
+        .error(function (data) {
+          console.log('Error: ' + data);
+        });
+    };
 }

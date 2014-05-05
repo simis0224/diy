@@ -1,28 +1,28 @@
 <div ng-controller="postDetailController">
 
-    <span ng-show="currentUser.id === item.createdBy">
-        删除作品
-        <a href="/logout">登出</a><br>
-    </span>
-    名称：{{ item.subject }}<br>
-    分类：{{ item.categoryInLabel }}<br>
-    主图：<img ng-src="{{ item.postImage }}"/><br>
-    描述：{{ item.summary }}<br>
-    原料：<br>
-    <div class="materialList" >
-        <ul ng-repeat="material in item.materials">
-            <li class="material">
-                {{ material.name }}{{ material.quantity }}
-            </li>
-        </ul>
-    </div>
-    工具：<br>
-    <div class="toolList" >
-        <ul ng-repeat="tool in item.tools">
-            <li class="tool">
-                {{ tool.name }}{{ tool.quantity }}
-            </li>
-        </ul>
-    </div>
     <p>{{ message }}<p>
+    <div ng-show="item">
+        <button ng-click="deletePost()">删除作品</button><br>
+
+        名称：{{ item.subject }}<br>
+        分类：{{ item.categoryInLabel }}<br>
+        主图：<img ng-src="{{ item.postImage }}"/><br>
+        描述：{{ item.summary }}<br>
+        原料：<br>
+        <div class="materialList" >
+            <ul ng-repeat="material in item.materials">
+                <li class="material">
+                    {{ material.name }}{{ material.quantity }}
+                </li>
+            </ul>
+        </div>
+        工具：<br>
+        <div class="toolList" >
+            <ul ng-repeat="tool in item.tools">
+                <li class="tool">
+                    {{ tool.name }}{{ tool.quantity }}
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

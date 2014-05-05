@@ -33,8 +33,12 @@ module.exports = function(app, passport) {
     postController.find(req, res);
   });
 
-  app.post('/api/createPost', isLoggedIn, function(req, res, next) {
+  app.post('/api/post', isLoggedIn, function(req, res, next) {
     postController.apiCreate(req, res, next);
+  });
+
+  app.delete('/api/post/:id', isLoggedIn, function(req, res, next) {
+    postController.apiDelete(req, res, next);
   });
 
   app.get('*', function(req, res) {

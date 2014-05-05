@@ -198,6 +198,62 @@ BaseEntityController.prototype.update = function(req, res, next) {
   );
 }
 
+BaseEntityController.prototype.apiDelete = function(req, res, next) {
+  var id = traverse(req).get(['params','id']);
+
+  if(!id) {
+    res.json({
+      hasError: true,
+      message: labels.error.internalError
+    });
+    return;
+  }
+
+  that = this;
+  this.getEntityModel()
+    .findOne( { _id: id })
+    .exec(function(err, item) {
+      if(err) {
+        console.error(err);
+        res.json({
+          hasError: true,
+          message: labels.error.internalError
+        });
+        return;
+      }
+
+      if(!item) {
+        res.json({
+          hasError: true,
+          message: labels.post.postNotFound
+        });
+        return;
+      }
+
+      if(item.createdBy !== userHelper.getCurrentUser(req).id) {
+        req.flash('message', labels.error.noPrivilege);
+        res.json({
+          hasError: true,
+          message: labels.error.noPrivilege
+        });
+        return;
+      }
+
+      item.remove(function(err) {
+        if(err) {
+          res.json({
+            hasError: true,
+            message: labels.error.internalError
+          });
+          return;
+        }
+        res.json({
+          message: util.format(labels.crud.deleteSuccessful, that.getEntityNameLabel())
+        });
+      });
+    });
+}
+
 
 BaseEntityController.prototype.delete = function(req, res, next) {
   var id = traverse(req).get(['params','id']);
