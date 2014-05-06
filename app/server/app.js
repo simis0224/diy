@@ -33,19 +33,20 @@ app.configure(function() {
   app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
   app.use(passport.initialize());
   app.use(passport.session()); // persistent login sessions
-  app.use(require('less-middleware')({ src: __dirname + '/public' }));
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(require('less-middleware')({ src: __dirname + '/../public' }));
+  app.use(express.static(path.join(__dirname, '/../public')));
   app.use(flash());
   app.use(app.router);
 
+  console.log(__dirname);
 // development only
   if ('development' == app.get('env')) {
     app.use(express.errorHandler());
   }
 });
 
-require('./app/passport')(passport);
-require('./app/routes.js')(app, passport);
+require('./passport')(passport);
+require('./routes.js')(app, passport);
 userHelper.startUserCache();
 
 http.createServer(app).listen(config.port, function() {

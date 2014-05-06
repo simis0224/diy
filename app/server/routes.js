@@ -1,12 +1,12 @@
-var HomeController = require('../controllers/HomeController');
-var UserController = require('../controllers/userController');
+var HomeController = require('./controllers/HomeController');
+var UserController = require('./controllers/userController');
 var userController = new UserController();
-var PostController = require('../controllers/postController');
+var PostController = require('./controllers/postController');
 var postController = new PostController();
 
-var AuthController = require('../controllers/authController');
+var AuthController = require('./controllers/authController');
 var authController = new AuthController();
-var userHelper = require('../helpers/userHelper.js');
+var userHelper = require('./helpers/userHelper.js');
 
 module.exports = function(app, passport) {
 
