@@ -1,5 +1,5 @@
 function postListController($scope, $http, cssInjector) {
-  cssInjector.add("../components/listPost/listPost.css");
+  cssInjector.add("../ui/templates/listPost/listPost.css");
   // when landing on the page, get all todos and show them
   $http.get('/api/posts')
     .success(function(res) {

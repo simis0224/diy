@@ -1,7 +1,7 @@
 app.directive('navigationHeader', function() {
   return {
     restrict: 'E',
-    templateUrl: './components/navigationHeader/navigationHeader.html',
+    templateUrl: '/ui/templates/navigationHeader/navigationHeader.html',
     scope: {
       currentUser: '='
     }
@@ -11,6 +11,6 @@ app.directive('navigationHeader', function() {
 app.directive('navigationFooter', function() {
   return {
     restrict: 'E',
-    templateUrl: './components/navigationFooter/navigationFooter.html'
+    templateUrl: '/ui/templates/navigationFooter/navigationFooter.html'
   }
 });

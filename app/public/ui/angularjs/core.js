@@ -45,29 +45,29 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 
     $routeProvider.
       when('/', {
-        templateUrl: '../components/listPost/listPost.html',
+        templateUrl: '../ui/templates/listPost/listPost.html',
         controller: 'postListController'
       }).
       when('/viewPost/:id', {
-        templateUrl: '../components/viewPost/viewPost.html',
+        templateUrl: '../ui/templates/viewPost/viewPost.html',
         controller: 'postDetailController'
       }).
       when('/editPost', {
-        templateUrl: '../components/editPost/editPost.html',
+        templateUrl: '../ui/templates/editPost/editPost.html',
         controller: 'postEditController',
         resolve: {
           loggedin: checkLoggedin
         }
       }).
       when('/createPost', {
-        templateUrl: '../components/createPost/createPost.html',
+        templateUrl: '../ui/templates/createPost/createPost.html',
         controller: 'postCreateController',
         resolve: {
           loggedin: checkLoggedin
         }
       }).
       when('/login', {
-        templateUrl: '../components/login/login.html',
+        templateUrl: '../ui/templates/login/login.html',
         controller: 'loginController'
       }).
       otherwise({
