@@ -46,4 +46,13 @@ AuthController.prototype.apiLogin = function(passport, req, res, next) {
       });
     })(req, res, next);
 }
+
+AuthController.prototype.apiLogout = function(req, res, next) {
+  userHelper.deleteUserInSession(req);
+  req.logout();
+  res.json({
+    success: 1
+  });
+}
+
 module.exports = AuthController;

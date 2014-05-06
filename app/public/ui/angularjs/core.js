@@ -87,6 +87,9 @@ app.factory('AuthService', ['$cookies', function () {
     },
     setCurrentUser: function($cookieStore, user) {
       $cookieStore.put('user', user);
+    },
+    removeCurrentUser: function($cookieStore) {
+      $cookieStore.remove('user');
     }
   };
 }]);

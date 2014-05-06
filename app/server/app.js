@@ -38,7 +38,6 @@ app.configure(function() {
   app.use(flash());
   app.use(app.router);
 
-  console.log(__dirname);
 // development only
   if ('development' == app.get('env')) {
     app.use(express.errorHandler());

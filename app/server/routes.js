@@ -18,6 +18,10 @@ module.exports = function(app, passport) {
     authController.apiLogin(passport,req, res, next);
   });
 
+  app.post('/api/logout', function(req, res, next) {
+    authController.apiLogout(req, res, next);
+  });
+
   app.get('/login', function(req, res, next) {
     userController.renderLoginPage(req, res, next);
   });
@@ -49,7 +53,7 @@ module.exports = function(app, passport) {
   });
 
   app.get('*', function(req, res) {
-    res.sendfile('./public/components/viewPost.html');
+    res.sendfile('./public/index.html');
   });
 
   app.get('/', function(req, res, next) {
