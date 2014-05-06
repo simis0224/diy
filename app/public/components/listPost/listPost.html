@@ -1,4 +1,5 @@
-<div class="content" ng-controller="postListController">
+<navigation-header></navigation-header>
+<div class="content listPost" ng-controller="postListController">
     <p>{{ message }}</p>
     <ul ng-repeat="item in items" class="post_grid">
         <div class="post">
@@ -9,3 +10,4 @@
         </div>
     </ul>
 </div>
+<navigation-footer></navigation-footer>

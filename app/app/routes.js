@@ -3,12 +3,19 @@ var UserController = require('../controllers/userController');
 var userController = new UserController();
 var PostController = require('../controllers/postController');
 var postController = new PostController();
+
+var AuthController = require('../controllers/authController');
+var authController = new AuthController();
 var userHelper = require('../helpers/userHelper.js');
 
 module.exports = function(app, passport) {
 
-  app.get('/api/loggedInUser', function(req, res) {
-    res.send(req.isAuthenticated() ? userHelper.getCurrentUser(req) : '0');
+  app.get('/api/user/me', function(req, res) {
+    authController.apiGetLoggedUser(req, res)
+  });
+
+  app.post('/api/login', function(req, res, next) {
+    authController.apiLogin(passport,req, res, next);
   });
 
   app.get('/login', function(req, res, next) {

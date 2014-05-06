@@ -1,0 +1,19 @@
+<navigation-header></navigation-header>
+<div class="content login" ng-controller="loginController">
+    <form class="login" ng-submit="login()">
+        <h2>登录</h2>
+        <input type="text" name="username" placeholder="用户名或电子邮件" ng-model="formData.username"/>
+        <input type="password" name="password" placeholder="密码" ng-model="formData.password"/>
+        <p class="error">
+            {{ message }}
+        </p>
+        <button type="submit">登录</button>
+    </form>
+
+    <div class="otherLink">
+        <p>
+            没有账号，<a href="/signup">从这里注册</a>
+        </p>
+    </div>
+</div>
+<navigation-footer></navigation-footer>

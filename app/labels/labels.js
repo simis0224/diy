@@ -4,7 +4,7 @@ var user = {
   wrongPassword: '密码错误',
   usernameExists: '用户名或邮件已存在',
   updateSuccessful: '更新用户档案成功',
-  createSuccessful: '注册用户成功'
+  createSuccessful: '注册用户成功',
 }
 
 var post = {

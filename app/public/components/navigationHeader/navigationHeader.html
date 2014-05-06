@@ -1,12 +1,11 @@
-<div class="header">
+<div class="header" ng-controller="navigationHeaderController">
     <div class="link">
         <a href="/">首页</a>
 
-        <span ng-show="currentUser.username">
+        <span ng-show="isLoggedIn">
             你好, {{ currentUser.username }}
             <a href="/logout">登出</a><br>
         </span>
 
-        <a href="/logout">登出</a><br>
     </div>
 </div>

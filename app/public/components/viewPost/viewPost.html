@@ -1,5 +1,5 @@
-<div ng-controller="postDetailController">
-
+<navigation-header></navigation-header>
+<div class="content viewPost" ng-controller="postDetailController">
     <p>{{ message }}<p>
     <div ng-show="item">
         <button ng-click="deletePost()">删除作品</button><br>
@@ -26,3 +26,4 @@
         </div>
     </div>
 </div>
+<navigation-footer></navigation-footer>

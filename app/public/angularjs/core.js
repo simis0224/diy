@@ -1,5 +1,5 @@
 // public/core.js
-var app = angular.module('app', ['ngResource', 'ngRoute', 'angular.css.injector']);
+var app = angular.module('app', ['ngResource', 'ngRoute', 'angular.css.injector', 'ngCookies']);
 
 
 app.config(['$routeProvider', '$locationProvider', '$httpProvider',
@@ -66,7 +66,28 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
           loggedin: checkLoggedin
         }
       }).
+      when('/login', {
+        templateUrl: '../components/login/login.html',
+        controller: 'loginController'
+      }).
       otherwise({
         redirectTo: '/'
       });
   }]);
+
+app.factory('AuthService', ['$cookies', function () {
+  return {
+    login: function() {   },
+    logout: function() {  },
+    isLoggedIn: function($cookieStore) {
+      return !!$cookieStore.get('user');
+    },
+    getCurrentUser: function($cookieStore) {
+      return $cookieStore.get('user');
+    },
+    setCurrentUser: function($cookieStore, user) {
+      $cookieStore.put('user', user);
+    }
+  };
+}]);
+

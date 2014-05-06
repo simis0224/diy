@@ -1,4 +1,5 @@
-<div class="content" ng-controller="postCreateController">
+<navigation-header></navigation-header>
+<div class="content createPost" ng-controller="postCreateController">
     <p class="error">{{ errorMessage }}</p>
     <p>{{ message }}</p>
     <form enctype="multipart/form-data">
@@ -8,3 +9,4 @@
         <button type="submit" name="update" ng-click="createPost()">发布</button><br>
     </form>
 </div>
+<navigation-footer></navigation-footer>

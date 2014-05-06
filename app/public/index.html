@@ -6,18 +6,13 @@
         <script src="/bower_components/angular-route/angular-route.js"></script>
         <script src="/bower_components/angular-resource/angular-resource.js"></script>
         <script src="/bower_components/angular-css-injector/angular-css-injector.js"></script>
+        <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
 
         <script src="/angularjs/core.js"></script>
         <script src="/angularjs/directives.js"></script>
         <script src="/angularjs/controllers.js"></script>
     </head>
     <body>
-        <navigation-header current-user="currentUser"></navigation-header>
-        <div class="content">
-            <div class="view-container">
-                <div ng-view class="view-frame"></div>
-            </div>
-        </div>
-        <navigation-footer></navigation-footer>
+        <div ng-view class="view-frame"></div>
     </body>
 </html>
