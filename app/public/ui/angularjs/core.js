@@ -3,7 +3,8 @@ var app = angular.module('app', [
   'ngResource',
   'ngRoute',
   'angular.css.injector',
-  'authenticateService']);
+  'authenticateService',
+  'posts']);
 
 
 app.config(['$routeProvider', '$locationProvider', '$httpProvider',
@@ -49,22 +50,22 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 
     $routeProvider.
       when('/', {
-        templateUrl: '../ui/templates/listPost/listPost.html',
+        templateUrl: '../ui/angularjs/posts/listPost.html',
         controller: 'postListController'
       }).
       when('/viewPost/:id', {
-        templateUrl: '../ui/templates/viewPost/viewPost.html',
+        templateUrl: '../ui/angularjs/posts/viewPost.html',
         controller: 'postDetailController'
       }).
       when('/editPost', {
-        templateUrl: '../ui/templates/editPost/editPost.html',
+        templateUrl: '../ui/angularjs/posts/editPost.html',
         controller: 'postEditController',
         resolve: {
           loggedin: checkLoggedin
         }
       }).
       when('/createPost', {
-        templateUrl: '../ui/templates/createPost/createPost.html',
+        templateUrl: '../ui/angularjs/posts/createPost.html',
         controller: 'postCreateController',
         resolve: {
           loggedin: checkLoggedin

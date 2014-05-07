@@ -6,7 +6,6 @@ var postController = new PostController();
 
 var AuthController = require('./controllers/authController');
 var authController = new AuthController();
-var userHelper = require('./helpers/userHelper.js');
 
 module.exports = function(app, passport) {
 
