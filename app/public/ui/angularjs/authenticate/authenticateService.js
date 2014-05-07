@@ -1,8 +1,8 @@
 angular.module('authenticateService', [])
 
 .factory('authenticateService',
-  [ '$http', '$location',
-    function ($http, $location) {
+  [ '$http', '$location', '$q', '$timeout',
+    function ($http, $location, $q, $timeout) {
 
       var service = {
         currentUser: null,
@@ -34,6 +34,31 @@ angular.module('authenticateService', [])
               }
             });
           }
+        },
+        requireAuthenticated: function(){
+          // Initialize a new promise
+          var deferred = $q.defer();
+
+          if (service.currentUser) {
+            $timeout(deferred.resolve, 0);
+          } else {
+            // Make an AJAX call to check if the user is logged in
+            $http.get('/api/user/me').success(function(res){
+              // Authenticated
+              if (res !== '0') {
+                service.currentUser = res.data;
+                $timeout(deferred.resolve, 0);
+              }
+
+              // Not Authenticated
+              else {
+                $timeout(function(){deferred.reject();}, 0);
+                $location.url('/login');
+              }
+            });
+          }
+
+          return deferred.promise;
         }
       }
 

@@ -14,7 +14,9 @@
         <script src="/ui/angularjs/directives.js"></script>
         <script src="/ui/angularjs/controllers.js"></script>
     </head>
-    <body>
+    <body ng-controller="appController">
+        <navigation-header></navigation-header>
         <div ng-view class="view-frame"></div>
+        <navigation-footer></navigation-footer>
     </body>
 </html>

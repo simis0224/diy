@@ -10,26 +10,6 @@ var app = angular.module('app', [
 app.config(['$routeProvider', '$locationProvider', '$httpProvider',
   function($routeProvider, $locationProvider, $httpProvider) {
 
-    var checkLoggedin = function($q, $timeout, $http, $location, $rootScope){
-      // Initialize a new promise
-      var deferred = $q.defer();
-
-      // Make an AJAX call to check if the user is logged in
-      $http.get('/api/user/me').success(function(user){
-        // Authenticated
-        if (user !== '0')
-          $timeout(deferred.resolve, 0);
-
-        // Not Authenticated
-        else {
-          $timeout(function(){deferred.reject();}, 0);
-          $location.url('/login');
-        }
-      });
-
-      return deferred.promise;
-    };
-
     $httpProvider.responseInterceptors.push(function($q, $location) {
       return function(promise) {
         return promise.then(
@@ -47,7 +27,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
       }
     });
 
-
     $routeProvider.
       when('/', {
         templateUrl: '../ui/angularjs/posts/listPost.html',
@@ -61,14 +40,18 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         templateUrl: '../ui/angularjs/posts/editPost.html',
         controller: 'postEditController',
         resolve: {
-          loggedin: checkLoggedin
+          authenticated: function(authenticateService) {
+            authenticateService.requireAuthenticated();
+          }
         }
       }).
       when('/createPost', {
         templateUrl: '../ui/angularjs/posts/createPost.html',
         controller: 'postCreateController',
         resolve: {
-          loggedin: checkLoggedin
+          authenticated: function (authenticateService) {
+            authenticateService.requireAuthenticated();
+          }
         }
       }).
       when('/login', {
@@ -79,4 +62,8 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         redirectTo: '/'
       });
   }]);
+
+angular.module('app').controller('appController', ['authenticateService', function(authenticateService) {
+  authenticateService.checkCurrentUser();
+}]);
 
