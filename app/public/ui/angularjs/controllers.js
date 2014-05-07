@@ -61,35 +61,13 @@ function postDetailController($scope, $http, $routeParams) {
     };
 }
 
-function loginController($scope, $http, $location, authenticateService) {
-  $scope.formData = {};
-
-  $scope.login = function () {
-    $http.post('/api/login', $scope.formData)
-      .success(function (res) {
-        authenticateService.setCurrentUser(res.data);
-        $location.url('/');
-      })
-      .error(function (data) {
-        console.log('Error: ' + data);
-      });
-  }
+function loginController($scope, $location, authenticateService) {
+  $scope.login = function() {
+    authenticateService.login($scope.formData);
+  };
 }
 
 function navigationHeaderController($scope, $http, $location, $route, authenticateService, cssInjector) {
   cssInjector.add("../ui/templates/navigationHeader/navigationHeader.css");
-
   authenticateService.checkCurrentUser();
-
-  $scope.logout = function() {
-    $http.post('/api/logout')
-      .success(function (res) {
-        authenticateService.removeCurrentUser();
-        $route.reload();
-        $location.url('/');
-      })
-      .error(function (data) {
-        console.log('Error: ' + data);
-      });
-  }
 }

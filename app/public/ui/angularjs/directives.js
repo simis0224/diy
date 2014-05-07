@@ -3,7 +3,8 @@ app.directive('navigationHeader', ['authenticateService', function(authenticateS
     restrict: 'E',
     templateUrl: '/ui/templates/navigationHeader/navigationHeader.html',
     scope: true,
-    link: function($scope, $element, $attrs, $controller) {
+    link: function($scope) {
+      $scope.logout = authenticateService.logout;
       $scope.$watch(function() {
         return authenticateService.currentUser;
       }, function(currentUser) {
