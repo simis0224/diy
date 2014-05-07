@@ -11,7 +11,7 @@ var userHelper = require('./helpers/userHelper.js');
 module.exports = function(app, passport) {
 
   app.get('/api/user/me', function(req, res) {
-    authController.apiGetLoggedUser(req, res)
+    authController.apiGetLoggedInUser(req, res)
   });
 
   app.post('/api/login', function(req, res, next) {

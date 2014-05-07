@@ -3,11 +3,11 @@
         <a href="/">首页</a>
 
         <span class="rightLink">
-            <span ng-show="isLoggedIn">
+            <span ng-show="currentUser">
                 你好, {{ currentUser.username }}
                 <a href="javascript:void(0)" ng-click="logout()">登出</a>
             </span>
-            <span ng-show="!isLoggedIn">
+            <span ng-show="!currentUser">
                 <a href="#/login">登录</a>
             </span>
         </span>

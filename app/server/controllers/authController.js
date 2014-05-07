@@ -4,8 +4,8 @@ var util = require('util');
 
 function AuthController() {}
 
-AuthController.prototype.apiGetLoggedUser = function(req, res) {
-  res.send(req.isAuthenticated() ? userHelper.getCurrentUser(req) : '0');
+AuthController.prototype.apiGetLoggedInUser = function(req, res) {
+  res.send(req.isAuthenticated() ? { data: userHelper.getCurrentUser(req) }: '0');
 }
 
 AuthController.prototype.apiLogin = function(passport, req, res, next) {
@@ -38,7 +38,7 @@ AuthController.prototype.apiLogin = function(passport, req, res, next) {
 
         return res.json({
           success: 1,
-          user: {
+          data: {
             id: user.id,
             username: user.username
           }

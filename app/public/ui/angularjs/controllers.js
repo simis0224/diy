@@ -61,13 +61,13 @@ function postDetailController($scope, $http, $routeParams) {
     };
 }
 
-function loginController($scope, $http, $location, $cookieStore, AuthService) {
+function loginController($scope, $http, $location, authenticateService) {
   $scope.formData = {};
 
   $scope.login = function () {
     $http.post('/api/login', $scope.formData)
       .success(function (res) {
-        AuthService.setCurrentUser($cookieStore, res.user);
+        authenticateService.setCurrentUser(res.data);
         $location.url('/');
       })
       .error(function (data) {
@@ -76,15 +76,15 @@ function loginController($scope, $http, $location, $cookieStore, AuthService) {
   }
 }
 
-function navigationHeaderController($scope, $http, $location, $cookieStore, $route, AuthService, cssInjector) {
+function navigationHeaderController($scope, $http, $location, $route, authenticateService, cssInjector) {
   cssInjector.add("../ui/templates/navigationHeader/navigationHeader.css");
-  $scope.isLoggedIn = AuthService.isLoggedIn($cookieStore);
-  $scope.currentUser = AuthService.getCurrentUser($cookieStore);
+
+  authenticateService.checkCurrentUser();
 
   $scope.logout = function() {
     $http.post('/api/logout')
       .success(function (res) {
-        AuthService.removeCurrentUser($cookieStore);
+        authenticateService.removeCurrentUser();
         $route.reload();
         $location.url('/');
       })

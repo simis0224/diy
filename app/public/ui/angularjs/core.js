@@ -1,5 +1,9 @@
 // public/core.js
-var app = angular.module('app', ['ngResource', 'ngRoute', 'angular.css.injector', 'ngCookies']);
+var app = angular.module('app', [
+  'ngResource',
+  'ngRoute',
+  'angular.css.injector',
+  'authenticateService']);
 
 
 app.config(['$routeProvider', '$locationProvider', '$httpProvider',
@@ -10,7 +14,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
       var deferred = $q.defer();
 
       // Make an AJAX call to check if the user is logged in
-      $http.get('/api/loggedInUser').success(function(user){
+      $http.get('/api/user/me').success(function(user){
         // Authenticated
         if (user !== '0')
           $timeout(deferred.resolve, 0);
@@ -74,23 +78,4 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         redirectTo: '/'
       });
   }]);
-
-app.factory('AuthService', ['$cookies', function () {
-  return {
-    login: function() {   },
-    logout: function() {  },
-    isLoggedIn: function($cookieStore) {
-      return !!$cookieStore.get('user');
-    },
-    getCurrentUser: function($cookieStore) {
-      return $cookieStore.get('user');
-    },
-    setCurrentUser: function($cookieStore, user) {
-      $cookieStore.put('user', user);
-    },
-    removeCurrentUser: function($cookieStore) {
-      $cookieStore.remove('user');
-    }
-  };
-}]);
 
