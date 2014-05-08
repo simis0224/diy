@@ -1,1 +1,9 @@
-editPost
+<div class="content createPost" ng-controller="postEditController">
+    <p class="error">{{ errorMessage }}</p>
+    <p>{{ message }}</p>
+    <form enctype="multipart/form-data">
+        <input type="text" name="subject" ng-model="formData.subject" placeholder="作品名称"/><br>
+        <textarea name="summary" placeholder="简述" rows="4" ng-model="formData.summary" cols="50" ></textarea><br>
+        <button type="submit" name="update" ng-click="updatePost()">修改</button><br>
+    </form>
+</div>

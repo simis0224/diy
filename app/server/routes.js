@@ -7,6 +7,8 @@ var postController = new PostController();
 var AuthController = require('./controllers/authController');
 var authController = new AuthController();
 
+var uploadController = require('./controllers/uploadController');
+
 module.exports = function(app, passport) {
 
   app.get('/api/user/me', function(req, res) {
@@ -19,6 +21,10 @@ module.exports = function(app, passport) {
 
   app.post('/api/logout', function(req, res, next) {
     authController.apiLogout(req, res, next);
+  });
+
+  app.post('/api/upload/image', function(req, res, next) {
+    uploadController.apiUploadImage(req, res, next);
   });
 
   app.get('/login', function(req, res, next) {
@@ -43,11 +49,15 @@ module.exports = function(app, passport) {
     postController.find(req, res);
   });
 
-  app.post('/api/post', isLoggedIn, function(req, res, next) {
+  app.post('/api/post/create', isLoggedIn, function(req, res, next) {
     postController.apiCreate(req, res, next);
   });
 
-  app.delete('/api/post/:id', isLoggedIn, function(req, res, next) {
+  app.post('/api/post/update/:id', isLoggedIn, function(req, res, next) {
+    postController.apiUpdate(req, res, next);
+  });
+
+  app.post('/api/post/delete/:id', isLoggedIn, function(req, res, next) {
     postController.apiDelete(req, res, next);
   });
 
@@ -79,10 +89,6 @@ module.exports = function(app, passport) {
   app.post('/createPost', isLoggedIn, function(req, res, next) {
     postController.create(req, res, next);
   });
-
-//  app.get('/viewPost/:id', function(req, res, next) {
-//    postController.renderViewPage(req, res, next);
-//  });
 
   app.get('/editPost/:id', isLoggedIn, function(req, res, next) {
     postController.renderEditPage(req, res, next);

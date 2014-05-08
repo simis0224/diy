@@ -67,9 +67,9 @@ UserController.prototype.getRedirectUrlParam = function(item) {
 
 UserController.prototype.handleDBErrorOnUpdate = function(err, req) {
   if (err.code === 11001) { // mongodb unique index violation error
-    req.flash('message', labels.user.usernameExists);
+    return labels.user.usernameExists;
   } else {
-    req.flash('message', labels.error.internalError);
+    return labels.error.internalError;
   }
 }
 

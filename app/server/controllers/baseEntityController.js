@@ -46,7 +46,7 @@ BaseEntityController.prototype.findOne = function(req, res) {
       }
 
       res.json({
-        item: retItem
+        data: retItem
       });
     });
 }
@@ -84,7 +84,7 @@ BaseEntityController.prototype.find = function(req, res) {
       });
 
       res.json({
-        items: retItems
+        data: retItems
       });
     });
 }
@@ -193,6 +193,73 @@ BaseEntityController.prototype.update = function(req, res, next) {
 
         req.flash('message', util.format(labels.crud.updateSuccessful, that.getEntityNameLabel()));
         res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
+      });
+    }
+  );
+}
+
+BaseEntityController.prototype.apiUpdate = function(req, res, next) {
+  var itemData = {
+    _id: traverse(req).get(['params','id']),
+    lastModifiedDate: new Date()
+  };
+
+  itemData = this.addItemDataOnUpdate(req, itemData);
+
+  that = this;
+  this.getEntityModel()
+    .findOne( { _id: itemData._id })
+    .exec(function (err, item) {
+      if (err) {
+        console.error(err);
+        res.json({
+          success: 0,
+          errorMessage: labels.error.internalError
+        });
+        return;
+      }
+
+      if (!item) {
+        res.json({
+          success: 0,
+          errorMessage: util.format(labels.error.itemNotFound, that.getEntityNameLabel()),
+        });
+        return;
+      }
+
+      if(item.createdBy && item.createdBy !== userHelper.getCurrentUser(req).id) {
+        res.json({
+          success: 0,
+          errorMessage: labels.error.noPrivilege
+        });
+        return;
+      }
+
+      item.set(itemData);
+      item.save(function (err, newItem) {
+        if (err) {
+          console.error(err);
+          // TODO fix validation
+          var errorMesssage = "";
+          if (err.name === 'ValidationError') {
+            errorMesssage = err.errors[Object.keys(err.errors)[0]].message;
+          } else if (err.name === 'MongoError') {
+            errorMesssage = that.handleDBErrorOnUpdate(err, req);
+          } else {
+            errorMesssage = labels.error.internalError;
+          }
+
+          res.json({
+            success: 0,
+            errorMessage: errorMesssage
+          });
+          return;
+        }
+
+        that.hook_afterSaveBeforeRedirectOnUpdate(req, item);
+        res.json({
+          success: 1
+        });
       });
     }
   );
@@ -487,7 +554,7 @@ BaseEntityController.prototype.getEntityName = function() {}
 BaseEntityController.prototype.getEntityNameLabel = function() {}
 
 BaseEntityController.prototype.handleDBErrorOnUpdate = function(err, req) {
-  req.flash('message', labels.error.internalError);
+  return labels.error.internalError;
 }
 
 

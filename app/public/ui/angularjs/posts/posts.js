@@ -6,7 +6,7 @@ angular.module('posts', [])
   // when landing on the page, get all todos and show them
   $http.get('/api/posts')
     .success(function(res) {
-      $scope.items = res.items;
+      $scope.data = res.data;
     })
     .error(function(data) {
       console.log('Error: ' + data);
@@ -18,10 +18,10 @@ angular.module('posts', [])
 .controller('postCreateController', ['$scope', '$http', function ($scope, $http) {
 
   $scope.createPost = function () {
-    $http.post('/api/createPost', $scope.formData)
+    $http.post('/api/post/create', $scope.formData)
       .success(function (res) {
-        $scope.item = res.item;
-        console.log(res.item);
+        $scope.data = res.data;
+        console.log(res.data);
       })
       .error(function (data) {
         console.log('Error: ' + data);
@@ -30,13 +30,40 @@ angular.module('posts', [])
 
 }])
 
+.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
+  var id = $routeParams.id;
+  // when landing on the page, get all todos and show them
+  $http.get('/api/post/' + id)
+    .success(function(res) {
+      $scope.formData = res.data;
+      $scope.message = res.message;
+    })
+    .error(function(data) {
+      console.log('Error: ' + data);
+    });
+
+  $scope.updatePost = function() {
+    $http.post('/api/post/update/' + id, $scope.formData)
+      .success(function(res) {
+        if(res.success === 1) {
+          $location.url('/viewPost/' + id);
+        } else {
+          $scope.errorMessage = res.message;
+        }
+      })
+      .error(function(data) {
+        console.log('Error: ' + data);
+      });
+  };
+}])
+
 .controller('postDetailController', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
 
   var id = $routeParams.id;
   // when landing on the page, get all todos and show them
   $http.get('/api/post/' + id)
     .success(function(res) {
-      $scope.item = res.item;
+      $scope.data = res.data;
       $scope.message = res.message;
     })
     .error(function(data) {
@@ -44,10 +71,9 @@ angular.module('posts', [])
     });
 
   $scope.createPost = function() {
-    $http.post('/api/createPost', $scope.formData)
+    $http.post('/api/post/create', $scope.formData)
       .success(function(res) {
-        $scope.item = res.item;
-        console.log(res.item);
+        console.log(res.data);
       })
       .error(function(data) {
         console.log('Error: ' + data);
@@ -55,10 +81,10 @@ angular.module('posts', [])
   };
 
   $scope.deletePost = function () {
-    $http.delete('/api/post/' + id)
+    $http.post('/api/post/delete/' + id)
       .success(function (res) {
         if(!res.hasError) {
-          $scope.item = null;
+          $scope.data = null;
         }
         $scope.message = res.message;
         console.log(res.message);

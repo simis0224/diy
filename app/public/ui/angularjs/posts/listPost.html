@@ -1,6 +1,6 @@
 <div class="content listPost" ng-controller="postListController">
     <p>{{ message }}</p>
-    <ul ng-repeat="item in items" class="post_grid">
+    <ul ng-repeat="item in data" class="post_grid">
         <div class="post">
             <a href="#/viewPost/{{ item._id }}">
                 <img ng-src="{{ item.postImage }}" class="post_image"/>

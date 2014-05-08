@@ -36,7 +36,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         templateUrl: '../ui/angularjs/posts/viewPost.html',
         controller: 'postDetailController'
       }).
-      when('/editPost', {
+      when('/editPost/:id', {
         templateUrl: '../ui/angularjs/posts/editPost.html',
         controller: 'postEditController',
         resolve: {
