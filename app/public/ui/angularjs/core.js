@@ -4,6 +4,7 @@ var app = angular.module('app', [
   'ngRoute',
   'angular.css.injector',
   'authenticateService',
+  'angularFileUpload',
   'posts']);
 
 

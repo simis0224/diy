@@ -14,8 +14,12 @@ angular.module('posts', [])
 
 }])
 
+.controller('postCreateController', ['$scope', '$http', '$location', '$upload', 'cssInjector',
+    function ($scope, $http, $location, $upload, cssInjector) {
 
-.controller('postCreateController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+  cssInjector.add("../ui/angularjs/posts/createPost.css");
+
+  $scope.formData = {};
 
   $scope.createPost = function () {
     $http.post('/api/post/create', $scope.formData)
@@ -32,6 +36,36 @@ angular.module('posts', [])
       console.log('Error: ' + res);
     });
   }
+
+  $scope.onFileSelect = function($files) {
+    //$files: an array of files selected, each file has name, size, and type.
+    for (var i = 0; i < $files.length; i++) {
+      var file = $files[i];
+      $scope.upload = $upload.upload({
+        url: '/api/upload/image',
+        method: 'POST',
+        // headers: {'header-key': 'header-value'},
+        // withCredentials: true,
+        data: { myObj: $scope.myModelObj },
+        file: file
+      }).progress(function(evt) {
+        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+      }).success(function(res, status, headers, config) {
+        // file is uploaded successfully
+        if(res.success === 1) {
+          $scope.formData.postImage = res.imageUrl;
+          var previewImage = angular.element( document.querySelector( '.imagePreview' ) )[0];
+          previewImage.src = res.imageUrl;
+          console.log("Upload image succeeded.");
+        } else {
+          console.log('Upload error:' + res);
+        }
+      })
+      .error(function (res) {
+        console.log('Error: ' + res);
+      });
+    }
+  };
 }])
 
 .controller('postEditController', ['$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
@@ -62,7 +96,11 @@ angular.module('posts', [])
   };
 }])
 
-.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
+.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector',
+    function ($scope, $http, $routeParams, $location, cssInjector) {
+
+  cssInjector.add("../ui/angularjs/posts/viewPost.css");
+
   var id = $routeParams.id;
 
   $http.get('/api/post/' + id)

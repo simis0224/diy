@@ -54,7 +54,7 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
   item.subject = traverse(req).get(['body','subject']);
   item.category = traverse(req).get(['body', 'category']);
   item.summary = traverse(req).get(['body','summary']);
-  item.postImage = handleFileUpload(req);
+  item.postImage = traverse(req).get(['body','postImage']);
   item.materials = [];
   item.tools = [];
 
@@ -88,10 +88,7 @@ PostController.prototype.addItemDataOnUpdate = function(req, item) {
   item.subject = traverse(req).get(['body','subject']);
   item.category = traverse(req).get(['body', 'category']);
   item.summary = traverse(req).get(['body','summary']);
-  if(req.files && req.files.postImage && req.files.postImage.name)
-  {
-    item.postImage = handleFileUpload(req);
-  }
+  item.postImage = traverse(req).get(['body','postImage']);
   item.materials = [];
   item.tools = [];
 
@@ -120,19 +117,6 @@ PostController.prototype.addItemDataOnUpdate = function(req, item) {
 
 
   return item;
-}
-
-function handleFileUpload(req) {
-  if(!req.files || !req.files.postImage || !req.files.postImage.name) {
-    return req.body.currentPicture || '';
-  }
-  var data = fs.readFileSync(req.files.postImage.path);
-  var fileName = req.files.postImage.name;
-  var uid = crypto.randomBytes(10).toString('hex');
-  var dir = paths.UPLOAD_IMAGE_DIR + uid;
-  fs.mkdirSync(dir, '0777');
-  fs.writeFileSync(dir + "/" + fileName, data);
-  return util.format(paths.UPLOAD_IMAGE_ACCESS_SRC, uid, fileName);
 }
 
 function getParamIndex(paramName) {

@@ -3,7 +3,9 @@
     <p class="error">{{ errorMessage }}</p>
     <form enctype="multipart/form-data">
         <input type="text" name="subject" value="" ng-model="formData.subject" placeholder="作品名称"/><br>
-        <input type="file" name="pic" value="" ng-model="formData.pic" aria-label="主图"/><br>
+        <input type="file" name="fileUploader" ng-file-select="onFileSelect($files)" ><br>
+        <img class="imagePreview"/>
+        <input type="hidden" name="postImage" ng-model="formData.postImage" ><br>
         <textarea name="summary" placeholder="简述" ng-model="formData.summary" rows="4" cols="50" ></textarea><br>
         <button type="submit" name="update" ng-click="createPost()">发布</button><br>
     </form>
