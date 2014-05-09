@@ -9,6 +9,8 @@ var authController = new AuthController();
 
 var uploadController = require('./controllers/uploadController');
 
+var errors = require('./constants/errors');
+
 module.exports = function(app, passport) {
 
   app.get('/api/user/me', function(req, res) {
@@ -27,20 +29,9 @@ module.exports = function(app, passport) {
     uploadController.apiUploadImage(req, res, next);
   });
 
-  app.get('/login', function(req, res, next) {
-    userController.renderLoginPage(req, res, next);
-  });
-
-  app.post('/login', passport.authenticate('local-login', {
-    successRedirect : '/',
-    failureRedirect : '/login',
-    failureFlash : true
-  }));
-
-  app.get('/logout', function(req, res) {
-    userController.logout(req, res);
-  });
-
+  /**
+   * Post related api
+   */
   app.get('/api/post/:id', function(req, res) {
     postController.findOne(req, res);
   });
@@ -79,34 +70,9 @@ module.exports = function(app, passport) {
   app.get('/viewUser/:username', function(req, res, next) {
     userController.renderViewPage(req, res, next);
   });
+
   app.get('/listUser', function(req, res, next) {
     userController.renderListPage(req, res, next);
-  });
-
-  app.get('/createPost', isLoggedIn, function(req, res, next) {
-    postController.renderCreatePage(req, res, next);
-  });
-  app.post('/createPost', isLoggedIn, function(req, res, next) {
-    postController.create(req, res, next);
-  });
-
-  app.get('/editPost/:id', isLoggedIn, function(req, res, next) {
-    postController.renderEditPage(req, res, next);
-  });
-  app.post('/editPost/:id', isLoggedIn, function(req, res, next) {
-    postController.update(req, res, next);
-  });
-
-  app.get('/listPost/:username', function(req, res, next) {
-    postController.renderListPage(req, res, next);
-  });
-
-  app.get('/listPost', function(req, res, next) {
-    postController.renderListPage(req, res, next);
-  });
-
-  app.post('/deletePost/:id', isLoggedIn, function(req, res, next) {
-    postController.delete(req, res, next);
   });
 
   app.get('/signup', function(req, res, next) {
@@ -124,5 +90,9 @@ function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
     return next();
 
-  res.redirect('/');
+  //TODO should return 404
+  res.json({
+    success: 0,
+    error: errors.USER_NOT_LOGGED_IN_ERROR
+  });
 }

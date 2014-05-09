@@ -1,6 +1,6 @@
 <div class="content createPost" ng-controller="postCreateController">
-    <p class="error">{{ errorMessage }}</p>
     <p>{{ message }}</p>
+    <p class="error">{{ errorMessage }}</p>
     <form enctype="multipart/form-data">
         <input type="text" name="subject" value="" ng-model="formData.subject" placeholder="作品名称"/><br>
         <input type="file" name="pic" value="" ng-model="formData.pic" aria-label="主图"/><br>

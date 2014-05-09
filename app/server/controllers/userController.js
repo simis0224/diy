@@ -5,6 +5,7 @@ var util = require('util');
 var BaseEntityController = require('./baseEntityController');
 var userHelper = require('../helpers/userHelper.js');
 var labels = require('../labels/labels');
+var errors = require('../constants/errors');
 
 module.exports = UserController;
 
@@ -67,9 +68,9 @@ UserController.prototype.getRedirectUrlParam = function(item) {
 
 UserController.prototype.handleDBErrorOnUpdate = function(err, req) {
   if (err.code === 11001) { // mongodb unique index violation error
-    return labels.user.usernameExists;
+    return errors.USERNAME_OR_EMAIL_EXISTS_ERROR;
   } else {
-    return labels.error.internalError;
+    return errors.INTERNAL_ERROR;
   }
 }
 

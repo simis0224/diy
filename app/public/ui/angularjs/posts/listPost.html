@@ -1,5 +1,6 @@
 <div class="content listPost" ng-controller="postListController">
     <p>{{ message }}</p>
+    <p class="error">{{ errorMessage }}<p>
     <ul ng-repeat="item in data" class="post_grid">
         <div class="post">
             <a href="#/viewPost/{{ item._id }}">

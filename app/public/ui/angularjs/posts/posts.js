@@ -3,7 +3,7 @@ angular.module('posts', [])
 .controller('postListController', ['$scope', '$http', 'cssInjector', function ($scope, $http, cssInjector) {
 
   cssInjector.add("../ui/angularjs/posts/listPost.css");
-  // when landing on the page, get all todos and show them
+
   $http.get('/api/posts')
     .success(function(res) {
       $scope.data = res.data;
@@ -15,31 +15,36 @@ angular.module('posts', [])
 }])
 
 
-.controller('postCreateController', ['$scope', '$http', function ($scope, $http) {
+.controller('postCreateController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
 
   $scope.createPost = function () {
     $http.post('/api/post/create', $scope.formData)
       .success(function (res) {
-        $scope.data = res.data;
-        console.log(res.data);
-      })
-      .error(function (data) {
-        console.log('Error: ' + data);
-      });
+        if (res.success === 1) {
+          console.log("Create post succeeded.");
+          $location.url('/viewPost/' + res.data._id);
+        } else {
+          $scope.errorMessage = res.error.message;
+          console.log("Create post failed. Error: " + res.error.message);
+        }
+    })
+    .error(function (res) {
+      console.log('Error: ' + res);
+    });
   }
-
 }])
 
 .controller('postEditController', ['$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
   var id = $routeParams.id;
-  // when landing on the page, get all todos and show them
+
   $http.get('/api/post/' + id)
     .success(function(res) {
       $scope.formData = res.data;
       $scope.message = res.message;
     })
-    .error(function(data) {
-      console.log('Error: ' + data);
+    .error(function(res) {
+      $scope.errorMessage = res.error.message;
+      console.log('Error: ' + res);
     });
 
   $scope.updatePost = function() {
@@ -57,10 +62,9 @@ angular.module('posts', [])
   };
 }])
 
-.controller('postDetailController', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
-
+.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
   var id = $routeParams.id;
-  // when landing on the page, get all todos and show them
+
   $http.get('/api/post/' + id)
     .success(function(res) {
       $scope.data = res.data;
@@ -70,28 +74,20 @@ angular.module('posts', [])
       console.log('Error: ' + data);
     });
 
-  $scope.createPost = function() {
-    $http.post('/api/post/create', $scope.formData)
-      .success(function(res) {
-        console.log(res.data);
-      })
-      .error(function(data) {
-        console.log('Error: ' + data);
-      });
-  };
-
   $scope.deletePost = function () {
     $http.post('/api/post/delete/' + id)
       .success(function (res) {
-        if(!res.hasError) {
-          $scope.data = null;
+        if(res.success === 1) {
+          console.log("Delete " + id + " succeeded.");
+          $location.url('/');
+        } else {
+          $scope.errorMessage = res.error.message;
+          console.log("Delete " + id + " failed. Error: " + res.error.message);
         }
-        $scope.message = res.message;
-        console.log(res.message);
       })
-      .error(function (data) {
-        console.log('Error: ' + data);
+      .error(function (res) {
+        console.log('Error: ' + res);
       });
   };
 
-}])
+}]);

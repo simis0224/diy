@@ -4,6 +4,7 @@ var userHelper = require('../helpers/userHelper.js');
 var labels = require('../labels/labels');
 var util = require('util');
 var _ = require('lodash');
+var errors = require('../constants/errors');
 
 module.exports = BaseEntityController;
 
@@ -14,8 +15,8 @@ BaseEntityController.prototype.findOne = function(req, res) {
 
   if(!id) {
     res.json({
-      hasError: true,
-      message: labels.error.internalError
+      success: 0,
+      error: errors.INVALID_ID_ERROR
     });
     return;
   }
@@ -26,16 +27,16 @@ BaseEntityController.prototype.findOne = function(req, res) {
       if(err) {
         console.error(err);
         res.json({
-          hasError: true,
-          message: labels.error.internalError
+          success: 0,
+          error: errors.INTERNAL_ERROR
         });
         return;
       }
 
       if(!item) {
         res.json({
-          hasError: true,
-          message: labels.post.postNotFound
+          success: 0,
+          error: errors.ITEM_DOES_NOT_EXIST_ERROR
         });
         return;
       }
@@ -46,6 +47,7 @@ BaseEntityController.prototype.findOne = function(req, res) {
       }
 
       res.json({
+        success: 1,
         data: retItem
       });
     });
@@ -68,8 +70,8 @@ BaseEntityController.prototype.find = function(req, res) {
       if(err) {
         console.error(err);
         res.json({
-          hasError: true,
-          message: labels.error.internalError
+          success: 0,
+          error: errors.INTERNAL_ERROR
         });
         return;
       }
@@ -84,6 +86,7 @@ BaseEntityController.prototype.find = function(req, res) {
       });
 
       res.json({
+        success: 1,
         data: retItems
       });
     });
@@ -104,15 +107,14 @@ BaseEntityController.prototype.apiCreate = function(req, res, next) {
     if (err) {
       console.error(err);
       res.json({
-        hasError: true,
-        errorMessage: labels.error.internalError,
-        item: item
+        success: 0,
+        error: errors.INTERNAL_ERROR
       });
       return;
     }
     res.json({
-      message: util.format(labels.crud.publishSuccessful, that.getEntityNameLabel()),
-      item: item
+      success: 1,
+      data: item
     });
   });
 }
@@ -214,7 +216,7 @@ BaseEntityController.prototype.apiUpdate = function(req, res, next) {
         console.error(err);
         res.json({
           success: 0,
-          errorMessage: labels.error.internalError
+          error: errors.INTERNAL_ERROR
         });
         return;
       }
@@ -222,7 +224,7 @@ BaseEntityController.prototype.apiUpdate = function(req, res, next) {
       if (!item) {
         res.json({
           success: 0,
-          errorMessage: util.format(labels.error.itemNotFound, that.getEntityNameLabel()),
+          error: errors.ITEM_DOES_NOT_EXIST_ERROR
         });
         return;
       }
@@ -230,7 +232,7 @@ BaseEntityController.prototype.apiUpdate = function(req, res, next) {
       if(item.createdBy && item.createdBy !== userHelper.getCurrentUser(req).id) {
         res.json({
           success: 0,
-          errorMessage: labels.error.noPrivilege
+          error: errors.NO_PRIVILEGE_ERROR
         });
         return;
       }
@@ -240,23 +242,22 @@ BaseEntityController.prototype.apiUpdate = function(req, res, next) {
         if (err) {
           console.error(err);
           // TODO fix validation
-          var errorMesssage = "";
+          var error = errors.INTERNAL_ERROR;
           if (err.name === 'ValidationError') {
-            errorMesssage = err.errors[Object.keys(err.errors)[0]].message;
+            var error = errors.FIELD_VALIDATION_ERROR;
           } else if (err.name === 'MongoError') {
-            errorMesssage = that.handleDBErrorOnUpdate(err, req);
-          } else {
-            errorMesssage = labels.error.internalError;
+            error = that.handleDBErrorOnUpdate(err, req);
           }
 
           res.json({
             success: 0,
-            errorMessage: errorMesssage
+            error: error
           });
           return;
         }
 
         that.hook_afterSaveBeforeRedirectOnUpdate(req, item);
+
         res.json({
           success: 1
         });
@@ -270,8 +271,8 @@ BaseEntityController.prototype.apiDelete = function(req, res, next) {
 
   if(!id) {
     res.json({
-      hasError: true,
-      message: labels.error.internalError
+      success: 0,
+      error: errors.INTERNAL_ERROR
     });
     return;
   }
@@ -283,8 +284,8 @@ BaseEntityController.prototype.apiDelete = function(req, res, next) {
       if(err) {
         console.error(err);
         res.json({
-          hasError: true,
-          message: labels.error.internalError
+          success: 0,
+          error: errors.INTERNAL_ERROR
         });
         return;
       }
@@ -292,16 +293,15 @@ BaseEntityController.prototype.apiDelete = function(req, res, next) {
       if(!item) {
         res.json({
           hasError: true,
-          message: labels.post.postNotFound
+          error: errors.ITEM_DOES_NOT_EXIST_ERROR
         });
         return;
       }
 
       if(item.createdBy !== userHelper.getCurrentUser(req).id) {
-        req.flash('message', labels.error.noPrivilege);
         res.json({
-          hasError: true,
-          message: labels.error.noPrivilege
+          success: 0,
+          error: errors.NO_PRIVILEGE_ERROR
         });
         return;
       }
@@ -309,13 +309,13 @@ BaseEntityController.prototype.apiDelete = function(req, res, next) {
       item.remove(function(err) {
         if(err) {
           res.json({
-            hasError: true,
-            message: labels.error.internalError
+            success: 0,
+            error: errors.INTERNAL_ERROR
           });
           return;
         }
         res.json({
-          message: util.format(labels.crud.deleteSuccessful, that.getEntityNameLabel())
+          success: 1
         });
       });
     });
@@ -554,7 +554,7 @@ BaseEntityController.prototype.getEntityName = function() {}
 BaseEntityController.prototype.getEntityNameLabel = function() {}
 
 BaseEntityController.prototype.handleDBErrorOnUpdate = function(err, req) {
-  return labels.error.internalError;
+  return errors.INTERNAL_ERROR;
 }
 
 

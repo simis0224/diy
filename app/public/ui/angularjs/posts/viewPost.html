@@ -1,5 +1,6 @@
 <div class="content viewPost" ng-controller="postDetailController">
     <p>{{ message }}<p>
+    <p class="error">{{ errorMessage }}<p>
     <div ng-show="data">
         <button ng-click="deletePost()">删除作品</button><br>
         <a href="/#/editPost/{{data._id}}">修改作品</a><br>
