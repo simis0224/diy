@@ -1,4 +1,4 @@
-angular.module('posts', [])
+angular.module('posts', ['uploadService'])
 
 .controller('postListController', ['$scope', '$http', 'cssInjector', function ($scope, $http, cssInjector) {
 
@@ -14,8 +14,8 @@ angular.module('posts', [])
 
 }])
 
-.controller('postCreateController', ['$scope', '$http', '$location', '$upload', 'cssInjector',
-    function ($scope, $http, $location, $upload, cssInjector) {
+.controller('postCreateController', ['$scope', '$http', '$location', '$upload', 'cssInjector', 'uploadService',
+    function ($scope, $http, $location, $upload, cssInjector, uploadService) {
 
   cssInjector.add("../ui/angularjs/posts/createPost.css");
 
@@ -37,20 +37,9 @@ angular.module('posts', [])
     });
   }
 
-  $scope.onFileSelect = function($files) {
-    //$files: an array of files selected, each file has name, size, and type.
-    for (var i = 0; i < $files.length; i++) {
-      var file = $files[i];
-      $scope.upload = $upload.upload({
-        url: '/api/upload/image',
-        method: 'POST',
-        // headers: {'header-key': 'header-value'},
-        // withCredentials: true,
-        data: { myObj: $scope.myModelObj },
-        file: file
-      }).progress(function(evt) {
-        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-      }).success(function(res, status, headers, config) {
+  $scope.uploadImage = function($files) {
+    uploadService.uploadImage($files,
+      function(res, status, headers, config) {
         // file is uploaded successfully
         if(res.success === 1) {
           $scope.formData.postImage = res.imageUrl;
@@ -60,15 +49,18 @@ angular.module('posts', [])
         } else {
           console.log('Upload error:' + res);
         }
-      })
-      .error(function (res) {
+      },
+      function (res) {
         console.log('Error: ' + res);
       });
-    }
-  };
+    };
 }])
 
-.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
+.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService',
+    function ($scope, $http, $routeParams, $location, cssInjector, uploadService) {
+
+  cssInjector.add("../ui/angularjs/posts/editPost.css");
+
   var id = $routeParams.id;
 
   $http.get('/api/post/' + id)
@@ -94,6 +86,24 @@ angular.module('posts', [])
         console.log('Error: ' + data);
       });
   };
+
+  $scope.uploadImage = function($files) {
+    uploadService.uploadImage($files,
+      function(res, status, headers, config) {
+        // file is uploaded successfully
+        if(res.success === 1) {
+          $scope.formData.postImage = res.imageUrl;
+          var previewImage = angular.element( document.querySelector( '.postImage' ) )[0];
+          previewImage.src = res.imageUrl;
+          console.log("Upload image succeeded.");
+        } else {
+          console.log('Upload error:' + res);
+        }
+      },
+      function (res) {
+        console.log('Error: ' + res);
+      });
+    };
 }])
 
 .controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector',

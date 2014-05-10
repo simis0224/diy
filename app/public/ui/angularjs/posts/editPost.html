@@ -1,8 +1,11 @@
-<div class="content createPost" ng-controller="postEditController">
+<div class="content editPost" ng-controller="postEditController">
     <p>{{ message }}</p>
     <p class="error">{{ errorMessage }}</p>
     <form enctype="multipart/form-data">
         <input type="text" name="subject" ng-model="formData.subject" placeholder="作品名称"/><br>
+        <input type="file" name="fileUploader" ng-file-select="uploadImage($files)" ><br>
+        <img class="postImage" ng-src="{{ formData.postImage }}"/><br>
+        <input type="hidden" name="postImage" ng-model="formData.postImage" ><br>
         <textarea name="summary" placeholder="简述" rows="4" ng-model="formData.summary" cols="50" ></textarea><br>
         <button type="submit" name="update" ng-click="updatePost()">修改</button><br>
     </form>
