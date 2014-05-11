@@ -1,0 +1,17 @@
+<div class="content" ng-controller="signupController">
+    <form method="post" class="signup" ng-submit="signup()">
+        <h2>注册</h2>
+        <input type="text" name="email" ng-model="formData.email" placeholder="电子邮件" />
+        <input type="text" name="username" ng-model="formData.username" placeholder="用户名"/>
+        <input type="password" name="password" ng-model="formData.password" placeholder="账户密码"/>
+        <p class="error">
+            {{ errorMessage }}
+        </p>
+        <button type="submit" name="update">注册</button><br>
+    </form>
+    <div class="otherLink">
+        <p>
+            已有账号，<a href="/#/login">从这里登录</a>
+        </p>
+    </div>
+</div>

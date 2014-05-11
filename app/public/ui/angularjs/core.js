@@ -56,8 +56,12 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         }
       }).
       when('/login', {
-        templateUrl: '../ui/templates/login/login.html',
+        templateUrl: '../ui/angularjs/users/login.html',
         controller: 'loginController'
+      }).
+      when('/signup', {
+        templateUrl: '../ui/angularjs/users/signup.html',
+        controller: 'signupController'
       }).
       otherwise({
         redirectTo: '/'
