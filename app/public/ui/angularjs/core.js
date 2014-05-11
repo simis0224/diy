@@ -5,7 +5,10 @@ var app = angular.module('app', [
   'angular.css.injector',
   'authenticateService',
   'uploadService',
-  'posts']);
+  'common',
+  'posts',
+  'users'
+  ]);
 
 
 app.config(['$routeProvider', '$locationProvider', '$httpProvider',
