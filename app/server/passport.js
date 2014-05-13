@@ -4,6 +4,7 @@ var labels = require('./labels/labels');
 var traverse = require('traverse');
 var util = require('util');
 var userHelper = require('./helpers/userHelper');
+var errors = require('./constants/errors');
 
 module.exports = function(passport) {
 
@@ -77,16 +78,15 @@ module.exports = function(passport) {
         .findOne({ $or: [ { username: username}, { email: username } ] })
         .exec(function(err, user) {
           if (err) {
-            req.flash('loginMessage', labels.error.internalError);
             return done(err);
           }
 
           if (!user) {
-            return done(null, false, req.flash('message', util.format(labels.user.userNotFound, username)));
+            return done(errors.USER_DOES_NOT_EXIST_ERROR);
           }
 
           if (!User.validatePassword(password, user.password)) {
-            return done(null, false, req.flash('message', labels.user.wrongPassword));
+            return done(errors.INCORRECT_PASSWORD_ERROR);
           }
           userHelper.updateUserInSession(req, user);
           return done(null, user);

@@ -6,14 +6,19 @@ angular.module('authenticateService', [])
 
       var service = {
         currentUser: null,
-        login: function (user) {
+        login: function (user, onLoginSuccess, onLoginFailure) {
           $http.post('/api/login', user)
             .success(function (res) {
-              service.currentUser = res.data;
-              $location.url('/');
+              if(res.success === 1) {
+                service.currentUser = res.data;
+                onLoginSuccess();
+              } else {
+                onLoginFailure(res.error.message);
+              }
             })
-            .error(function (data) {
-              console.log('Error: ' + data);
+            .error(function (err) {
+              onLoginFailure(err);
+              console.log('Error: ' + err);
             });
         },
         logout: function() {

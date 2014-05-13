@@ -7,9 +7,9 @@ const errors = {
     code: '00002',
     message: 'INVALID_ID_ERROR'
   },
-  ITEM_DOES_NOT_EXIST_ERROR: {
+  RECORD_DOES_NOT_EXIST_ERROR: {
     code: '00003',
-    message: 'ITEM_DOES_NOT_EXIST_ERROR'
+    message: 'RECORD_DOES_NOT_EXIST_ERROR'
   },
   NO_PRIVILEGE_ERROR: {
     code: '00004',
@@ -26,8 +26,15 @@ const errors = {
   USER_NOT_LOGGED_IN_ERROR: {
     code: '00007',
     message: 'USER_NOT_LOGGED_IN_ERROR'
+  },
+  INCORRECT_PASSWORD_ERROR: {
+    code: '00008',
+    message: 'INCORRECT_PASSWORD_ERROR'
+  },
+  USER_DOES_NOT_EXIST_ERROR: {
+    code: '00010',
+    message: 'USER_DOES_NOT_EXIST_ERROR'
   }
 }
-
 
 module.exports = errors;

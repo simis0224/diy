@@ -1,6 +1,7 @@
 var userHelper = require('../helpers/userHelper');
 var labels = require('../labels/labels');
 var util = require('util');
+var errors = require('../constants/errors');
 
 function AuthController() {}
 
@@ -12,6 +13,7 @@ AuthController.prototype.apiLogin = function(passport, req, res, next) {
   passport.authenticate('local-login',
     function (err, user, info) {
       if (err) {
+        console.log(err);
         res.json({
           success: 0,
           error: err
@@ -22,16 +24,17 @@ AuthController.prototype.apiLogin = function(passport, req, res, next) {
       if (!user) {
         res.json({
           success: 0,
-          error: util.format(labels.error.itemNotFound, labels.user.name)
+          error: errors.USER_DOES_NOT_EXIST_ERROR
         });
         return;
       }
 
       req.logIn(user, function (err) {
         if (err) {
+          console.log(err);
           res.json({
             success: 0,
-            error: err
+            error: errors.INTERNAL_ERROR
           });
           return;
         }

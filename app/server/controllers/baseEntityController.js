@@ -36,7 +36,7 @@ BaseEntityController.prototype.findOne = function(req, res) {
       if(!item) {
         res.json({
           success: 0,
-          error: errors.ITEM_DOES_NOT_EXIST_ERROR
+          error: errors.RECORD_DOES_NOT_EXIST_ERROR
         });
         return;
       }
@@ -224,7 +224,7 @@ BaseEntityController.prototype.apiUpdate = function(req, res, next) {
       if (!item) {
         res.json({
           success: 0,
-          error: errors.ITEM_DOES_NOT_EXIST_ERROR
+          error: errors.RECORD_DOES_NOT_EXIST_ERROR
         });
         return;
       }
@@ -293,7 +293,7 @@ BaseEntityController.prototype.apiDelete = function(req, res, next) {
       if(!item) {
         res.json({
           hasError: true,
-          error: errors.ITEM_DOES_NOT_EXIST_ERROR
+          error: errors.RECORD_DOES_NOT_EXIST_ERROR
         });
         return;
       }

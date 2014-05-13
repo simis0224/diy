@@ -1,10 +1,10 @@
-<div class="content login" ng-controller="loginController">
+<div class="login">
     <form class="login" ng-submit="login()">
         <h2>登录</h2>
-        <input type="text" name="username" placeholder="用户名或电子邮件" ng-model="formData.username"/>
-        <input type="password" name="password" placeholder="密码" ng-model="formData.password"/>
+        <input type="text" name="username" placeholder="用户名或电子邮件" ng-model="user.username"/>
+        <input type="password" name="password" placeholder="密码" ng-model="user.password"/>
         <p class="error">
-            {{ message }}
+            {{ errorMessage }}
         </p>
         <button type="submit">登录</button>
     </form>
