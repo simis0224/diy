@@ -60,9 +60,10 @@ angular.module('common', ['ui.bootstrap'])
           authenticateService.login(user, onLoginSuccess, onLoginFailure);
         }
 
-        $scope.ok = function () {
+        $scope.redirectToSignupPage = function() {
           $modalInstance.close();
-        };
+          $location.url('/signup');
+        }
 
         $scope.cancel = function () {
           $modalInstance.dismiss('cancel');
