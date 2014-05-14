@@ -106,12 +106,18 @@ angular.module('posts', ['uploadService'])
     };
 }])
 
-.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector',
-    function ($scope, $http, $routeParams, $location, cssInjector) {
+.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService',
+    function ($scope, $http, $routeParams, $location, cssInjector, authenticateService) {
 
   cssInjector.add("../ui/angularjs/posts/viewPost.css");
 
   var id = $routeParams.id;
+
+  $scope.$watch(function() {
+    return authenticateService.currentUser;
+  }, function(currentUser) {
+    $scope.currentUser = currentUser;
+  });
 
   $http.get('/api/post/' + id)
     .success(function(res) {

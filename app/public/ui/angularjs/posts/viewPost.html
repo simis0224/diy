@@ -2,8 +2,18 @@
     <p>{{ message }}<p>
     <p class="error">{{ errorMessage }}<p>
     <div ng-show="data">
-        <button ng-click="deletePost()">删除作品</button><br>
-        <a href="/#/editPost/{{data._id}}">修改作品</a><br>
+
+        <div class="btn-group" dropdown ng-show="currentUser && data && currentUser.id === data.createdBy.id">
+            <button type="button" class="btn btn-danger">操作</button>
+            <button type="button" class="btn btn-danger dropdown-toggle">
+                <span class="caret"></span>
+                <span class="sr-only">Split button!</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="javascript:void(0)" ng-click="deletePost()">删除作品</a></li>
+                <li><a href="/#/editPost/{{data._id}}">修改作品</a></li>
+            </ul>
+        </div><br>
 
         名称：{{ data.subject }}<br>
         分类：{{ data.categoryInLabel }}<br>
