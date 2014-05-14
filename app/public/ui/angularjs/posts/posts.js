@@ -52,6 +52,9 @@ angular.module('posts', ['uploadService'])
       },
       function (res) {
         console.log('Error: ' + res);
+      },
+      function (percent) {
+        $scope.uploadProgress = percent;
       });
     };
 }])

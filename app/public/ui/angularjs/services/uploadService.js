@@ -4,7 +4,7 @@ angular.module('uploadService', [ 'angularFileUpload' ])
     function ($upload) {
 
       var service = {
-        uploadImage: function($files, onSuccess, onError) {
+        uploadImage: function($files, onSuccess, onError, onProgress) {
           for (var i = 0; i < $files.length; i++) {
             var file = $files[i];
             $upload.upload({
@@ -12,7 +12,9 @@ angular.module('uploadService', [ 'angularFileUpload' ])
               method: 'POST',
               file: file
             }).progress(function(evt) {
-              console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+              var percent = parseInt(100.0 * evt.loaded / evt.total);
+              onProgress(percent)
+              console.log('percent: ' + percent);
             }).success(onSuccess)
               .error(onError);
           }
