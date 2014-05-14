@@ -24,8 +24,8 @@ angular.module('common', ['ui.bootstrap'])
 })
 
 .controller('navigationHeaderController', [
-    '$scope', '$http', '$location', '$route','$modal', 'authenticateService', 'cssInjector',
-  function($scope, $http, $location, $route, $modal, authenticateService, cssInjector) {
+    '$scope', '$http', '$location', '$route','$modal', '$rootScope', 'authenticateService', 'cssInjector',
+  function($scope, $http, $location, $route, $modal, $rootScope, authenticateService, cssInjector) {
 
   cssInjector.add("../ui/angularjs/common/navigationHeader.css");
 
@@ -36,8 +36,7 @@ angular.module('common', ['ui.bootstrap'])
 
   $scope.errorMessage = "";
 
-  $scope.openLoginDialog = function() {
-
+  var openLoginDialog = function() {
     $modal.open({
       templateUrl: '/ui/angularjs/users/login.html',
       backdrop: true,
@@ -80,6 +79,14 @@ angular.module('common', ['ui.bootstrap'])
         }
       }
     });
+  }
+
+  $rootScope.$on("openLoginDialogEvent", function (event, args) {
+    openLoginDialog();
+  });
+
+  $scope.openLoginDialog = function() {
+    openLoginDialog();
   }
 }])
 

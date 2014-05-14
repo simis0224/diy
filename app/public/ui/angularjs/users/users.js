@@ -11,8 +11,8 @@ angular.module('users', [])
 
 }])
 
-.controller('signupController', ['$scope', '$location', 'authenticateService', 'cssInjector',
-  function($scope, $location, authenticateService, cssInjector) {
+.controller('signupController', ['$scope', '$rootScope', '$location', 'authenticateService', 'cssInjector',
+  function($scope, $rootScope, $location, authenticateService, cssInjector) {
 
   cssInjector.add("../ui/angularjs/users/login.css");
 
@@ -26,6 +26,10 @@ angular.module('users', [])
 
   $scope.signup = function() {
     authenticateService.signup($scope.user, onSignupSuccess, onSignupFailure);
+  }
+
+  $scope.openLoginDialog = function() {
+    $rootScope.$broadcast("openLoginDialogEvent");
   }
 
 }])
