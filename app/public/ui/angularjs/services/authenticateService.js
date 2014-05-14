@@ -6,6 +6,22 @@ angular.module('authenticateService', [])
 
       var service = {
         currentUser: null,
+        signup: function (user, onSignupSuccess, onSignupFailure) {
+          $http.post('/api/signup', user)
+            .success(function (res) {
+              if(res.success === 1) {
+                service.currentUser = res.data;
+                onSignupSuccess();
+              } else {
+                onSignupFailure(res.error.message);
+                console.log('Error: ' + res);
+              }
+            })
+            .error(function (err) {
+              onSignupFailure(err);
+              console.log('Error: ' + err);
+            });
+        },
         login: function (user, onLoginSuccess, onLoginFailure) {
           $http.post('/api/login', user)
             .success(function (res) {

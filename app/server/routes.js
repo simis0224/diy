@@ -18,7 +18,11 @@ module.exports = function(app, passport) {
   });
 
   app.post('/api/login', function(req, res, next) {
-    authController.apiLogin(passport,req, res, next);
+    authController.apiLogin(passport, req, res, next);
+  });
+
+  app.post('/api/signup', function(req, res, next) {
+    authController.apiSignup(passport, req, res, next);
   });
 
   app.post('/api/logout', function(req, res, next) {
@@ -74,16 +78,6 @@ module.exports = function(app, passport) {
   app.get('/listUser', function(req, res, next) {
     userController.renderListPage(req, res, next);
   });
-
-  app.get('/signup', function(req, res, next) {
-    userController.renderCreatePage(req, res, next);
-  });
-
-  app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect : '/',
-    failureRedirect : '/signup',
-    failureFlash : true
-  }));
 }
 
 function isLoggedIn(req, res, next) {

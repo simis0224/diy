@@ -33,12 +33,12 @@ module.exports = function(passport) {
           .findOne({ $or: [ { username: username }, { email: email } ] })
           .exec(function(err, user) {
             if (err) {
-              req.flash('loginMessage', labels.error.internalError);
-              return;
+              console.error(err);
+              return done(errors.INTERNAL_ERROR);
             }
 
             if (user) {
-              return done(null, false, req.flash('message', labels.user.usernameExists));
+              return done(errors.USERNAME_OR_EMAIL_EXISTS_ERROR);
             } else {
 
               var userData = {
@@ -55,10 +55,9 @@ module.exports = function(passport) {
                 if (err) {
                   // TODO fix validation
                   if (err.name === 'ValidationError') {
-                    return done(null, false, req.flash('message', err.errors[Object.keys(err.errors)[0]].message));
-                  } else {
-                    throw err;
+                    err.message = err.errors[Object.keys(err.errors)[0]].message;
                   }
+                  return done(err);
                 }
                 userHelper.updateCurrentUserInfo(req, user);
                 done(null, newUser);
@@ -78,7 +77,8 @@ module.exports = function(passport) {
         .findOne({ $or: [ { username: username}, { email: username } ] })
         .exec(function(err, user) {
           if (err) {
-            return done(err);
+            console.error(err);
+            return done(errors.INTERNAL_ERROR);
           }
 
           if (!user) {

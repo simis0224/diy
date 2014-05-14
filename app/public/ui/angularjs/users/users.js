@@ -6,14 +6,26 @@ angular.module('users', [])
   cssInjector.add("../ui/angularjs/users/login.css");
 
   $scope.login = function() {
-    authenticateService.login($scope.formData);
+    authenticateService.login($scope.user);
   };
 
 }])
 
-.controller('signupController', ['$scope', 'authenticateService', 'cssInjector',
-  function($scope, authenticateService, cssInjector) {
+.controller('signupController', ['$scope', '$location', 'authenticateService', 'cssInjector',
+  function($scope, $location, authenticateService, cssInjector) {
 
   cssInjector.add("../ui/angularjs/users/login.css");
+
+  var onSignupSuccess = function () {
+    $location.url('/');
+  }
+
+  var onSignupFailure = function (err) {
+    $scope.errorMessage = err;
+  }
+
+  $scope.signup = function() {
+    authenticateService.signup($scope.user, onSignupSuccess, onSignupFailure);
+  }
 
 }])
