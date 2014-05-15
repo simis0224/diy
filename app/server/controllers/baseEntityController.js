@@ -99,7 +99,7 @@ BaseEntityController.prototype.apiCreate = function(req, res, next) {
     lastModifedDate: new Date()
   };
 
-  itemData = this.addItemDataOnCreate(req, itemData);
+  itemData = this.readItemDataFromRequestOnCreate(req, itemData);
 
   that = this;
   var newItem = new this.getEntityModel()(itemData);
@@ -119,94 +119,13 @@ BaseEntityController.prototype.apiCreate = function(req, res, next) {
   });
 }
 
-BaseEntityController.prototype.create = function(req, res, next) {
-  var itemData = {
-    createdBy: userHelper.getCurrentUser(req).id,
-    createdDate: new Date(),
-    lastModifedDate: new Date()
-  };
-
-  itemData = this.addItemDataOnCreate(req, itemData);
-
-  that = this;
-  var newItem = new this.getEntityModel()(itemData);
-  newItem.save(function(err, item) {
-    if (err) {
-      console.error(err);
-      req.flash('message', labels.error.internalError);
-      // TODO pass itemData
-      res.redirect('/edit' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
-      return;
-    }
-    req.flash('message', util.format(labels.crud.publishSuccessful, that.getEntityNameLabel()));
-    res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
-  });
-}
-
-BaseEntityController.prototype.update = function(req, res, next) {
-  var itemData = {
-    _id: traverse(req).get(['body','id']),
-    lastModifiedDate: new Date()
-  };
-
-  itemData = this.addItemDataOnUpdate(req, itemData);
-
-  that = this;
-  this.getEntityModel()
-    .findOne( { _id: itemData._id })
-    .exec(function (err, item) {
-      if (err) {
-        console.error(err);
-        req.flash('message', labels.error.internalError);
-        res.redirect('/edit' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
-        return;
-      }
-
-      if (!item) {
-        req.flash('message', util.format(labels.error.itemNotFound, that.getEntityNameLabel()));
-        res.redirect('/edit' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
-        return;
-      }
-
-      if(item.createdBy && item.createdBy !== userHelper.getCurrentUser(req).id) {
-        req.flash('message', labels.error.noPrivilege);
-        res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(itemData));
-        return;
-      }
-
-      item.set(itemData);
-      item.save(function (err, newItem) {
-        if (err) {
-          console.error(err);
-          // TODO fix validation
-          if (err.name === 'ValidationError') {
-            req.flash('message', err.errors[Object.keys(err.errors)[0]].message);
-          } else if (err.name === 'MongoError') {
-            that.handleDBErrorOnUpdate(err, req);
-          } else {
-            req.flash('message', labels.error.internalError);
-          }
-
-          res.redirect('/edit' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
-          return;
-        }
-
-        that.hook_afterSaveBeforeRedirectOnUpdate(req, item);
-
-        req.flash('message', util.format(labels.crud.updateSuccessful, that.getEntityNameLabel()));
-        res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
-      });
-    }
-  );
-}
-
 BaseEntityController.prototype.apiUpdate = function(req, res, next) {
   var itemData = {
     _id: traverse(req).get(['params','id']),
     lastModifiedDate: new Date()
   };
 
-  itemData = this.addItemDataOnUpdate(req, itemData);
+  itemData = this.readItemDataFromRequestOnUpdate(req, itemData);
 
   that = this;
   this.getEntityModel()
@@ -255,8 +174,6 @@ BaseEntityController.prototype.apiUpdate = function(req, res, next) {
           });
           return;
         }
-
-        that.hook_afterSaveBeforeRedirectOnUpdate(req, item);
 
         res.json({
           success: 1
@@ -322,226 +239,12 @@ BaseEntityController.prototype.apiDelete = function(req, res, next) {
 }
 
 
-BaseEntityController.prototype.delete = function(req, res, next) {
-  var id = traverse(req).get(['params','id']);
-
-  if(!id) {
-    req.flash('message', labels.error.internalError);
-    res.redirect('/list' + this.getEntityName());
-    return;
-  }
-
-  that = this;
-  this.getEntityModel()
-    .findOne( { _id: id })
-    .exec(function(err, item) {
-      if(err) {
-        console.error(err);
-        req.flash('message', labels.error.internalError);
-        res.redirect('/view' + that.getEntityName() + '/' + id)
-        return;
-      }
-
-      if(!item) {
-        req.flash('message', labels.post.postNotFound);
-        res.redirect('/view' + that.getEntityName() + '/' + id);
-        return;
-      }
-
-      if(item.createdBy !== userHelper.getCurrentUser(req).id) {
-        req.flash('message', labels.error.noPrivilege);
-        res.redirect('/view' + that.getEntityName() + '/' + id);
-        return;
-      }
-
-      item.remove(function(err) {
-        if(err) {
-          req.flash('message', labels.error.internalError);
-          res.redirect('/view' + that.getEntityName() + '/' + id)
-          return;
-        }
-        req.flash('message', util.format(labels.crud.deleteSuccessful, that.getEntityNameLabel()));
-        res.redirect('/list' + that.getEntityName() + '/' + userHelper.getCurrentUser(req).username);
-      });
-    });
-}
-
-BaseEntityController.prototype.renderViewPage = function(req, res, next) {
-  var param = this.getUrlParamOnViewPage(req);
-  if(!param) {
-    res.render('view' + this.getEntityName(), {
-      message: labels.error.pageNotFound,
-      currentUser: userHelper.getCurrentUser(req)
-    })
-  }
-
-  that = this;
-  this.getEntityModel()
-    .findOne(this.getViewPageQuery(param))
-    .exec(function(err, item) {
-      var message = req.flash('message');
-      if (err) {
-        console.error(err);
-        message = labels.error.internalError;
-      }
-
-      if(!item) {
-        message = util.format(labels.error.itemNotFound, that.getEntityNameLabel());
-      }
-
-      item = that.hook_afterFindBeforeRedirectOnViewPage(item);
-
-      res.render('view' + that.getEntityName(), {
-        message: message,
-        item: item,
-        currentUser: userHelper.getCurrentUser(req)
-      });
-    });
-}
-
-BaseEntityController.prototype.renderListPage = function(req, res, next) {
-  var param = this.getUrlParamOnListPage(req);
-
-  that = this;
-  this.getEntityModel()
-    .find(this.getListPageQuery(param))
-    .exec(function(err, items) {
-      var message = req.flash('message')
-      if(err) {
-        message = labels.error.internalError;
-        console.log(err);
-      }
-      res.render('list' + that.getEntityName(), {
-        message: message,
-        items: items  ,
-        currentUser: userHelper.getCurrentUser(req)
-      })
-    })
-}
-
-BaseEntityController.prototype.renderCreatePage = function(req, res, next) {
-  var pageData = {
-    currentUser: userHelper.getCurrentUser(req),
-    message: req.flash('message')
-  }
-
-  pageData = this.hook_afterFindBeforeRedirectOnCreatePage(pageData);
-
-  res.render('create' + this.getEntityName(), pageData);
-}
-
-BaseEntityController.prototype.renderEditPage = function(req, res, next) {
-  var id = this.getUrlParamOnEditPage(req)
-  if(!id) {
-    res.render('edit' + this.getEntityName(), {
-      message: labels.error.pageNotFound,
-      currentUser: userHelper.getCurrentUser(req)
-    })
-  }
-
-  var validationResult = this.validateBeforeFindOnEditPage(req, res, id);
-  if(validationResult && validationResult.hasValidationError) {
-    return;
-  }
-
-  that = this;
-  this.getEntityModel()
-    .findOne( this.getEditPageQuery(id) )
-    .exec(function(err, item) {
-      var message = req.flash('message');
-      if (err) {
-        message = labels.error.internalError;
-        console.error(err);
-      }
-
-      if(!item) {
-        message = util.format(labels.error.itemNotFound, that.getEntityNameLabel());
-      }
-
-      var validationResult = that.validateAfterFindOnEditPage(req, res, item);
-      if(validationResult && validationResult.hasValidationError) {
-        req.flash('message', labels.error.noPrivilege);
-        res.redirect('/view' + that.getEntityName() + '/' + that.getRedirectUrlParam(item));
-        return;
-      }
-
-      var pageData = {
-        message: message,
-        item: item,
-        currentUser: userHelper.getCurrentUser(req)
-      }
-
-      pageData = that.hook_afterFindBeforeRedirectOnEditPage(pageData);
-
-      res.render('edit' + that.getEntityName(), pageData);
-    });
-}
-
-BaseEntityController.prototype.getViewPageQuery = function(param) {
-  return { _id: param };
-}
-
-BaseEntityController.prototype.getListPageQuery = function(param) {
-  if(param) {
-    return { createdBy: param };
-  } else {
-    return {};
-  }
-}
-
-BaseEntityController.prototype.getEditPageQuery = function(param) {
-  return { _id: param };
-}
-
-BaseEntityController.prototype.getUrlParamOnViewPage = function(req) {
-  return traverse(req).get(['params','id']);
-}
-
-BaseEntityController.prototype.getUrlParamOnListPage = function(req) {
-  var username = traverse(req).get(['params','username']);
-  return  traverse(userHelper.getUserByUsername(username)).get(['id']);
-}
-
-BaseEntityController.prototype.getUrlParamOnEditPage = function(req) {
-  return traverse(req).get(['params','id']);
-}
-
-BaseEntityController.prototype.hook_afterSaveBeforeRedirectOnUpdate = function(req, item) {}
-
-BaseEntityController.prototype.hook_afterFindBeforeRedirectOnViewPage = function(item) {
+BaseEntityController.prototype.readItemDataFromRequestOnCreate = function(req, item) {
   return item;
 }
 
-BaseEntityController.prototype.hook_afterFindBeforeRedirectOnCreatePage = function(pageData) {
-  return pageData;
-}
-
-BaseEntityController.prototype.hook_afterFindBeforeRedirectOnEditPage = function(pageData) {
-  return pageData;
-}
-
-BaseEntityController.prototype.validateBeforeFindOnEditPage = function(req, res, id) {
-  return {
-    hasValidationError: false
-  };
-}
-
-BaseEntityController.prototype.validateAfterFindOnEditPage = function(req, res, item) {
-  return {
-    hasValidationError: item.createdBy && item.createdBy !== userHelper.getCurrentUser(req).id
-  };
-}
-
-BaseEntityController.prototype.addItemDataOnCreate = function(req, item) {
+BaseEntityController.prototype.readItemDataFromRequestOnUpdate = function(req, item) {
   return item;
-}
-
-BaseEntityController.prototype.addItemDataOnUpdate = function(req, item) {
-  return item;
-}
-
-BaseEntityController.prototype.getRedirectUrlParam = function(item) {
-  return item._id;
 }
 
 /**

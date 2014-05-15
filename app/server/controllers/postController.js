@@ -29,28 +29,7 @@ PostController.prototype.getEntityNameLabel = function() {
   return postLabels.name;
 }
 
-PostController.prototype.getIdFromParamsOnViewPage = function(req) {
-  return traverse(req).get(['params','id']);
-}
-
-PostController.prototype.hook_afterFindBeforeRedirectOnViewPage = function(item) {
-  if(item && item.category) {
-    item.categoryInLabel = traverse(CategoryEnum.getEnumByDbValue(item.category)).get(['value', 'label']);
-  }
-  return item;
-}
-
-PostController.prototype.hook_afterFindBeforeRedirectOnCreatePage = function(pageData) {
-  pageData.categories = CategoryEnum.enums;
-  return pageData;
-}
-
-PostController.prototype.hook_afterFindBeforeRedirectOnEditPage = function(pageData) {
-  pageData.categories = CategoryEnum.enums;
-  return pageData;
-}
-
-PostController.prototype.addItemDataOnCreate = function(req, item) {
+PostController.prototype.readItemDataFromRequestOnCreate = function(req, item) {
   item.subject = traverse(req).get(['body','subject']);
   item.category = traverse(req).get(['body', 'category']);
   item.summary = traverse(req).get(['body','summary']);
@@ -84,7 +63,7 @@ PostController.prototype.addItemDataOnCreate = function(req, item) {
   return item;
 }
 
-PostController.prototype.addItemDataOnUpdate = function(req, item) {
+PostController.prototype.readItemDataFromRequestOnUpdate = function(req, item) {
   item.subject = traverse(req).get(['body','subject']);
   item.category = traverse(req).get(['body', 'category']);
   item.summary = traverse(req).get(['body','summary']);

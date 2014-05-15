@@ -1,0 +1,21 @@
+<div class="viewUser" ng-controller="userDetailController">
+    <p>{{ message }}<p>
+    <p class="error">{{ errorMessage }}<p>
+    <div ng-show="user">
+
+        <div class="btn-group" dropdown>
+            <button type="button" class="btn btn-danger">操作</button>
+            <button type="button" class="btn btn-danger dropdown-toggle">
+                <span class="caret"></span>
+                <span class="sr-only">Split button!</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="/#/editUser/{{user._id}}">更新用户资料</a></li>
+            </ul>
+        </div><br>
+
+        用户名：{{ user.username }}<br>
+        邮箱：{{ user.email }}<br>
+        注册日期：{{ user.createdDate }}<br>
+    </div>
+</div>

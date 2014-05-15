@@ -1,17 +1,12 @@
-<div class="content" ng-controller="signupController">
-    <form class="signup" ng-submit="signup()">
-        <h2>注册</h2>
+<div class="updateUser">
+    <form ng-submit="updateUser()">
+        <h2>更新用户资料</h2>
         <input type="text" name="email" ng-model="user.email" placeholder="电子邮件" class="form-control"/>
         <input type="text" name="username" ng-model="user.username" placeholder="用户名" class="form-control"/>
         <input type="password" name="password" ng-model="user.password" placeholder="账户密码" class="form-control"/>
         <p class="error">
             {{ errorMessage }}
         </p>
-        <button type="submit" name="update">注册</button><br>
+        <button type="submit" name="update">更新</button><br>
     </form>
-    <div class="otherLink">
-        <p>
-            已有账号，<a href="javascript:void(0)" ng-click="openLoginDialog()">从这里登录</a>
-        </p>
-    </div>
 </div>

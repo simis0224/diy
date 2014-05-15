@@ -58,6 +58,14 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
           }
         }
       }).
+      when('/viewUser/:id', {
+        templateUrl: '../ui/angularjs/users/viewUser.html',
+        controller: 'userDetailController'
+      }).
+      when('/editUser/:id', {
+        templateUrl: '../ui/angularjs/users/editUser.html',
+        controller: 'userEditController'
+      }).
       when('/login', {
         templateUrl: '../ui/angularjs/users/login.html',
         controller: 'loginController'

@@ -29,6 +29,10 @@ module.exports = function(app, passport) {
     authController.apiLogout(req, res, next);
   });
 
+  app.get('/api/user/:id', function(req, res) {
+    userController.findOne(req, res);
+  });
+
   app.post('/api/upload/image', function(req, res, next) {
     uploadController.apiUploadImage(req, res, next);
   });
@@ -58,25 +62,6 @@ module.exports = function(app, passport) {
 
   app.get('*', function(req, res) {
     res.sendfile('./public/index.html');
-  });
-
-  app.get('/', function(req, res, next) {
-    HomeController.renderHomePage(req, res, next);
-  });
-
-  app.get('/editUser/:username', isLoggedIn, function(req, res, next) {
-    userController.renderEditPage(req, res, next);
-  });
-  app.post('/editUser/:username', isLoggedIn, function(req, res, next) {
-    userController.update(req, res, next);
-  });
-
-  app.get('/viewUser/:username', function(req, res, next) {
-    userController.renderViewPage(req, res, next);
-  });
-
-  app.get('/listUser', function(req, res, next) {
-    userController.renderListPage(req, res, next);
   });
 }
 
