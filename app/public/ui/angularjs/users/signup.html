@@ -1,7 +1,7 @@
 <div class="content" ng-controller="signupController">
     <form class="signup" ng-submit="signup()">
         <h2>注册</h2>
-        <input type="text" name="email" ng-model="user.email" placeholder="电子邮件" class="form-control"/>
+        <input type="email" name="email" ng-model="user.email" placeholder="电子邮件" class="form-control"/>
         <input type="text" name="username" ng-model="user.username" placeholder="用户名" class="form-control"/>
         <input type="password" name="password" ng-model="user.password" placeholder="账户密码" class="form-control"/>
         <p class="error">

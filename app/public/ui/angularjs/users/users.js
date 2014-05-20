@@ -1,5 +1,25 @@
 angular.module('users', [])
 
+.config(function ($routeProvider) {
+  $routeProvider.
+    when('/viewUser/:id', {
+      templateUrl: '../ui/angularjs/users/viewUser.html',
+      controller: 'userDetailController'
+    }).
+    when('/editUser/:id', {
+      templateUrl: '../ui/angularjs/users/editUser.html',
+      controller: 'userEditController'
+    }).
+    when('/login', {
+      templateUrl: '../ui/angularjs/users/login.html',
+      controller: 'loginController'
+    }).
+    when('/signup', {
+      templateUrl: '../ui/angularjs/users/signup.html',
+      controller: 'signupController'
+    });
+})
+
 .controller('loginController', ['$scope', 'authenticateService', 'cssInjector',
   function($scope, authenticateService, cssInjector) {
 

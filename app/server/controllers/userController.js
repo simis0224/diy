@@ -46,3 +46,9 @@ UserController.prototype.readItemDataFromRequestOnUpdate = function(req, itemDat
   return itemData;
 }
 
+UserController.prototype.hook_beforeSuccessReturnOnGetOne = function(item) {
+  delete item.password;
+  return item;
+}
+
+

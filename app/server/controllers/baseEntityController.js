@@ -10,7 +10,7 @@ module.exports = BaseEntityController;
 
 function BaseEntityController() {}
 
-BaseEntityController.prototype.findOne = function(req, res) {
+BaseEntityController.prototype.apiGetOne = function(req, res) {
   var id = traverse(req).get(['params','id']);
 
   if(!id) {
@@ -21,6 +21,7 @@ BaseEntityController.prototype.findOne = function(req, res) {
     return;
   }
 
+  that = this;
   this.getEntityModel()
     .findOne( { _id: id })
     .exec(function(err, item) {
@@ -46,6 +47,8 @@ BaseEntityController.prototype.findOne = function(req, res) {
         retItem.createdBy = userHelper.getUserById(item.createdBy);
       }
 
+      that.hook_beforeSuccessReturnOnGetOne(retItem);
+
       res.json({
         success: 1,
         data: retItem
@@ -53,7 +56,7 @@ BaseEntityController.prototype.findOne = function(req, res) {
     });
 }
 
-BaseEntityController.prototype.find = function(req, res) {
+BaseEntityController.prototype.apiGet = function(req, res) {
   var userId = traverse(req).get(['query','userId']);
 
   var query = {};
@@ -246,6 +249,11 @@ BaseEntityController.prototype.readItemDataFromRequestOnCreate = function(req, i
 BaseEntityController.prototype.readItemDataFromRequestOnUpdate = function(req, item) {
   return item;
 }
+
+BaseEntityController.prototype.hook_beforeSuccessReturnOnGetOne = function(item) {
+  return item;
+}
+
 
 /**
  * Methods below should be implemented in sub class

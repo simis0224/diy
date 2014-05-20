@@ -1,5 +1,31 @@
 angular.module('posts', ['uploadService'])
 
+.config(function ($routeProvider) {
+  $routeProvider.
+    when('/viewPost/:id', {
+      templateUrl: '../ui/angularjs/posts/viewPost.html',
+      controller: 'postDetailController'
+    }).
+    when('/editPost/:id', {
+      templateUrl: '../ui/angularjs/posts/editPost.html',
+      controller: 'postEditController',
+      resolve: {
+        authenticated: function(authenticateService) {
+          authenticateService.requireAuthenticated();
+        }
+      }
+    }).
+    when('/createPost', {
+      templateUrl: '../ui/angularjs/posts/createPost.html',
+      controller: 'postCreateController',
+      resolve: {
+        authenticated: function (authenticateService) {
+          authenticateService.requireAuthenticated();
+        }
+      }
+    });
+})
+
 .controller('postListController', ['$scope', '$http', 'cssInjector', function ($scope, $http, cssInjector) {
 
   cssInjector.add("../ui/angularjs/posts/listPost.css");

@@ -36,44 +36,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         templateUrl: '../ui/angularjs/posts/listPost.html',
         controller: 'postListController'
       }).
-      when('/viewPost/:id', {
-        templateUrl: '../ui/angularjs/posts/viewPost.html',
-        controller: 'postDetailController'
-      }).
-      when('/editPost/:id', {
-        templateUrl: '../ui/angularjs/posts/editPost.html',
-        controller: 'postEditController',
-        resolve: {
-          authenticated: function(authenticateService) {
-            authenticateService.requireAuthenticated();
-          }
-        }
-      }).
-      when('/createPost', {
-        templateUrl: '../ui/angularjs/posts/createPost.html',
-        controller: 'postCreateController',
-        resolve: {
-          authenticated: function (authenticateService) {
-            authenticateService.requireAuthenticated();
-          }
-        }
-      }).
-      when('/viewUser/:id', {
-        templateUrl: '../ui/angularjs/users/viewUser.html',
-        controller: 'userDetailController'
-      }).
-      when('/editUser/:id', {
-        templateUrl: '../ui/angularjs/users/editUser.html',
-        controller: 'userEditController'
-      }).
-      when('/login', {
-        templateUrl: '../ui/angularjs/users/login.html',
-        controller: 'loginController'
-      }).
-      when('/signup', {
-        templateUrl: '../ui/angularjs/users/signup.html',
-        controller: 'signupController'
-      }).
       otherwise({
         redirectTo: '/'
       });

@@ -30,7 +30,7 @@ module.exports = function(app, passport) {
   });
 
   app.get('/api/user/:id', function(req, res) {
-    userController.findOne(req, res);
+    userController.apiGetOne(req, res);
   });
 
   app.post('/api/upload/image', function(req, res, next) {
@@ -41,11 +41,11 @@ module.exports = function(app, passport) {
    * Post related api
    */
   app.get('/api/post/:id', function(req, res) {
-    postController.findOne(req, res);
+    postController.apiGetOne(req, res);
   });
 
   app.get('/api/posts', function(req, res) {
-    postController.find(req, res);
+    postController.apiGet(req, res);
   });
 
   app.post('/api/post/create', isLoggedIn, function(req, res, next) {
