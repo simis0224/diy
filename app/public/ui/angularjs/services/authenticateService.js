@@ -1,8 +1,8 @@
 angular.module('authenticateService', [])
 
 .factory('authenticateService',
-  [ '$http', '$location', '$q', '$timeout',
-    function ($http, $location, $q, $timeout) {
+  [ '$http', '$location', '$q', '$timeout', '$rootScope',
+    function ($http, $location, $q, $timeout, $rootScope) {
 
       var service = {
         currentUser: null,
@@ -74,7 +74,8 @@ angular.module('authenticateService', [])
               // Not Authenticated
               else {
                 $timeout(function(){deferred.reject();}, 0);
-                $location.url('/login');
+                $location.url('/');
+                $rootScope.$broadcast("openLoginDialogEvent");
               }
             });
           }

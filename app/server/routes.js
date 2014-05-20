@@ -33,6 +33,10 @@ module.exports = function(app, passport) {
     userController.apiGetOne(req, res);
   });
 
+  app.post('/api/user/update/:id', isLoggedIn, function(req, res, next) {
+    userController.apiUpdate(req, res, next);
+  });
+
   app.post('/api/upload/image', function(req, res, next) {
     uploadController.apiUploadImage(req, res, next);
   });

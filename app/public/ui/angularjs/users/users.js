@@ -8,7 +8,12 @@ angular.module('users', [])
     }).
     when('/editUser/:id', {
       templateUrl: '../ui/angularjs/users/editUser.html',
-      controller: 'userEditController'
+      controller: 'userEditController',
+      resolve: {
+        authenticated: function(authenticateService) {
+          authenticateService.requireAuthenticated();
+        }
+      }
     }).
     when('/login', {
       templateUrl: '../ui/angularjs/users/login.html',
@@ -59,9 +64,9 @@ angular.module('users', [])
 
     var id = $routeParams.id;
 
-    $http.get('/api/post/' + id)
+    $http.get('/api/user/' + id)
       .success(function(res) {
-        $scope.formData = res.data;
+        $scope.user = res.data;
         $scope.message = res.message;
       })
       .error(function(res) {
@@ -70,7 +75,7 @@ angular.module('users', [])
       });
 
     $scope.updateUser = function() {
-      $http.post('/api/user/update/' + id, $scope.formData)
+      $http.post('/api/user/update/' + id, $scope.user)
         .success(function(res) {
           if(res.success === 1) {
             $location.url('/viewUser/' + id);
