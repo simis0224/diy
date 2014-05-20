@@ -1,13 +1,13 @@
 <div class="content createPost" ng-controller="postCreateController">
     <p>{{ message }}</p>
     <p class="error">{{ errorMessage }}</p>
-    <form enctype="multipart/form-data">
-        <input type="text" name="subject" value="" ng-model="formData.subject" placeholder="作品名称" class="form-control"/><br>
+    <form>
+        <input type="text" name="subject" value="" ng-model="post.subject" placeholder="作品名称" class="form-control"/><br>
         <input type="file" name="fileUploader" ng-file-select="uploadImage($files)" ><br>
         <progressbar animate="true" value="uploadProgress" type="success"><b>{{uploadProgress}}%</b></progressbar>
         <img class="imagePreview"/>
-        <input type="hidden" name="postImage" ng-model="formData.postImage" ><br>
-        <textarea name="summary" placeholder="简述" ng-model="formData.summary" rows="4" cols="50" class="form-control"></textarea><br>
+        <input type="hidden" name="postImage" ng-model="post.postImage" ><br>
+        <textarea name="summary" placeholder="简述" ng-model="post.summary" rows="4" cols="50" class="form-control"></textarea><br>
         <button type="submit" name="update" ng-click="createPost()">发布</button><br>
     </form>
 </div>

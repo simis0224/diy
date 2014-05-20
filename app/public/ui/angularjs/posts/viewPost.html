@@ -1,9 +1,9 @@
 <div class="content viewPost" ng-controller="postDetailController">
     <p>{{ message }}<p>
     <p class="error">{{ errorMessage }}<p>
-    <div ng-show="data">
+    <div ng-show="post">
 
-        <div class="btn-group" dropdown ng-show="currentUser && data && currentUser.id === data.createdBy.id">
+        <div class="btn-group" dropdown ng-show="currentUser && currentUser.id === post.createdBy.id">
             <button type="button" class="btn btn-danger">操作</button>
             <button type="button" class="btn btn-danger dropdown-toggle">
                 <span class="caret"></span>
@@ -11,29 +11,13 @@
             </button>
             <ul class="dropdown-menu" role="menu">
                 <li><a href="javascript:void(0)" ng-click="deletePost()">删除作品</a></li>
-                <li><a href="/#/editPost/{{data._id}}">修改作品</a></li>
+                <li><a href="/#/editPost/{{post._id}}">修改作品</a></li>
             </ul>
         </div><br>
 
-        名称：{{ data.subject }}<br>
-        分类：{{ data.categoryInLabel }}<br>
-        主图：<img class="postImage" ng-src="{{ data.postImage }}"/><br>
-        描述：{{ data.summary }}<br>
-        原料：<br>
-        <div class="materialList" >
-            <ul ng-repeat="material in data.materials">
-                <li class="material">
-                    {{ material.name }}{{ material.quantity }}
-                </li>
-            </ul>
-        </div>
-        工具：<br>
-        <div class="toolList" >
-            <ul ng-repeat="tool in data.tools">
-                <li class="tool">
-                    {{ tool.name }}{{ tool.quantity }}
-                </li>
-            </ul>
-        </div>
+        名称：{{ post.subject }}<br>
+        主图：<img class="postImage" ng-src="{{ post.postImage }}"/><br>
+        描述：{{ post.summary }}<br>
+        作者：<a href="/#/viewUser/{{post.createdBy.id}}">{{ post.createdBy.username }}</a><br>
     </div>
 </div>

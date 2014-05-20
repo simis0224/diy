@@ -1,11 +1,11 @@
 <div class="content listPost" ng-controller="postListController">
     <p>{{ message }}</p>
     <p class="error">{{ errorMessage }}<p>
-    <ul ng-repeat="item in data" class="post_grid">
+    <ul ng-repeat="post in posts" class="post_grid">
         <div class="post">
-            <a href="#/viewPost/{{ item._id }}">
-                <img ng-src="{{ item.postImage }}" class="post_image"/>
-                {{ item.subject }} by {{ item.createdBy.username }}
+            <a href="#/viewPost/{{ post._id }}">
+                <img ng-src="{{ post.postImage }}" class="post_image"/>
+                {{ post.subject }} by {{ post.createdBy.username }}
             </a>
         </div>
     </ul>

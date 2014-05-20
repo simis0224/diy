@@ -32,7 +32,7 @@ angular.module('posts', ['uploadService'])
 
   $http.get('/api/posts')
     .success(function(res) {
-      $scope.data = res.data;
+      $scope.posts = res.data;
     })
     .error(function(data) {
       console.log('Error: ' + data);
@@ -45,10 +45,10 @@ angular.module('posts', ['uploadService'])
 
   cssInjector.add("../ui/angularjs/posts/createPost.css");
 
-  $scope.formData = {};
+  $scope.post = {};
 
   $scope.createPost = function () {
-    $http.post('/api/post/create', $scope.formData)
+    $http.post('/api/post/create', $scope.post)
       .success(function (res) {
         if (res.success === 1) {
           console.log("Create post succeeded.");
@@ -68,7 +68,7 @@ angular.module('posts', ['uploadService'])
       function(res, status, headers, config) {
         // file is uploaded successfully
         if(res.success === 1) {
-          $scope.formData.postImage = res.imageUrl;
+          $scope.post.postImage = res.imageUrl;
           var previewImage = angular.element( document.querySelector( '.imagePreview' ) )[0];
           previewImage.src = res.imageUrl;
           console.log("Upload image succeeded.");
@@ -94,7 +94,7 @@ angular.module('posts', ['uploadService'])
 
   $http.get('/api/post/' + id)
     .success(function(res) {
-      $scope.formData = res.data;
+      $scope.post = res.data;
       $scope.message = res.message;
     })
     .error(function(res) {
@@ -103,7 +103,7 @@ angular.module('posts', ['uploadService'])
     });
 
   $scope.updatePost = function() {
-    $http.post('/api/post/update/' + id, $scope.formData)
+    $http.post('/api/post/update/' + id, $scope.post)
       .success(function(res) {
         if(res.success === 1) {
           $location.url('/viewPost/' + id);
@@ -121,7 +121,7 @@ angular.module('posts', ['uploadService'])
       function(res, status, headers, config) {
         // file is uploaded successfully
         if(res.success === 1) {
-          $scope.formData.postImage = res.imageUrl;
+          $scope.post.postImage = res.imageUrl;
           var previewImage = angular.element( document.querySelector( '.postImage' ) )[0];
           previewImage.src = res.imageUrl;
           console.log("Upload image succeeded.");
@@ -131,6 +131,9 @@ angular.module('posts', ['uploadService'])
       },
       function (res) {
         console.log('Error: ' + res);
+      },
+      function (percent) {
+        $scope.uploadProgress = percent;
       });
     };
 }])
@@ -150,7 +153,7 @@ angular.module('posts', ['uploadService'])
 
   $http.get('/api/post/' + id)
     .success(function(res) {
-      $scope.data = res.data;
+      $scope.post = res.data;
       $scope.message = res.message;
     })
     .error(function(data) {
