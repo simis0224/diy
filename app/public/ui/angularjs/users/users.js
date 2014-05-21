@@ -41,15 +41,15 @@ angular.module('users', [])
 
   cssInjector.add("../ui/angularjs/users/login.css");
 
-  var onSignupSuccess = function () {
-    $location.url('/');
-  }
-
-  var onSignupFailure = function (err) {
-    $scope.errorMessage = err;
-  }
-
   $scope.signup = function() {
+    var onSignupSuccess = function () {
+      $location.url('/');
+    }
+
+    var onSignupFailure = function (err) {
+      $scope.errorMessage = err;
+    }
+
     authenticateService.signup($scope.user, onSignupSuccess, onSignupFailure);
   }
 
@@ -59,33 +59,38 @@ angular.module('users', [])
 
 }])
 
-.controller('userEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService',
-  function ($scope, $http, $routeParams, $location, cssInjector, uploadService) {
+.controller('userEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',
+  function ($scope, $http, $routeParams, $location, cssInjector, uploadService, crudService) {
 
     var id = $routeParams.id;
 
-    $http.get('/api/user/' + id)
-      .success(function(res) {
-        $scope.user = res.data;
-        $scope.message = res.message;
-      })
-      .error(function(res) {
-        $scope.errorMessage = res.error.message;
-        console.log('Error: ' + res);
-      });
+    var onGetSuccess = function (res) {
+      $scope.user = res.data;
+      $scope.message = res.message;
+    }
+
+    var onGetError = function (res) {
+      $scope.errorMessage = res.error.message;
+    }
+
+    crudService.get('user', id, onGetSuccess, onGetError);
 
     $scope.updateUser = function() {
-      $http.post('/api/user/update/' + id, $scope.user)
-        .success(function(res) {
-          if(res.success === 1) {
-            $location.url('/viewUser/' + id);
-          } else {
-            $scope.errorMessage = res.message;
-          }
-        })
-        .error(function(data) {
-          console.log('Error: ' + data);
-        });
+
+      var onUpdateSuccess = function (res) {
+        $location.url('/viewUser/' + id);
+      }
+
+      var onUpdateError = function (res) {
+        if (res.success === 1) {
+          $scope.errorMessage = res.error.message;
+        } else {
+          $scope.errorMessage = res;
+        }
+      }
+
+      crudService.update('user', id, $scope.user, onUpdateSuccess, onUpdateError);
+
     };
 
     $scope.uploadImage = function($files) {
@@ -107,8 +112,8 @@ angular.module('users', [])
     };
   }])
 
-.controller('userDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService',
-  function ($scope, $http, $routeParams, $location, cssInjector, authenticateService) {
+.controller('userDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService', 'crudService',
+  function ($scope, $http, $routeParams, $location, cssInjector, authenticateService, crudService) {
 
     var id = $routeParams.id;
 
@@ -118,12 +123,14 @@ angular.module('users', [])
       $scope.currentUser = currentUser;
     });
 
-    $http.get('/api/user/' + id)
-      .success(function(res) {
-        $scope.user = res.data;
-        $scope.message = res.message;
-      })
-      .error(function(data) {
-        console.log('Error: ' + data);
-      });
+    var onGetSuccess = function (res) {
+      $scope.user = res.data;
+      $scope.message = res.message;
+    }
+
+    var onGetError = function (res) {
+      $scope.errorMessage = res.error.message;
+    }
+
+    crudService.get('user', id, onGetSuccess, onGetError);
   }]);
