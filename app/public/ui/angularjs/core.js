@@ -5,6 +5,7 @@ var app = angular.module('app', [
   'angular.css.injector',
   'authenticateService',
   'uploadService',
+  'crudService',
   'common',
   'posts',
   'users'

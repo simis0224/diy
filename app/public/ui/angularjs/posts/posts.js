@@ -1,4 +1,4 @@
-angular.module('posts', ['uploadService'])
+angular.module('posts', ['uploadService', 'crudService'])
 
 .config(function ($routeProvider) {
   $routeProvider.
@@ -40,27 +40,28 @@ angular.module('posts', ['uploadService'])
 
 }])
 
-.controller('postCreateController', ['$scope', '$http', '$location', '$upload', 'cssInjector', 'uploadService',
-    function ($scope, $http, $location, $upload, cssInjector, uploadService) {
+.controller('postCreateController', ['$scope', '$http', '$location', '$upload', 'cssInjector', 'uploadService', 'crudService',
+    function ($scope, $http, $location, $upload, cssInjector, uploadService, crudService) {
 
   cssInjector.add("../ui/angularjs/posts/createPost.css");
 
   $scope.post = {};
 
   $scope.createPost = function () {
-    $http.post('/api/post/create', $scope.post)
-      .success(function (res) {
-        if (res.success === 1) {
-          console.log("Create post succeeded.");
-          $location.url('/viewPost/' + res.data._id);
-        } else {
-          $scope.errorMessage = res.error.message;
-          console.log("Create post failed. Error: " + res.error.message);
-        }
-    })
-    .error(function (res) {
-      console.log('Error: ' + res);
-    });
+
+    var onCreateSuccess = function(res) {
+      $location.url('/viewPost/' + res.data._id);
+    }
+
+    var onCreateError = function(res) {
+      if (res.success === 1) {
+        $scope.errorMessage = res.error.message;
+      } else {
+        $scope.errorMessage = res;
+      }
+    }
+
+    crudService.create('post', $scope.post, onCreateSuccess, onCreateError);
   }
 
   $scope.uploadImage = function($files) {
@@ -85,35 +86,35 @@ angular.module('posts', ['uploadService'])
     };
 }])
 
-.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService',
-    function ($scope, $http, $routeParams, $location, cssInjector, uploadService) {
+.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',
+    function ($scope, $http, $routeParams, $location, cssInjector, uploadService, crudService) {
 
   cssInjector.add("../ui/angularjs/posts/editPost.css");
 
   var id = $routeParams.id;
 
-  $http.get('/api/post/' + id)
-    .success(function(res) {
-      $scope.post = res.data;
-      $scope.message = res.message;
-    })
-    .error(function(res) {
-      $scope.errorMessage = res.error.message;
-      console.log('Error: ' + res);
-    });
+  var onGetSuccess = function(res) {
+    $scope.post = res.data;
+    $scope.message = res.message;
+  };
 
-  $scope.updatePost = function() {
-    $http.post('/api/post/update/' + id, $scope.post)
-      .success(function(res) {
-        if(res.success === 1) {
-          $location.url('/viewPost/' + id);
-        } else {
-          $scope.errorMessage = res.message;
-        }
-      })
-      .error(function(data) {
-        console.log('Error: ' + data);
-      });
+  crudService.get('post', id, onGetSuccess);
+
+  $scope.updatePost = function () {
+
+    var onUpdateSuccess = function (res) {
+      $location.url('/viewPost/' + id);
+    }
+
+    var onUpdateError = function (res) {
+      if (res.success === 1) {
+        $scope.errorMessage = res.error.message;
+      } else {
+        $scope.errorMessage = res;
+      }
+    }
+
+    crudService.update('post', id, $scope.post, onUpdateSuccess, onUpdateError);
   };
 
   $scope.uploadImage = function($files) {
@@ -138,8 +139,8 @@ angular.module('posts', ['uploadService'])
     };
 }])
 
-.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService',
-    function ($scope, $http, $routeParams, $location, cssInjector, authenticateService) {
+.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService', 'crudService',
+    function ($scope, $http, $routeParams, $location, cssInjector, authenticateService, crudService) {
 
   cssInjector.add("../ui/angularjs/posts/viewPost.css");
 
@@ -151,29 +152,28 @@ angular.module('posts', ['uploadService'])
     $scope.currentUser = currentUser;
   });
 
-  $http.get('/api/post/' + id)
-    .success(function(res) {
-      $scope.post = res.data;
-      $scope.message = res.message;
-    })
-    .error(function(data) {
-      console.log('Error: ' + data);
-    });
+  var onGetSuccess = function(res) {
+    $scope.post = res.data;
+    $scope.message = res.message;
+  };
+
+  crudService.get('post', id, onGetSuccess);
 
   $scope.deletePost = function () {
-    $http.post('/api/post/delete/' + id)
-      .success(function (res) {
-        if(res.success === 1) {
-          console.log("Delete " + id + " succeeded.");
-          $location.url('/');
-        } else {
-          $scope.errorMessage = res.error.message;
-          console.log("Delete " + id + " failed. Error: " + res.error.message);
-        }
-      })
-      .error(function (res) {
-        console.log('Error: ' + res);
-      });
+
+    var onDeleteSuccess = function(res) {
+      $location.url('/');
+    };
+
+    var onDeleteError = function(res) {
+      if (res.success === 1) {
+        $scope.errorMessage = res.error.message;
+      } else {
+        $scope.errorMessage = res;
+      }
+    };
+
+    crudService.delete('post', id, onDeleteSuccess, onDeleteError);
   };
 
 }]);
