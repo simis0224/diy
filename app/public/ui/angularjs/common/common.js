@@ -16,13 +16,6 @@ angular.module('common', ['ui.bootstrap'])
   }
 }])
 
-.directive('navigationFooter', function() {
-  return {
-    restrict: 'E',
-    templateUrl: '/ui/angularjs/common/navigationFooter.html'
-  }
-})
-
 .controller('navigationHeaderController', [
     '$scope', '$http', '$location', '$route','$modal', '$rootScope', 'authenticateService', 'cssInjector',
   function($scope, $http, $location, $route, $modal, $rootScope, authenticateService, cssInjector) {
@@ -36,7 +29,7 @@ angular.module('common', ['ui.bootstrap'])
 
   $scope.errorMessage = "";
 
-  var openLoginDialog = function() {
+  var openLoginDialog = function(redirectUrlOnSuccess, redirectUrlOnCancel) {
     $modal.open({
       templateUrl: '/ui/angularjs/users/login.html',
       backdrop: true,
@@ -48,7 +41,9 @@ angular.module('common', ['ui.bootstrap'])
 
         var onLoginSuccess = function () {
           $modalInstance.close();
-          $location.url('/');
+          if (redirectUrlOnSuccess) {
+            $location.url(redirectUrlOnSuccess);
+          }
         }
 
         var onLoginFailure = function (err) {
@@ -65,10 +60,11 @@ angular.module('common', ['ui.bootstrap'])
         }
 
         $scope.cancel = function () {
+          if (redirectUrlOnCancel) {
+            $location.url(redirectUrlOnCancel);
+          }
           $modalInstance.dismiss('cancel');
         };
-
-
       },
       resolve: {
         user: function () {
@@ -89,5 +85,55 @@ angular.module('common', ['ui.bootstrap'])
     openLoginDialog();
   }
 }])
+
+.directive('navigationFooter', function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/ui/angularjs/common/navigationFooter.html'
+  }
+})
+
+.directive('imageUploader', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      onSuccess: '&',
+      onError: '&'
+    },
+    templateUrl: '/ui/angularjs/common/imageUploader.html'
+  }
+})
+
+.controller('imageUploaderController', [
+  '$scope', '$http', '$location', '$route','$modal', '$rootScope', 'uploadService',
+  function($scope, $http, $location, $route, $modal, $rootScope, uploadService) {
+
+    $scope.previewImageSrc = '';
+
+    $scope.uploadImage = function($files) {
+
+      var onSuccess = function(res, status, headers, config) {
+        // file is uploaded successfully
+        if(res.success === 1) {
+          $scope.previewImageSrc = res.imageUrl;
+          $scope.onSuccess({imageUrl: res.imageUrl});
+          console.log("Upload image succeeded.");
+        } else {
+          $scope.onError({error: res});
+          console.error('Upload image error:' + res);
+        }
+      }
+
+      var onError = function (res) {
+        console.error('Upload image error: ' + res);
+      }
+
+      var onProgress = function (percent) {
+        $scope.uploadProgress = percent;
+      }
+
+      uploadService.uploadImage($files, onSuccess, onError, onProgress);
+    };
+  }])
 
 

@@ -1,0 +1,5 @@
+<div class="imageUploader" ng-controller="imageUploaderController">
+  <input type="file" name="fileUploader" ng-file-select="uploadImage($files)" ><br>
+  <progressbar animate="true" value="uploadProgress" type="success"><b>{{uploadProgress}}%</b></progressbar>
+  <img class="previewImage" ng-src="{{previewImageSrc}}"/>
+</div>

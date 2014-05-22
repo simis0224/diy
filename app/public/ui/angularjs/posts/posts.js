@@ -64,26 +64,13 @@ angular.module('posts', ['uploadService', 'crudService'])
     crudService.create('post', $scope.post, onCreateSuccess, onCreateError);
   }
 
-  $scope.uploadImage = function($files) {
-    uploadService.uploadImage($files,
-      function(res, status, headers, config) {
-        // file is uploaded successfully
-        if(res.success === 1) {
-          $scope.post.postImage = res.imageUrl;
-          var previewImage = angular.element( document.querySelector( '.imagePreview' ) )[0];
-          previewImage.src = res.imageUrl;
-          console.log("Upload image succeeded.");
-        } else {
-          console.log('Upload error:' + res);
-        }
-      },
-      function (res) {
-        console.log('Error: ' + res);
-      },
-      function (percent) {
-        $scope.uploadProgress = percent;
-      });
-    };
+  $scope.imageUploadOnSuccess = function(imageUrl) {
+    $scope.post.postImage = imageUrl;
+  }
+
+  $scope.imageUploadOnError = function(message) {
+    $scope.errorMessage = message;
+  }
 }])
 
 .controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',
@@ -117,26 +104,13 @@ angular.module('posts', ['uploadService', 'crudService'])
     crudService.update('post', id, $scope.post, onUpdateSuccess, onUpdateError);
   };
 
-  $scope.uploadImage = function($files) {
-    uploadService.uploadImage($files,
-      function(res, status, headers, config) {
-        // file is uploaded successfully
-        if(res.success === 1) {
-          $scope.post.postImage = res.imageUrl;
-          var previewImage = angular.element( document.querySelector( '.postImage' ) )[0];
-          previewImage.src = res.imageUrl;
-          console.log("Upload image succeeded.");
-        } else {
-          console.log('Upload error:' + res);
-        }
-      },
-      function (res) {
-        console.log('Error: ' + res);
-      },
-      function (percent) {
-        $scope.uploadProgress = percent;
-      });
-    };
+  $scope.imageUploadOnSuccess = function(imageUrl) {
+    $scope.post.postImage = imageUrl;
+  }
+
+  $scope.imageUploadOnError = function(message) {
+    $scope.errorMessage = message;
+  }
 }])
 
 .controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService', 'crudService',
