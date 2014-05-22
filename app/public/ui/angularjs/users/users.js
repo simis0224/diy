@@ -25,13 +25,20 @@ angular.module('users', [])
     });
 })
 
-.controller('loginController', ['$scope', 'authenticateService', 'cssInjector',
-  function($scope, authenticateService, cssInjector) {
+.controller('loginController', ['$scope', '$location', '$routeParams', 'authenticateService', 'cssInjector',
+  function($scope, $location, $routeParams, authenticateService, cssInjector) {
 
   cssInjector.add("../ui/angularjs/users/login.css");
 
   $scope.login = function() {
-    authenticateService.login($scope.user);
+    var onLoginSuccess = function() {
+      if($routeParams.retUrl) {
+        $location.url($routeParams.retUrl);
+      } else {
+        $location.url('/');
+      }
+    }
+    authenticateService.login($scope.user, onLoginSuccess);
   };
 
 }])
@@ -52,11 +59,6 @@ angular.module('users', [])
 
     authenticateService.signup($scope.user, onSignupSuccess, onSignupFailure);
   }
-
-  $scope.openLoginDialog = function() {
-    $rootScope.$broadcast("openLoginDialogEvent");
-  }
-
 }])
 
 .controller('userEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',

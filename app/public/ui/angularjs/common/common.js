@@ -1,4 +1,4 @@
-angular.module('common', ['ui.bootstrap'])
+angular.module('common', [])
 
 .directive('navigationHeader', ['authenticateService', function(authenticateService) {
   return {
@@ -17,8 +17,8 @@ angular.module('common', ['ui.bootstrap'])
 }])
 
 .controller('navigationHeaderController', [
-    '$scope', '$http', '$location', '$route','$modal', '$rootScope', 'authenticateService', 'cssInjector',
-  function($scope, $http, $location, $route, $modal, $rootScope, authenticateService, cssInjector) {
+    '$scope', '$http', '$location', '$route', '$rootScope', 'authenticateService', 'cssInjector',
+  function($scope, $http, $location, $route, $rootScope, authenticateService, cssInjector) {
 
   cssInjector.add("../ui/angularjs/common/navigationHeader.css");
 
@@ -29,61 +29,6 @@ angular.module('common', ['ui.bootstrap'])
 
   $scope.errorMessage = "";
 
-  var openLoginDialog = function(redirectUrlOnSuccess, redirectUrlOnCancel) {
-    $modal.open({
-      templateUrl: '/ui/angularjs/users/login.html',
-      backdrop: true,
-      windowClass: 'modal',
-      controller: function ($scope, $modalInstance, user, errorMessage) {
-
-        $scope.user = user;
-        $scope.errorMessage = errorMessage
-
-        var onLoginSuccess = function () {
-          $modalInstance.close();
-          if (redirectUrlOnSuccess) {
-            $location.url(redirectUrlOnSuccess);
-          }
-        }
-
-        var onLoginFailure = function (err) {
-          $scope.errorMessage = err;
-        }
-
-        $scope.login = function() {
-          authenticateService.login(user, onLoginSuccess, onLoginFailure);
-        }
-
-        $scope.redirectToSignupPage = function() {
-          $modalInstance.close();
-          $location.url('/signup');
-        }
-
-        $scope.cancel = function () {
-          if (redirectUrlOnCancel) {
-            $location.url(redirectUrlOnCancel);
-          }
-          $modalInstance.dismiss('cancel');
-        };
-      },
-      resolve: {
-        user: function () {
-          return $scope.user;
-        },
-        errorMessage: function() {
-          return $scope.errorMessage;
-        }
-      }
-    });
-  }
-
-  $rootScope.$on("openLoginDialogEvent", function (event, args) {
-    openLoginDialog();
-  });
-
-  $scope.openLoginDialog = function() {
-    openLoginDialog();
-  }
 }])
 
 .directive('navigationFooter', function() {
@@ -105,8 +50,8 @@ angular.module('common', ['ui.bootstrap'])
 })
 
 .controller('imageUploaderController', [
-  '$scope', '$http', '$location', '$route','$modal', '$rootScope', 'uploadService',
-  function($scope, $http, $location, $route, $modal, $rootScope, uploadService) {
+  '$scope', '$location', 'uploadService',
+  function($scope, $location, uploadService) {
 
     $scope.previewImageSrc = '';
 

@@ -4,7 +4,6 @@
     <form>
         <input type="text" name="subject" ng-model="post.subject" placeholder="作品名称" class="form-control"/><br>
         <image-uploader on-success="imageUploadOnSuccess(imageUrl)" on-error="imageUploadOnError(error)"></image-uploader>
-        <input type="hidden" name="postImage" ng-model="post.postImage" ><br>
         <textarea name="summary" placeholder="简述" rows="4" ng-model="post.summary" cols="50" class="form-control"></textarea><br>
         <button type="submit" name="update" ng-click="updatePost()">修改</button><br>
     </form>

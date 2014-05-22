@@ -11,14 +11,14 @@ angular.module('authenticateService', [])
             .success(function (res) {
               if(res.success === 1) {
                 service.currentUser = res.data;
-                onSignupSuccess();
+                (onSignupSuccess || angular.noop)();
               } else {
-                onSignupFailure(res.error.message);
+                (onSignupFailure || angular.noop)(res.error.message);
                 console.log('Error: ' + res);
               }
             })
             .error(function (err) {
-              onSignupFailure(err);
+              (onSignupFailure || angular.noop)(err);
               console.log('Error: ' + err);
             });
         },
@@ -27,13 +27,13 @@ angular.module('authenticateService', [])
             .success(function (res) {
               if(res.success === 1) {
                 service.currentUser = res.data;
-                onLoginSuccess();
+                (onLoginSuccess || angular.noop)();
               } else {
-                onLoginFailure(res.error.message);
+                (onLoginFailure || angular.noop)(res.error.message);
               }
             })
             .error(function (err) {
-              onLoginFailure(err);
+              (onLoginFailure || angular.noop)(err);
               console.log('Error: ' + err);
             });
         },
@@ -74,8 +74,7 @@ angular.module('authenticateService', [])
               // Not Authenticated
               else {
                 $timeout(function(){deferred.reject();}, 0);
-                $location.url('/');
-                $rootScope.$broadcast("openLoginDialogEvent");
+                $location.url('/login?retUrl=' + $location.path());
               }
             });
           }
