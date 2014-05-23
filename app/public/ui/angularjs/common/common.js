@@ -1,4 +1,4 @@
-angular.module('common', [])
+angular.module('common', ['ui.bootstrap'])
 
 .directive('navigationHeader', ['authenticateService', function(authenticateService) {
   return {
@@ -50,8 +50,10 @@ angular.module('common', [])
 })
 
 .controller('imageUploaderController', [
-  '$scope', '$location', 'uploadService',
-  function($scope, $location, uploadService) {
+  '$scope', '$location', 'uploadService', 'cssInjector',
+  function($scope, $location, uploadService, cssInjector) {
+
+    cssInjector.add("../ui/angularjs/common/imageUploader.css");
 
     $scope.previewImageSrc = '';
 
