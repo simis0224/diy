@@ -43,12 +43,12 @@ module.exports = function(app, passport) {
   /**
    * Post related api
    */
-  app.get('/api/post/:id', function(req, res) {
-    postController.apiGetOne(req, res);
+  app.get('/api/post/list', function(req, res) {
+    postController.apiList(req, res);
   });
 
-  app.get('/api/posts', function(req, res) {
-    postController.apiGet(req, res);
+  app.get('/api/post/:id', function(req, res) {
+    postController.apiGetOne(req, res);
   });
 
   app.post('/api/post/create', isLoggedIn, function(req, res, next) {

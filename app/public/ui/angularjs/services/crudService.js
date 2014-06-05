@@ -15,6 +15,23 @@ angular.module('crudService', [])
               (onError || angular.noop)();
             });
         },
+        list: function (entity, onSuccess, onError) {
+          $http.get('/api/' + entity + '/list')
+            .success(function (res) {
+              if (res.success === 1) {
+                console.log('List ' + entity + ' succeeded.');
+                (onSuccess || angular.noop)(res);
+              } else {
+                debugger;
+                console.error('List ' + entity + ' failed. Error: ' + res.error.message);
+                (onError || angular.noop)(res);
+              }
+            })
+            .error(function (res) {
+              (onError || angular.noop)();
+              console.error('Create ' + entity + ' failed. Error: ' + res);
+            });
+        },
         create: function (entity, data, onSuccess, onError) {
           $http.post('/api/' + entity + '/create', data)
             .success(function (res) {

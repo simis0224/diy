@@ -26,17 +26,23 @@ angular.module('posts', ['uploadService', 'crudService'])
     });
 })
 
-.controller('postListController', ['$scope', '$http', 'cssInjector', function ($scope, $http, cssInjector) {
+.controller('postListController', ['$scope', '$http', 'cssInjector', 'crudService', function ($scope, $http, cssInjector, crudService) {
 
   cssInjector.add("../ui/angularjs/posts/listPost.css");
 
-  $http.get('/api/posts')
-    .success(function(res) {
-      $scope.posts = res.data;
-    })
-    .error(function(data) {
-      console.log('Error: ' + data);
-    });
+  var onListSuccess = function(res) {
+    $scope.posts = res.data;
+  }
+
+  var onListError = function(res) {
+    if (res.success === 1) {
+      $scope.errorMessage = res.error.message;
+    } else {
+      $scope.errorMessage = res;
+    }
+  }
+
+  crudService.list('post', onListSuccess, onListError);
 
 }])
 

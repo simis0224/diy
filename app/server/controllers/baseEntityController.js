@@ -56,7 +56,7 @@ BaseEntityController.prototype.apiGetOne = function(req, res) {
     });
 }
 
-BaseEntityController.prototype.apiGet = function(req, res) {
+BaseEntityController.prototype.apiList = function(req, res) {
   var userId = traverse(req).get(['query','userId']);
 
   var query = {};

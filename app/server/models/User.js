@@ -8,7 +8,7 @@ var userSchema = mongoose.Schema({
   username: String,
   password: String,
   status: String,
-  role: String,
+  isAdmin: Boolean,
   createdDate: Date,
   lastModifedDate: Date
 });
