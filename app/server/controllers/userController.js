@@ -3,7 +3,6 @@ var User = require('../models/User');
 var userLabels = require('../labels/labels').user;
 var util = require('util');
 var BaseEntityController = require('./baseEntityController');
-var userHelper = require('../helpers/userHelper.js');
 var labels = require('../labels/labels');
 var errors = require('../constants/errors');
 

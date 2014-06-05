@@ -1,8 +1,6 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var User = require('./models/User');
-var labels = require('./labels/labels');
 var traverse = require('traverse');
-var util = require('util');
 var userHelper = require('./helpers/userHelper');
 var errors = require('./constants/errors');
 
