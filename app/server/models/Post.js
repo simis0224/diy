@@ -3,7 +3,10 @@ var mongoose = global.mongoose;
 // define the schema for our user model
 var postSchema = mongoose.Schema({
   subject: String,
+  location: String,
   summary: String,
+  address: String,
+  phone: String,
   postImage: String,
   createdBy: String,
   createdDate: Date,

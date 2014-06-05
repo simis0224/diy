@@ -150,4 +150,8 @@ angular.module('posts', ['uploadService', 'crudService'])
     crudService.delete('post', id, onDeleteSuccess, onDeleteError);
   };
 
+  $scope.redirectToPostEditPage = function(){
+    $location.url('/editPost/' + id);
+  }
+
 }]);

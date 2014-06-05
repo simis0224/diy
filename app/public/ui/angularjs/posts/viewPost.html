@@ -4,20 +4,14 @@
     <div ng-show="post">
 
         <div class="btn-group" dropdown ng-show="currentUser && currentUser.id === post.createdBy.id">
-            <button type="button" class="btn btn-danger">操作</button>
-            <button type="button" class="btn btn-danger dropdown-toggle">
-                <span class="caret"></span>
-                <span class="sr-only">Split button!</span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li><a href="javascript:void(0)" ng-click="deletePost()">删除作品</a></li>
-                <li><a href="/#/editPost/{{post._id}}">修改作品</a></li>
-            </ul>
-        </div><br>
+            <button button type="button" class="btn btn-primary" ng-click="deletePost()">删除</button>
+            <button button type="button" class="btn btn-primary" ng-click="redirectToPostEditPage()">修改</button>
+        </div>
 
-        名称：{{ post.subject }}<br>
-        主图：<img class="postImage" ng-src="{{ post.postImage }}"/><br>
-        描述：{{ post.summary }}<br>
-        作者：<a href="/#/viewUser/{{post.createdBy.id}}">{{ post.createdBy.username }}</a><br>
+        <h1>{{ post.subject }}</h1>
+        <div><img class="postImage" ng-src="{{ post.postImage }}"/></div>
+        <div>{{ post.summary }}</div>
+        <div>地址：{{ post.address }}</div>
+        <div>电话：{{ post.phone }}</div>
     </div>
 </div>
