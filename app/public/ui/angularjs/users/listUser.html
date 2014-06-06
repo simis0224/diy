@@ -1,0 +1,12 @@
+<div class="listUser">
+    <p>{{ message }}</p>
+    <p class="error">{{ errorMessage }}<p>
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="user in $data">
+            <td data-title="'ID'">{{user._id}}</td>
+            <td data-title="'用户名'">{{user.username}}</td>
+            <td data-title="'电子邮件'">{{user.email}}</td>
+            <td data-title="'管理员'">{{user.isAdmin}}</td>
+        </tr>
+    </table>
+</div>

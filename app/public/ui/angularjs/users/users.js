@@ -1,4 +1,4 @@
-angular.module('users', [])
+angular.module('users', ['ngTable'])
 
 .config(function ($routeProvider) {
   $routeProvider.
@@ -14,6 +14,10 @@ angular.module('users', [])
           authenticateService.requireAuthenticated();
         }
       }
+    }).
+    when('/listUser', {
+      templateUrl: '../ui/angularjs/users/listUser.html',
+      controller: 'userListController'
     }).
     when('/login', {
       templateUrl: '../ui/angularjs/users/login.html',
@@ -59,6 +63,38 @@ angular.module('users', [])
 
     authenticateService.signup($scope.user, onSignupSuccess, onSignupFailure);
   }
+}])
+
+.controller('userListController', ['$scope', '$http', 'cssInjector', 'crudService', 'ngTableParams', function ($scope, $http, cssInjector, crudService, ngTableParams) {
+
+  cssInjector.add("../ui/angularjs/users/listUser.css");
+
+  var onListSuccess = function(res) {
+    users = res.data;
+
+    $scope.tableParams = new ngTableParams({
+      page: 1,            // show first page
+      count: 10           // count per page
+    }, {
+      total: users.length, // length of data
+      getData: function($defer, params) {
+        $defer.resolve(users.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      }
+    });
+  }
+
+  var onListError = function(res) {
+    if (res.success === 1) {
+      $scope.errorMessage = res.error.message;
+    } else {
+      $scope.errorMessage = res;
+    }
+  }
+
+  crudService.list('user', onListSuccess, onListError);
+
+
+
 }])
 
 .controller('userEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',

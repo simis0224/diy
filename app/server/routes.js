@@ -28,6 +28,10 @@ module.exports = function(app, passport) {
     authController.apiLogout(req, res, next);
   });
 
+  app.get('/api/user/list', function(req, res) {
+    userController.apiList(req, res);
+  });
+
   app.get('/api/user/:id', function(req, res) {
     userController.apiGetOne(req, res);
   });
