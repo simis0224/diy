@@ -1,4 +1,5 @@
 var traverse = require('traverse');
+var _ = require('lodash');
 var Post = require('../models/Post');
 var postLabels = require('../labels/labels').post;
 var util = require('util');
@@ -22,24 +23,4 @@ PostController.prototype.getEntityName = function() {
 
 PostController.prototype.getEntityNameLabel = function() {
   return postLabels.name;
-}
-
-PostController.prototype.readItemDataFromRequestOnCreate = function(req, item) {
-  item.subject = traverse(req).get(['body','subject']);
-  item.summary = traverse(req).get(['body','summary']);
-  item.postImage = traverse(req).get(['body','postImage']);
-  item.address = traverse(req).get(['body','address']);
-  item.phone = traverse(req).get(['body','phone']);
-
-  return item;
-}
-
-PostController.prototype.readItemDataFromRequestOnUpdate = function(req, item) {
-  item.subject = traverse(req).get(['body','subject']);
-  item.summary = traverse(req).get(['body','summary']);
-  item.postImage = traverse(req).get(['body','postImage']);
-  item.address = traverse(req).get(['body','address']);
-  item.phone = traverse(req).get(['body','phone']);
-
-  return item;
 }

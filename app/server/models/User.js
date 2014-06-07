@@ -1,30 +1,62 @@
 var bcrypt   = require('bcrypt-nodejs');
 var mongoose = global.mongoose;
 var validator = require("validator");
+var modelHelper = require('./modelHelper');
 
-// define the schema for our user model
-var userSchema = mongoose.Schema({
-  email: String,
-  username: String,
-  password: String,
-  status: String,
-  isAdmin: Boolean,
-  createdDate: Date,
-  lastModifedDate: Date
-});
+var fields = [
+  {
+    name: 'email',
+    type: String,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
+    name: 'username',
+    type: String,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
+    name: 'password',
+    type: String,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
+    name: 'status',
+    type: String,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
+    name: 'isAdmin',
+    type: Boolean,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
+    name: 'profileImage',
+    type: String,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
+    name: 'createdDate',
+    type: Date,
+    allowCreate: true,
+    allowUpdate: false,
+    isSystemGenerated: true
+  },
+  {
+    name: 'lastModifiedDate',
+    type: Date,
+    allowCreate: true,
+    allowUpdate: true,
+    isSystemGenerated: true
+  }
+]
 
-// methods ======================
-// generating a hash
-function generateHash(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
-
-// checking if password is valid
-function validatePassword(password1, password2) {
-  return bcrypt.compareSync(password1, password2);
-};
-
-var User = mongoose.model('User', userSchema);
+var User = modelHelper.generateModel('User', fields);
 
 User.schema.path('email').validate(function (value) {
   return validator.isEmail(value);
@@ -37,6 +69,17 @@ User.schema.path('username').validate(function (value) {
 User.schema.path('password').validate(function (value) {
   return value && value.trim().length >= 8;
 }, '密码长度大于等于8');
+
+// methods ======================
+// generating a hash
+function generateHash(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+// checking if password is valid
+function validatePassword(password1, password2) {
+  return bcrypt.compareSync(password1, password2);
+};
 
 // create the model for users and expose it to our app
 module.exports = User;

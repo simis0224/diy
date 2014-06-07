@@ -243,10 +243,22 @@ BaseEntityController.prototype.apiDelete = function(req, res, next) {
 
 
 BaseEntityController.prototype.readItemDataFromRequestOnCreate = function(req, item) {
+  _.forEach(this.getEntityModel().fields, function(field) {
+    if(field.allowCreate && traverse(req).get(['body', field.name])) {
+      item[field.name] = traverse(req).get(['body', field.name]);
+    }
+  });
+
   return item;
 }
 
 BaseEntityController.prototype.readItemDataFromRequestOnUpdate = function(req, item) {
+  _.forEach(this.getEntityModel().fields, function(field) {
+    if(field.allowUpdate && traverse(req).get(['body', field.name])) {
+      item[field.name] = traverse(req).get(['body', field.name]);
+    }
+  });
+
   return item;
 }
 

@@ -35,21 +35,9 @@ UserController.prototype.handleDBErrorOnUpdate = function(err, req) {
 }
 
 UserController.prototype.readItemDataFromRequestOnUpdate = function(req, itemData) {
-  var email = traverse(req).get(['body','email']);
-  if(email) {
-    itemData.email = email;
-  }
-  var username = traverse(req).get(['body','username']);
-  if(username) {
-    itemData.username = username;
-  }
-  var isAdmin = traverse(req).get(['body','isAdmin']);
-  if(isAdmin) {
-    itemData.isAdmin = isAdmin;
-  }
-  var password = traverse(req).get(['body','password']);
-  if(password) {
-    itemData.password = User.generateHash(password);
+  BaseEntityController.prototype.readItemDataFromRequestOnUpdate.call(this, req, itemData);
+  if(itemData.password) {
+    itemData.password = User.generateHash(itemData.password);
   }
   return itemData;
 }
