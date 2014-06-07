@@ -2,9 +2,17 @@
     <p>{{ message }}</p>
     <p class="error">{{ errorMessage }}</p>
     <form>
-        <input type="text" name="subject" ng-model="post.subject" placeholder="作品名称" class="form-control"/><br>
-        <image-uploader on-success="imageUploadOnSuccess(imageUrl)" on-error="imageUploadOnError(error)"></image-uploader>
-        <textarea name="summary" placeholder="简述" rows="4" ng-model="post.summary" cols="50" class="form-control"></textarea><br>
-        <button type="submit" name="update" ng-click="updatePost()">修改</button><br>
+        <h2>修改推荐</h2>
+        <div><input type="text" name="subject" ng-model="post.subject" placeholder="作品名称" class="form-control"/></div>
+        <div><input type="text" name="location" value="" ng-model="post.location" placeholder="地点" class="form-control" required/></div>
+        <div><img class="postImage" ng-src="{{ post.postImage }}"/></div>
+        <div><image-uploader on-success="imageUploadOnSuccess(imageUrl)" on-error="imageUploadOnError(error)"></image-uploader></div>
+        <div><textarea name="summary" placeholder="简述" rows="4" ng-model="post.summary" cols="50" class="form-control"></textarea></div>
+        <div><input type="text" name="address" value="" ng-model="post.address" placeholder="地址" class="form-control"/></div>
+        <div><input type="text" name="phone" value="" ng-model="post.phone" placeholder="电话" class="form-control"/></div>
+        <div>
+            <button name="update" class="btn btn-default" ng-click="redirectToPreviousPage()">取消</button>
+            <button type="submit" name="update" class="btn btn-primary" ng-click="updatePost()">修改</button>
+        </div>
     </form>
 </div>

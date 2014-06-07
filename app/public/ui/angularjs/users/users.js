@@ -120,6 +120,8 @@ angular.module('users', ['ngTable'])
 .controller('userEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService', 'authenticateService',
   function ($scope, $http, $routeParams, $location, cssInjector, uploadService, crudService, authenticateService) {
 
+    cssInjector.add("../ui/angularjs/users/editUser.css");
+
     var id = $routeParams.id;
 
     if (authenticateService.currentUser.id != id && !authenticateService.currentUser.isAdmin) {

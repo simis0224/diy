@@ -1,13 +1,12 @@
-form {
-    margin: 40px;
-}
-
 form.login {
+    margin: 0 auto;
     height: 220px;
+    width: 400px;
 }
 
 form.signup {
-    height: 270px;
+    margin: 0 auto;
+    width: 400px;
 }
 
 form.login button, form.signup button {

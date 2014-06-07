@@ -101,17 +101,17 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
   };
 
   $scope.redirectToPostEditPage = function(id){
-    $location.url('/editPost/' + id);
+    $location.url('/editPost/' + id + '?retUrl=' + $location.path());
   }
 
   $scope.redirectToPostCreatePage = function(id){
-    $location.url('/createPost/');
+    $location.url('/createPost?retUrl=' + $location.path());
   }
 
 }])
 
-.controller('postCreateController', ['$scope', '$http', '$location', '$upload', 'cssInjector', 'uploadService', 'crudService',
-    function ($scope, $http, $location, $upload, cssInjector, uploadService, crudService) {
+.controller('postCreateController', ['$scope', '$http', '$location', '$upload', '$routeParams', 'cssInjector', 'uploadService', 'crudService',
+    function ($scope, $http, $location, $upload, $routeParams, cssInjector, uploadService, crudService) {
 
   cssInjector.add("../ui/angularjs/posts/createPost.css");
 
@@ -140,6 +140,11 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
 
   $scope.imageUploadOnError = function(message) {
     $scope.errorMessage = message;
+  }
+
+  $scope.redirectToPreviousPage = function(){
+    var retUrl = $routeParams.retUrl ? $routeParams.retUrl : '/';
+    $location.url(retUrl);
   }
 }])
 
@@ -180,6 +185,11 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
 
   $scope.imageUploadOnError = function(message) {
     $scope.errorMessage = message;
+  }
+
+  $scope.redirectToPreviousPage = function(){
+    var retUrl = $routeParams.retUrl ? $routeParams.retUrl : '/';
+    $location.url(retUrl);
   }
 }])
 

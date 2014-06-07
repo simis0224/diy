@@ -29,6 +29,10 @@ angular.module('common', ['ui.bootstrap'])
 
   $scope.errorMessage = "";
 
+  $scope.redirectToLoginPage = function(){
+    var retUrl = $location.path() === '/login' ? '/' : $location.path();
+    $location.url('/login?retUrl=' + retUrl);
+  }
 }])
 
 .directive('navigationFooter', function() {

@@ -1,6 +1,7 @@
 <div class="listUser">
     <p>{{ message }}</p>
     <p class="error">{{ errorMessage }}<p>
+    <h2>用户列表</h2>
     <table ng-table="tableParams" class="table">
         <tr ng-repeat="user in $data">
             <td data-title="'ID'">

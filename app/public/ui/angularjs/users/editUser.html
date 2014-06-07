@@ -1,12 +1,15 @@
-<div class="updateUser">
+<div class="editUser">
     <form ng-submit="updateUser()">
-        <h2>更新用户资料</h2>
-        <input type="text" name="email" ng-model="user.email" placeholder="电子邮件" class="form-control"/>
-        <input type="text" name="username" ng-model="user.username" placeholder="用户名" class="form-control"/>
-        <input type="password" name="password" ng-model="user.password" placeholder="账户密码" class="form-control"/>
+        <h2>修改用户资料</h2>
+        <div><input type="text" name="email" ng-model="user.email" placeholder="电子邮件" class="form-control"/></div>
+        <div><input type="text" name="username" ng-model="user.username" placeholder="用户名" class="form-control"/></div>
+        <div><input type="password" name="password" ng-model="user.password" placeholder="账户密码" class="form-control"/></div>
         <p class="error">
             {{ errorMessage }}
         </p>
-        <button type="submit" name="update">更新</button><br>
+        <div>
+            <button name="update" class="btn btn-default">取消</button>
+            <button type="submit" name="update" class="btn btn-primary">修改</button>
+        </div>
     </form>
 </div>

@@ -2,11 +2,7 @@
     <p>{{ message }}<p>
     <p class="error">{{ errorMessage }}<p>
     <div ng-show="user">
-
-        <div class="btn-group" dropdown ng-show="currentUser && currentUser.id === user._id">
-            <button button type="button" class="btn btn-primary" ng-click="redirectToUserEditPage()">更新用户资料</button>
-        </div>
-
+        <h2>用户资料</h2>
         <div>用户名：{{ user.username }}</div>
         <div>邮箱：{{ user.email }}</div>
         <div>注册日期：{{ user.createdDate }}</div>

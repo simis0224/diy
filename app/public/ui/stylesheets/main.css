@@ -12,10 +12,10 @@ div.footer {
 }
 
 div.content {
-    min-height: 500px;
+    min-height: 800px;
     width: 960px;
     margin: 0 auto;
-    padding-top: 40px;
+    padding-top: 10px;
 }
 
 div.content a, div.content:visited {
