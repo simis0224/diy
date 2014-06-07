@@ -1,0 +1,25 @@
+<div class="listPost">
+    <p>{{ message }}</p>
+    <p class="error">{{ errorMessage }}<p>
+    <div>
+        <button button type="button" class="btn btn-primary" ng-click="redirectToPostCreatePage()">创建推荐</button>
+    </div>
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="post in $data">
+            <td data-title="'ID'">
+                <a href="#/viewPost/{{post._id}}">{{post._id}}</a>
+            </td>
+            <td data-title="'标题'">
+                <a href="#/viewPost/{{post._id}}">{{post.subject}}</a>
+            </td>
+            <td data-title="'地点'">{{post.location}}</td>
+            <td data-title="'创建人'">{{post.createdBy.username}}</td>
+            <td data-title="'操作'">
+                <div class="btn-group" dropdown>
+                    <button button type="button" class="btn btn-primary" ng-click="deletePost(post._id)">删除</button>
+                    <button button type="button" class="btn btn-primary" ng-click="redirectToPostEditPage(post._id)">修改</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

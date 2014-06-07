@@ -1,10 +1,14 @@
-angular.module('posts', ['uploadService', 'crudService'])
+angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
 
 .config(function ($routeProvider) {
   $routeProvider.
     when('/viewPost/:id', {
       templateUrl: '../ui/angularjs/posts/viewPost.html',
       controller: 'postDetailController'
+    }).
+    when('/listPost', {
+      templateUrl: '../ui/angularjs/posts/listPost.html',
+      controller: 'postListController'
     }).
     when('/editPost/:id', {
       templateUrl: '../ui/angularjs/posts/editPost.html',
@@ -26,7 +30,7 @@ angular.module('posts', ['uploadService', 'crudService'])
     });
 })
 
-.controller('postListController', ['$scope', '$http', 'cssInjector', 'crudService', function ($scope, $http, cssInjector, crudService) {
+.controller('postGridController', ['$scope', '$http', 'cssInjector', 'crudService', function ($scope, $http, cssInjector, crudService) {
 
   cssInjector.add("../ui/angularjs/posts/gridPost.css");
 
@@ -43,6 +47,62 @@ angular.module('posts', ['uploadService', 'crudService'])
   }
 
   crudService.list('post', onListSuccess, onListError);
+
+}])
+
+.controller('postListController', ['$scope', '$http', '$location', 'cssInjector', 'crudService', 'ngTableParams',
+    function ($scope, $http, $location, cssInjector, crudService, ngTableParams) {
+
+  cssInjector.add("../ui/angularjs/posts/listPost.css");
+
+  var onListSuccess = function(res) {
+    posts = res.data;
+
+    $scope.tableParams = new ngTableParams({
+      page: 1,            // show first page
+      count: 10           // count per page
+    }, {
+      total: posts.length, // length of data
+      getData: function($defer, params) {
+        $defer.resolve(posts.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+      }
+    });
+  }
+
+  var onListError = function(res) {
+    if (res.success === 1) {
+      $scope.errorMessage = res.error.message;
+    } else {
+      $scope.errorMessage = res;
+    }
+  }
+
+  crudService.list('post', onListSuccess, onListError);
+
+  $scope.deletePost = function (id) {
+
+    var onDeleteSuccess = function(res) {
+      $location.url('/listPost');
+    };
+
+    var onDeleteError = function(res) {
+      if (res.success === 1) {
+        $scope.errorMessage = res.error.message;
+      } else {
+        $scope.errorMessage = res;
+      }
+    };
+
+    crudService.delete('post', id, onDeleteSuccess, onDeleteError);
+  };
+
+  $scope.redirectToPostEditPage = function(id){
+    $location.url('/editPost/' + id);
+  }
+
+  $scope.redirectToPostCreatePage = function(id){
+    $location.url('/createPost/');
+  }
 
 }])
 
@@ -138,26 +198,5 @@ angular.module('posts', ['uploadService', 'crudService'])
   };
 
   crudService.get('post', id, onGetSuccess);
-
-  $scope.deletePost = function () {
-
-    var onDeleteSuccess = function(res) {
-      $location.url('/');
-    };
-
-    var onDeleteError = function(res) {
-      if (res.success === 1) {
-        $scope.errorMessage = res.error.message;
-      } else {
-        $scope.errorMessage = res;
-      }
-    };
-
-    crudService.delete('post', id, onDeleteSuccess, onDeleteError);
-  };
-
-  $scope.redirectToPostEditPage = function(){
-    $location.url('/editPost/' + id);
-  }
 
 }]);

@@ -2,12 +2,6 @@
     <p>{{ message }}<p>
     <p class="error">{{ errorMessage }}<p>
     <div ng-show="post">
-
-        <div class="btn-group" dropdown ng-show="currentUser && currentUser.isAdmin">
-            <button button type="button" class="btn btn-primary" ng-click="deletePost()">删除</button>
-            <button button type="button" class="btn btn-primary" ng-click="redirectToPostEditPage()">修改</button>
-        </div>
-
         <h1>{{ post.subject }}</h1>
         <div><img class="postImage" ng-src="{{ post.postImage }}"/></div>
         <div>{{ post.summary }}</div>

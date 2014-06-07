@@ -36,7 +36,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
     $routeProvider.
       when('/', {
         templateUrl: '../ui/angularjs/posts/gridPost.html',
-        controller: 'postListController'
+        controller: 'postGridController'
       }).
       otherwise({
         redirectTo: '/'

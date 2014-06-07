@@ -1,11 +1,3 @@
-.user_list tr td{
-    width: 200px;
-}
-
-.user_list {
-    border: 1px;
-}
-
 .listUser .header div {
     float: left;
 }
