@@ -12,7 +12,9 @@
             <td data-title="'电子邮件'">{{user.email}}</td>
             <td data-title="'管理员'">{{user.isAdmin}}</td>
             <td data-title="'操作'">
-                <a ng-click="setAdminUser(user._id)">升级管理员</a>
+                <div class="btn-group" dropdown>
+                    <button button type="button" class="btn btn-primary" ng-click="setAdminUser(user._id)">升级管理员</button>
+                </div>
             </td>
         </tr>
     </table>

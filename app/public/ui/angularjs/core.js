@@ -35,7 +35,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 
     $routeProvider.
       when('/', {
-        templateUrl: '../ui/angularjs/posts/listPost.html',
+        templateUrl: '../ui/angularjs/posts/gridPost.html',
         controller: 'postListController'
       }).
       otherwise({

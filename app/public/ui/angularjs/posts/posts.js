@@ -28,7 +28,7 @@ angular.module('posts', ['uploadService', 'crudService'])
 
 .controller('postListController', ['$scope', '$http', 'cssInjector', 'crudService', function ($scope, $http, cssInjector, crudService) {
 
-  cssInjector.add("../ui/angularjs/posts/listPost.css");
+  cssInjector.add("../ui/angularjs/posts/gridPost.css");
 
   var onListSuccess = function(res) {
     $scope.posts = res.data;
