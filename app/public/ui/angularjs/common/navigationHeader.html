@@ -6,8 +6,9 @@
                 <span class="dropdown" on-toggle="toggled(open)">
                     <a href class="dropdown-toggle link">{{ currentUser.username }}</a>
                     <ul class="dropdown-menu">
-                        <li><a href="javascript:void(0)" ng-click="logout()">登出</a></li>
                         <li ng-show="currentUser.isAdmin"><a href="/#/adminPage">管理员界面</a></li>
+                        <li><a href="/#/editUser/{{currentUser.id}}">用户资料设置</a></li>
+                        <li><a href="javascript:void(0)" ng-click="logout()">登出</a></li>
                     </ul>
                 </span>
             </span>

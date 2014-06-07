@@ -6,7 +6,9 @@ angular.module('admin', [])
       templateUrl: '../ui/angularjs/admin/adminPage.html',
       resolve: {
         authenticated: function(authenticateService) {
-          authenticateService.requireAdminAuthenticated();
+          authenticateService.requireAuthenticated({
+            requireAdmin: true
+          });
         }
       }
     }).

@@ -56,56 +56,41 @@ angular.module('authenticateService', [])
             });
           }
         },
-        requireAuthenticated: function(){
+        requireAuthenticated: function(options){
+          options = options || {};
           // Initialize a new promise
           var deferred = $q.defer();
 
-          if (service.currentUser) {
-            $timeout(deferred.resolve, 0);
-          } else {
-            // Make an AJAX call to check if the user is logged in
-            $http.get('/api/user/me').success(function(res){
-              // Authenticated
-              if (res !== '0') {
-                service.currentUser = res.data;
-                $timeout(deferred.resolve, 0);
-              }
-
-              // Not Authenticated
-              else {
-                $timeout(function(){deferred.reject();}, 0);
-                $location.url('/login?retUrl=' + $location.path());
-              }
-            });
-          }
-
-          return deferred.promise;
-        },
-        requireAdminAuthenticated: function(){
-          // Initialize a new promise
-          var deferred = $q.defer();
-
-          if (service.currentUser) {
+          var validateAdmin = function () {
             if (service.currentUser.isAdmin) {
               $timeout(deferred.resolve, 0);
             } else {
               $timeout(function(){deferred.reject();}, 0);
               $location.url('/errorPage');
             }
+          }
+
+          if (service.currentUser) {
+            if (options.requireAdmin) {
+              validateAdmin();
+            } else {
+              $timeout(deferred.resolve, 0);
+            }
           } else {
             // Make an AJAX call to check if the user is logged in
             $http.get('/api/user/me').success(function(res){
               // Authenticated
               if (res !== '0') {
-                if (res.data.isAdmin) {
-                  service.currentUser = res.data;
-                  $timeout(deferred.resolve, 0);
+                service.currentUser = res.data;
+                if (options.requireAdmin) {
+                  validateAdmin();
                 } else {
-                  $timeout(function(){deferred.reject();}, 0);
-                  $location.url('/errorPage');
+                  $timeout(deferred.resolve, 0);
                 }
-              } else {
-                // Not Authenticated
+              }
+
+              // Not Authenticated
+              else {
                 $timeout(function(){deferred.reject();}, 0);
                 $location.url('/login?retUrl=' + $location.path());
               }

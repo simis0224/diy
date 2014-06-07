@@ -3,6 +3,7 @@
     <p class="error">{{ errorMessage }}<p>
     <div ng-show="post">
         <h1>{{ post.subject }}</h1>
+        <div>地点：{{ post.location }}</div>
         <div><img class="postImage" ng-src="{{ post.postImage }}"/></div>
         <div>{{ post.summary }}</div>
         <div>地址：{{ post.address }}</div>

@@ -15,7 +15,9 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
       controller: 'postEditController',
       resolve: {
         authenticated: function(authenticateService) {
-          authenticateService.requireAdminAuthenticated();
+          authenticateService.requireAuthenticated({
+            requireAdmin: true
+          });
         }
       }
     }).
@@ -24,7 +26,9 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
       controller: 'postCreateController',
       resolve: {
         authenticated: function (authenticateService) {
-          authenticateService.requireAdminAuthenticated();
+          authenticateService.requireAuthenticated({
+            requireAdmin: true
+          });
         }
       }
     });

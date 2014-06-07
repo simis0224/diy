@@ -117,10 +117,14 @@ angular.module('users', ['ngTable'])
   };
 }])
 
-.controller('userEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',
-  function ($scope, $http, $routeParams, $location, cssInjector, uploadService, crudService) {
+.controller('userEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService', 'authenticateService',
+  function ($scope, $http, $routeParams, $location, cssInjector, uploadService, crudService, authenticateService) {
 
     var id = $routeParams.id;
+
+    if (authenticateService.currentUser.id != id && !authenticateService.currentUser.isAdmin) {
+      $location.url('/errorPage');
+    }
 
     var onGetSuccess = function (res) {
       $scope.user = res.data;
