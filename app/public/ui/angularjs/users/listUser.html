@@ -3,10 +3,17 @@
     <p class="error">{{ errorMessage }}<p>
     <table ng-table="tableParams" class="table">
         <tr ng-repeat="user in $data">
-            <td data-title="'ID'">{{user._id}}</td>
-            <td data-title="'用户名'">{{user.username}}</td>
+            <td data-title="'ID'">
+                <a href="#/viewUser/{{user._id}}">{{user._id}}</a>
+            </td>
+            <td data-title="'用户名'">
+                <a href="#/viewUser/{{user._id}}">{{user.username}}</a>
+            </td>
             <td data-title="'电子邮件'">{{user.email}}</td>
             <td data-title="'管理员'">{{user.isAdmin}}</td>
+            <td data-title="'操作'">
+                <a ng-click="setAdminUser(user._id)">升级管理员</a>
+            </td>
         </tr>
     </table>
 </div>

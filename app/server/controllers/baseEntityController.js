@@ -218,7 +218,7 @@ BaseEntityController.prototype.apiDelete = function(req, res, next) {
         return;
       }
 
-      if(item.createdBy !== userHelper.getCurrentUser(req).id) {
+      if(!userHelper.getCurrentUser(req).isAdmin) {
         res.json({
           success: 0,
           error: errors.NO_PRIVILEGE_ERROR

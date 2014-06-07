@@ -93,8 +93,28 @@ angular.module('users', ['ngTable'])
 
   crudService.list('user', onListSuccess, onListError);
 
+  $scope.setAdminUser = function(id) {
 
+    var user = {
+      _id: id,
+      isAdmin: true
+    };
 
+    var onUpdateSuccess = function (res) {
+
+    }
+
+    var onUpdateError = function (res) {
+      if (res.success === 1) {
+        $scope.errorMessage = res.error.message;
+      } else {
+        $scope.errorMessage = res;
+      }
+    }
+
+    crudService.update('user', id, user, onUpdateSuccess, onUpdateError);
+
+  };
 }])
 
 .controller('userEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',
@@ -171,4 +191,8 @@ angular.module('users', ['ngTable'])
     }
 
     crudService.get('user', id, onGetSuccess, onGetError);
+
+    $scope.redirectToUserEditPage = function() {
+      $location.url('/editUser/' + id);
+    }
   }]);

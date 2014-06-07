@@ -30,6 +30,10 @@ var updateUserInSession = function(req, user) {
       id: user.id,
       username: user.username
     }
+
+    if (user.isAdmin) {
+      req.session.user.isAdmin = user.isAdmin;
+    }
   }
 }
 

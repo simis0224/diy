@@ -3,7 +3,7 @@
     <p class="error">{{ errorMessage }}<p>
     <div ng-show="post">
 
-        <div class="btn-group" dropdown ng-show="currentUser && currentUser.id === post.createdBy.id">
+        <div class="btn-group" dropdown ng-show="currentUser && currentUser.isAdmin">
             <button button type="button" class="btn btn-primary" ng-click="deletePost()">删除</button>
             <button button type="button" class="btn btn-primary" ng-click="redirectToPostEditPage()">修改</button>
         </div>
