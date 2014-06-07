@@ -43,7 +43,8 @@ AuthController.prototype.apiLogin = function(passport, req, res, next) {
           success: 1,
           data: {
             id: user.id,
-            username: user.username
+            username: user.username,
+            isAdmin: user.isAdmin
           }
         });
       });
@@ -93,7 +94,8 @@ AuthController.prototype.apiSignup = function(passport, req, res, next) {
           success: 1,
           data: {
             id: user.id,
-            username: user.username
+            username: user.username,
+            isAdmin: user.isAdmin
           }
         });
       });

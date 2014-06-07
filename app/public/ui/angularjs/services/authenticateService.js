@@ -80,6 +80,39 @@ angular.module('authenticateService', [])
           }
 
           return deferred.promise;
+        },
+        requireAdminAuthenticated: function(){
+          // Initialize a new promise
+          var deferred = $q.defer();
+
+          if (service.currentUser) {
+            if (service.currentUser.isAdmin) {
+              $timeout(deferred.resolve, 0);
+            } else {
+              $timeout(function(){deferred.reject();}, 0);
+              $location.url('/errorPage');
+            }
+          } else {
+            // Make an AJAX call to check if the user is logged in
+            $http.get('/api/user/me').success(function(res){
+              // Authenticated
+              if (res !== '0') {
+                if (res.data.isAdmin) {
+                  service.currentUser = res.data;
+                  $timeout(deferred.resolve, 0);
+                } else {
+                  $timeout(function(){deferred.reject();}, 0);
+                  $location.url('/errorPage');
+                }
+              } else {
+                // Not Authenticated
+                $timeout(function(){deferred.reject();}, 0);
+                $location.url('/login?retUrl=' + $location.path());
+              }
+            });
+          }
+
+          return deferred.promise;
         }
       }
 

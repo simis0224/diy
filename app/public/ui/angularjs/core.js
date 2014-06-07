@@ -8,7 +8,8 @@ var app = angular.module('app', [
   'crudService',
   'common',
   'posts',
-  'users'
+  'users',
+  'admin'
   ]);
 
 

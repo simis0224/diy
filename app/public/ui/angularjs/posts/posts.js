@@ -11,7 +11,7 @@ angular.module('posts', ['uploadService', 'crudService'])
       controller: 'postEditController',
       resolve: {
         authenticated: function(authenticateService) {
-          authenticateService.requireAuthenticated();
+          authenticateService.requireAdminAuthenticated();
         }
       }
     }).
@@ -20,7 +20,7 @@ angular.module('posts', ['uploadService', 'crudService'])
       controller: 'postCreateController',
       resolve: {
         authenticated: function (authenticateService) {
-          authenticateService.requireAuthenticated();
+          authenticateService.requireAdminAuthenticated();
         }
       }
     });
