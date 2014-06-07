@@ -18,11 +18,10 @@ angular.module('crudService', [])
         list: function (entity, onSuccess, onError) {
           $http.get('/api/' + entity + '/list')
             .success(function (res) {
-              if (res.success === 1) {
+              if (res && res.success === 1) {
                 console.log('List ' + entity + ' succeeded.');
                 (onSuccess || angular.noop)(res);
               } else {
-                debugger;
                 console.error('List ' + entity + ' failed. Error: ' + res.error.message);
                 (onError || angular.noop)(res);
               }
@@ -35,7 +34,8 @@ angular.module('crudService', [])
         create: function (entity, data, onSuccess, onError) {
           $http.post('/api/' + entity + '/create', data)
             .success(function (res) {
-              if (res.success === 1) {
+              debugger;
+              if (res && res.success === 1) {
                 console.log('Create ' + entity + '(' + res.data._id + ') succeeded.');
                 (onSuccess || angular.noop)(res);
               } else {
@@ -51,7 +51,7 @@ angular.module('crudService', [])
         delete: function (entity, id, onSuccess, onError) {
           $http.post('/api/' + entity + '/delete/' + id)
             .success(function (res) {
-              if(res.success === 1) {
+              if(res && res.success === 1) {
                 console.log('Delete ' + entity + '(' + id + ') succeeded.');
                 (onSuccess || angular.noop)(res);
               } else {
@@ -67,7 +67,7 @@ angular.module('crudService', [])
         update: function(entity, id, data, onSuccess, onError) {
           $http.post('/api/' + entity + '/update/' + id, data)
             .success(function(res) {
-              if(res.success === 1) {
+              if(res && res.success === 1) {
                 console.log('Update ' + entity + '(' + id + ') succeeded.');
                 (onSuccess || angular.noop)(res);
               } else {

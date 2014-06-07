@@ -9,7 +9,7 @@ angular.module('authenticateService', [])
         signup: function (user, onSignupSuccess, onSignupFailure) {
           $http.post('/api/signup', user)
             .success(function (res) {
-              if(res.success === 1) {
+              if(res && res.success === 1) {
                 service.currentUser = res.data;
                 (onSignupSuccess || angular.noop)();
               } else {
@@ -25,7 +25,7 @@ angular.module('authenticateService', [])
         login: function (user, onLoginSuccess, onLoginFailure) {
           $http.post('/api/login', user)
             .success(function (res) {
-              if(res.success === 1) {
+              if(res && res.success === 1) {
                 service.currentUser = res.data;
                 (onLoginSuccess || angular.noop)();
               } else {

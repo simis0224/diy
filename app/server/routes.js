@@ -10,8 +10,13 @@ var uploadController = require('./controllers/uploadController');
 
 var errors = require('./constants/errors');
 
+var userHelper = require('./helpers/userHelper');
+
 module.exports = function(app, passport) {
 
+  /**
+   * User related api
+   */
   app.get('/api/user/me', function(req, res) {
     authController.apiGetLoggedInUser(req, res)
   });
@@ -28,7 +33,7 @@ module.exports = function(app, passport) {
     authController.apiLogout(req, res, next);
   });
 
-  app.get('/api/user/list', function(req, res) {
+  app.get('/api/user/list', isLoggedIn, function(req, res) {
     userController.apiList(req, res);
   });
 
@@ -40,7 +45,10 @@ module.exports = function(app, passport) {
     userController.apiUpdate(req, res, next);
   });
 
-  app.post('/api/upload/image', function(req, res, next) {
+  /**
+   * Upload api
+   */
+  app.post('/api/upload/image', isLoggedIn, isAdmin, function(req, res, next) {
     uploadController.apiUploadImage(req, res, next);
   });
 
@@ -55,15 +63,15 @@ module.exports = function(app, passport) {
     postController.apiGetOne(req, res);
   });
 
-  app.post('/api/post/create', isLoggedIn, function(req, res, next) {
+  app.post('/api/post/create', isLoggedIn, isAdmin, function(req, res, next) {
     postController.apiCreate(req, res, next);
   });
 
-  app.post('/api/post/update/:id', isLoggedIn, function(req, res, next) {
+  app.post('/api/post/update/:id', isLoggedIn, isAdmin, function(req, res, next) {
     postController.apiUpdate(req, res, next);
   });
 
-  app.post('/api/post/delete/:id', isLoggedIn, function(req, res, next) {
+  app.post('/api/post/delete/:id', isLoggedIn, isAdmin, function(req, res, next) {
     postController.apiDelete(req, res, next);
   });
 
@@ -76,9 +84,17 @@ function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
     return next();
 
-  //TODO should return 404
-  res.json({
-    success: 0,
-    error: errors.USER_NOT_LOGGED_IN_ERROR
-  });
+  res
+    .status(401)
+    .send(errors.USER_NOT_LOGGED_IN_ERROR);
+}
+
+function isAdmin(req, res, next) {
+  if (userHelper.getCurrentUser(req).isAdmin) {
+    return next();
+  }
+
+  res
+    .status(401)
+    .send(errors.NO_PRIVILEGE_ERROR);
 }

@@ -43,7 +43,7 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
   }
 
   var onListError = function(res) {
-    if (res.success === 1) {
+    if (res && res.success === 1) {
       $scope.errorMessage = res.error.message;
     } else {
       $scope.errorMessage = res;
@@ -74,7 +74,7 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
   }
 
   var onListError = function(res) {
-    if (res.success === 1) {
+    if (res && res.success === 1) {
       $scope.errorMessage = res.error.message;
     } else {
       $scope.errorMessage = res;
@@ -90,7 +90,7 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
     };
 
     var onDeleteError = function(res) {
-      if (res.success === 1) {
+      if (res && res.success === 1) {
         $scope.errorMessage = res.error.message;
       } else {
         $scope.errorMessage = res;
@@ -124,7 +124,7 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
     }
 
     var onCreateError = function(res) {
-      if (res.success === 1) {
+      if (res && res.success === 1) {
         $scope.errorMessage = res.error.message;
       } else {
         $scope.errorMessage = res;
@@ -164,7 +164,7 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
     }
 
     var onUpdateError = function (res) {
-      if (res.success === 1) {
+      if (res && res.success === 1) {
         $scope.errorMessage = res.error.message;
       } else {
         $scope.errorMessage = res;

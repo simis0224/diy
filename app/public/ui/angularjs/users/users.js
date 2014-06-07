@@ -84,7 +84,7 @@ angular.module('users', ['ngTable'])
   }
 
   var onListError = function(res) {
-    if (res.success === 1) {
+    if (res && res.success === 1) {
       $scope.errorMessage = res.error.message;
     } else {
       $scope.errorMessage = res;
@@ -105,7 +105,7 @@ angular.module('users', ['ngTable'])
     }
 
     var onUpdateError = function (res) {
-      if (res.success === 1) {
+      if (res && res.success === 1) {
         $scope.errorMessage = res.error.message;
       } else {
         $scope.errorMessage = res;
@@ -144,7 +144,7 @@ angular.module('users', ['ngTable'])
       }
 
       var onUpdateError = function (res) {
-        if (res.success === 1) {
+        if (res && res.success === 1) {
           $scope.errorMessage = res.error.message;
         } else {
           $scope.errorMessage = res;
@@ -159,7 +159,7 @@ angular.module('users', ['ngTable'])
       uploadService.uploadImage($files,
         function(res, status, headers, config) {
           // file is uploaded successfully
-          if(res.success === 1) {
+          if(res && res.success === 1) {
             $scope.formData.postImage = res.imageUrl;
             var previewImage = angular.element( document.querySelector( '.postImage' ) )[0];
             previewImage.src = res.imageUrl;
