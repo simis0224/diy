@@ -16,7 +16,7 @@
             {{ errorMessage }}
         </p>
         <div>
-            <button name="cancel" class="btn btn-default">取消</button>
+            <button name="cancel" class="btn btn-default" ng-click="redirectToPreviousPage()">取消</button>
             <button type="submit" name="update" class="btn btn-primary" ng-click="updateUser()" ng-disabled="userForm.$invalid">修改</button>
         </div>
     </form>

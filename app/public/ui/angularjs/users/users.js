@@ -174,7 +174,12 @@ angular.module('users', ['ngTable'])
           console.log('Error: ' + res);
         });
     };
-  }])
+
+    $scope.redirectToPreviousPage = function(){
+      var retUrl = $routeParams.retUrl ? $routeParams.retUrl : '/';
+      $location.url(retUrl);
+    }
+}])
 
 .controller('userDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService', 'crudService',
   function ($scope, $http, $routeParams, $location, cssInjector, authenticateService, crudService) {

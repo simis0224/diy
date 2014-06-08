@@ -30,8 +30,12 @@ angular.module('common', ['ui.bootstrap'])
   $scope.errorMessage = "";
 
   $scope.redirectToLoginPage = function(){
-    var retUrl = $location.path() === '/login' ? '/' : $location.path();
+    var retUrl = $location.path() === '/login' || $location.path() === '/signup' ? '/' : $location.path();
     $location.url('/login?retUrl=' + retUrl);
+  }
+
+  $scope.redirectToEditUserPage = function(){
+    $location.url('/editUser/' + authenticateService.currentUser.id + '?retUrl=' +  $location.path());
   }
 }])
 
