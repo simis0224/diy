@@ -240,8 +240,17 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'bootstrap-t
   var onGetSuccess = function(res) {
     $scope.post = res.data;
     $scope.message = res.message;
+    // TODO make tagInput directive
+    if ($scope.post.tags) {
+      for(var i = 0; i < $scope.post.tags.length; i++) {
+        $('#tagInput').tagsinput('add', $scope.post.tags[i]);
+      }
+    }
   };
 
   crudService.get('post', id, onGetSuccess);
+
+  // TODO make tagInput directive
+  $('#tagInput').tagsinput('add', 'test');
 
 }]);

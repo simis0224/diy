@@ -2,3 +2,21 @@
     max-width: 600px;
     max-height: 400px;
 }
+
+.viewPost div.bootstrap-tagsinput {
+    border: 0;
+    box-shadow: none;
+}
+
+.viewPost div.bootstrap-tagsinput span span,
+.viewPost div.bootstrap-tagsinput input {
+    display: none;
+}
+
+.viewPost label {
+    width: 100%;
+}
+
+.viewPost #tagInput {
+    display: none;
+}

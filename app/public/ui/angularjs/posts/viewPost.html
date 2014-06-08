@@ -3,10 +3,25 @@
     <p class="error">{{ errorMessage }}<p>
     <div ng-show="post">
         <h1>{{ post.subject }}</h1>
-        <div>地点：{{ post.location }}</div>
+        <div>
+            <label>地点</label>
+            {{ post.location }}
+        </div>
         <div><img class="postImage" ng-src="{{ post.postImage }}"/></div>
-        <div>{{ post.summary }}</div>
-        <div>地址：{{ post.address }}</div>
-        <div>电话：{{ post.phone }}</div>
+        <div>
+            {{ post.summary }}
+        </div>
+        <div>
+            <label>地址</label>
+            {{ post.address }}
+        </div>
+        <div>
+            <label>电话</label>
+            {{ post.phone }}
+        </div>
+        <div>
+            <label>标签</label>
+            <input type="text" id="tagInput" value="" data-role="tagsinput"/>
+        </div>
     </div>
 </div>
