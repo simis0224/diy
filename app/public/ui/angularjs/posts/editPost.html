@@ -32,6 +32,10 @@
             <label>电话</label>
             <input type="text" name="phone" value="" ng-model="post.phone" class="form-control"/>
         </div>
+        <div>
+            <label>标签</label>
+            <input type="text" id="tagInput" value="" data-role="tagsinput" ng-model="post.tagsInString"/>
+        </div>
         <div class="buttonBar">
             <button name="update" class="btn btn-default" ng-click="redirectToPreviousPage()">取消</button>
             <button type="submit" name="update" class="btn btn-primary" ng-click="updatePost()" ng-disabled="postForm.$invalid">修改</button>

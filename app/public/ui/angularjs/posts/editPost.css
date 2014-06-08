@@ -6,3 +6,9 @@ form button {
     float: right;
     margin: 10px;
 }
+
+div.bootstrap-tagsinput {
+    width: 100%;
+    margin: 0;
+    height: 34px;
+}

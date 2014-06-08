@@ -89,6 +89,6 @@ angular.module('common', ['ui.bootstrap'])
 
       uploadService.uploadImage($files, onSuccess, onError, onProgress);
     };
-  }])
+}])
 
 

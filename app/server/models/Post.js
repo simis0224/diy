@@ -38,6 +38,12 @@ var fields = [
     allowUpdate: true
   },
   {
+    name: 'tags',
+    type: [String],
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
     name: 'createdBy',
     type: String,
     allowCreate: true,

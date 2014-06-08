@@ -1,4 +1,4 @@
-angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
+angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'bootstrap-tagsinput'])
 
 .config(function ($routeProvider) {
   $routeProvider.
@@ -131,6 +131,8 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
       }
     }
 
+    // TODO make tagInput directive
+    $scope.post.tags = $("#tagInput").tagsinput('items');
     crudService.create('post', $scope.post, onCreateSuccess, onCreateError);
   }
 
@@ -146,6 +148,19 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
     var retUrl = $routeParams.retUrl ? $routeParams.retUrl : '/';
     $location.url(retUrl);
   }
+
+  // TODO make tagInput directive
+  $('#tagInput').tagsinput({
+    typeahead: {
+      source: function(query) {
+        return $.getJSON('citynames.json');
+      }
+    }
+  });
+
+  $scope.queryCities = function(query) {
+    return $http.get('cities.json');
+  };
 }])
 
 .controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',
@@ -158,6 +173,11 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
   var onGetSuccess = function(res) {
     $scope.post = res.data;
     $scope.message = res.message;
+    if ($scope.post.tags) {
+      for(var i = 0; i < $scope.post.tags.length; i++) {
+        $('#tagInput').tagsinput('add', $scope.post.tags[i]);
+      }
+    }
   };
 
   crudService.get('post', id, onGetSuccess);
@@ -176,6 +196,8 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
       }
     }
 
+    // TODO make tagInput directive
+    $scope.post.tags = $("#tagInput").tagsinput('items');
     crudService.update('post', id, $scope.post, onUpdateSuccess, onUpdateError);
   };
 
@@ -191,6 +213,15 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
     var retUrl = $routeParams.retUrl ? $routeParams.retUrl : '/';
     $location.url(retUrl);
   }
+
+  // TODO make tagInput directive
+  $('#tagInput').tagsinput({
+    typeahead: {
+      source: function(query) {
+        return $.getJSON('citynames.json');
+      }
+    }
+  });
 }])
 
 .controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService', 'crudService',
