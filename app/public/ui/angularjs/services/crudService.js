@@ -34,7 +34,6 @@ angular.module('crudService', [])
         create: function (entity, data, onSuccess, onError) {
           $http.post('/api/' + entity + '/create', data)
             .success(function (res) {
-              debugger;
               if (res && res.success === 1) {
                 console.log('Create ' + entity + '(' + res.data._id + ') succeeded.');
                 (onSuccess || angular.noop)(res);

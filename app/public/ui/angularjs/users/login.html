@@ -1,12 +1,20 @@
 <div class="login">
-    <form class="login" ng-submit="login()">
-        <h2>登录</h2>
-        <div><input type="text" name="username" placeholder="用户名或电子邮件" ng-model="user.username" class="form-control"/></div>
-        <div><input type="password" name="password" placeholder="密码" ng-model="user.password" class="form-control"/></div>
+    <form name="userForm">
+        <h2>用户登录</h2>
+        <div ng-class="{ 'has-error' : userForm.username.$invalid && !userForm.username.$pristine }">
+            <input type="text" name="username" placeholder="用户名或电子邮件" ng-model="user.username" class="form-control" required/>
+            <p ng-show="userForm.username.$invalid && !userForm.username.$pristine" class="help-block">必须填写用户名或电子邮件</p>
+        </div>
+        <div ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine }">
+            <input type="password" name="password" placeholder="密码" ng-model="user.password" class="form-control" required/>
+            <p ng-show="userForm.password.$invalid && !userForm.password.$pristine" class="help-block">必须填写密码</p>
+        </div>
         <p class="error">
             {{ errorMessage }}
         </p>
-        <div><button type="submit" class="btn btn-primary">登录</button></div>
+        <div class="buttonBar">
+            <button type="submit" class="btn btn-primary" ng-click="login()" ng-disabled="userForm.$invalid">登录</button>
+        </div>
     </form>
 
     <div class="otherLink">

@@ -1,17 +1,37 @@
 <div class="createPost">
     <p>{{ message }}</p>
     <p class="error">{{ errorMessage }}</p>
-    <form>
+    <form name="postForm">
         <h2>创建推荐</h2>
-        <div><input type="text" name="subject" value="" ng-model="post.subject" placeholder="推荐名称（必填）" class="form-control" required/></div>
-        <div><input type="text" name="location" value="" ng-model="post.location" placeholder="地点" class="form-control" required/></div>
-        <div><image-uploader on-success="imageUploadOnSuccess(imageUrl)" on-error="imageUploadOnError(error)"></image-uploader></div>
-        <div><textarea name="summary" placeholder="简述" ng-model="post.summary" rows="4" cols="50" class="form-control"></textarea></div>
-        <div><input type="text" name="address" value="" ng-model="post.address" placeholder="地址" class="form-control"/></div>
-        <div><input type="text" name="phone" value="" ng-model="post.phone" placeholder="电话" class="form-control"/></div>
+        <div ng-class="{ 'has-error' : postForm.subject.$invalid && !postForm.subject.$pristine }">
+            <label>推荐名称（必填）</label>
+            <input type="text" name="subject" value="" ng-model="post.subject" class="form-control" required/>
+            <p ng-show="postForm.subject.$invalid && !postForm.subject.$pristine" class="help-block">必须填写推荐名称</p>
+        </div>
+        <div ng-class="{ 'has-error' : postForm.location.$invalid && !postForm.location.$pristine }">
+            <label>地点（必填）</label>
+            <input type="text" name="location" value="" ng-model="post.location" class="form-control" required/>
+            <p ng-show="postForm.location.$invalid && !postForm.location.$pristine" class="help-block">必须填写地点</p>
+        </div>
         <div>
+            <label>主图</label>
+            <image-uploader on-success="imageUploadOnSuccess(imageUrl)" on-error="imageUploadOnError(error)"></image-uploader>
+        </div>
+        <div>
+            <label>简述</label>
+            <textarea name="summary" ng-model="post.summary" rows="4" cols="50" class="form-control"></textarea>
+        </div>
+        <div>
+            <label>地址</label>
+            <input type="text" name="address" value="" ng-model="post.address" class="form-control"/>
+        </div>
+        <div>
+            <label>电话</label>
+            <input type="text" name="phone" value="" ng-model="post.phone" class="form-control"/>
+        </div>
+        <div class="buttonBar">
             <button name="cancel" class="btn btn-default" ng-click="redirectToPreviousPage()">取消</button>
-            <button type="button" class="btn btn-primary" ng-click="createPost()">发布</button>
+            <button type="button" class="btn btn-primary" ng-click="createPost()" ng-disabled="postForm.$invalid">创建</button>
         </div>
     </form>
 </div>

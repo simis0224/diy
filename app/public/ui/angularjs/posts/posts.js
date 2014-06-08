@@ -54,8 +54,8 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
 
 }])
 
-.controller('postListController', ['$scope', '$http', '$location', 'cssInjector', 'crudService', 'ngTableParams',
-    function ($scope, $http, $location, cssInjector, crudService, ngTableParams) {
+.controller('postListController', ['$scope', '$http', '$location', '$route', 'cssInjector', 'crudService', 'ngTableParams',
+    function ($scope, $http, $location, $route, cssInjector, crudService, ngTableParams) {
 
   cssInjector.add("../ui/angularjs/posts/listPost.css");
 
@@ -86,7 +86,7 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable'])
   $scope.deletePost = function (id) {
 
     var onDeleteSuccess = function(res) {
-      $location.url('/listPost');
+      $route.reload();
     };
 
     var onDeleteError = function(res) {

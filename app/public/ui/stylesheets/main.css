@@ -37,3 +37,7 @@ input {
 form div {
     margin: 15px 0 15px 0;
 }
+
+.buttonBar {
+    height: 50px;
+}

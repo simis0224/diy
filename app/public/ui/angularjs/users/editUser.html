@@ -1,15 +1,23 @@
 <div class="editUser">
-    <form ng-submit="updateUser()">
+    <form name="userForm">
         <h2>修改用户资料</h2>
-        <div><input type="text" name="email" ng-model="user.email" placeholder="电子邮件" class="form-control"/></div>
-        <div><input type="text" name="username" ng-model="user.username" placeholder="用户名" class="form-control"/></div>
-        <div><input type="password" name="password" ng-model="user.password" placeholder="账户密码" class="form-control"/></div>
+        <div ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine }">
+            <input type="email" name="email" ng-model="user.email" placeholder="电子邮件" class="form-control" required/>
+            <p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">必须填写有效的电子邮件</p>
+        </div>
+        <div ng-class="{ 'has-error' : userForm.username.$invalid && !userForm.username.$pristine }">
+            <input type="text" name="username" ng-model="user.username" placeholder="用户名" class="form-control" required/>
+            <p ng-show="userForm.username.$invalid && !userForm.username.$pristine" class="help-block">必须填写用户名</p>
+        </div>
+        <div>
+            <input type="password" name="password" ng-model="user.password" placeholder="账户密码" class="form-control"/>
+        </div>
         <p class="error">
             {{ errorMessage }}
         </p>
         <div>
-            <button name="update" class="btn btn-default">取消</button>
-            <button type="submit" name="update" class="btn btn-primary">修改</button>
+            <button name="cancel" class="btn btn-default">取消</button>
+            <button type="submit" name="update" class="btn btn-primary" ng-click="updateUser()" ng-disabled="userForm.$invalid">修改</button>
         </div>
     </form>
 </div>
