@@ -10,8 +10,8 @@
             <p ng-show="userForm.username.$invalid && !userForm.username.$pristine" class="help-block">必须填写用户名</p>
         </div>
         <div ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine }">
-            <input type="password" name="password" ng-model="user.password" placeholder="账户密码" class="form-control" required/>
-            <p ng-show="userForm.password.$invalid && !userForm.password.$pristine" class="help-block">必须填写密码</p>
+            <input type="password" name="password" ng-model="user.password" placeholder="账户密码" class="form-control" required ng-minlength="8" ng-maxlength="15"/>
+            <p ng-show="userForm.password.$invalid && !userForm.password.$pristine" class="help-block">必须填写由8-15位数字或字符组成的密码</p>
         </div>
         <p class="error">
             {{ errorMessage }}
