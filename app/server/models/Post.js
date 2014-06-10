@@ -39,7 +39,9 @@ var fields = [
   },
   {
     name: 'tags',
-    type: [String],
+    type: [{
+      text: String
+    }],
     allowCreate: true,
     allowUpdate: true
   },

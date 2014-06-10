@@ -31,7 +31,9 @@
         </div>
         <div>
             <label>标签</label>
-            <input type="text" id="tagInput" value="" data-role="tagsinput" class="form-control"/>
+            <tags-input ng-model="post.tags"
+                        placeholder="添加标签"
+                        min-length="1"/>
         </div>
         <div class="buttonBar">
             <button name="cancel" class="btn btn-default" ng-click="redirectToPreviousPage()">取消</button>
