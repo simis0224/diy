@@ -91,4 +91,22 @@ angular.module('common', ['ui.bootstrap'])
     };
 }])
 
+.directive('tagGroup', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      tags: '='
+    },
+    templateUrl: '/ui/angularjs/common/tagGroup.html'
+  }
+})
+
+.controller('tagGroupController', [
+  '$scope', '$location', 'cssInjector',
+  function($scope, $location, cssInjector) {
+
+    cssInjector.add("../ui/angularjs/common/tagGroup.css");
+
+  }])
+
 

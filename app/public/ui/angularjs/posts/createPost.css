@@ -1,17 +1,33 @@
-button {
+.createPost button {
     float: right;
     margin: 10px;
 }
 
-
-tags-input .tags {
+.createPost tags-input .tags {
     width: 100%;
     margin: 0;
     height: 34px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
     border-radius: 4px;
+    border: 1px solid #ccc;
+    box-shadow: none;
 }
 
-tags-input .host {
+.createPost tags-input .host {
     margin: 0;
-    border-radius: 4px;
+}
+
+.createPost tags-input .tags .tag-item {
+    background: #03B1D6;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    padding: 0 10px;
+    border: 0;
+}
+
+.createPost tags-input .tags .tag-item span,
+.createPost tags-input .tags .tag-item a {
+    color: #ffffff;
 }
