@@ -135,7 +135,7 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
   }
 
   $scope.imageUploadOnSuccess = function(imageUrl) {
-    $scope.post.postImage = imageUrl;
+    $scope.post.images = [imageUrl];
   }
 
   $scope.imageUploadOnError = function(message) {
@@ -184,7 +184,7 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
   };
 
   $scope.imageUploadOnSuccess = function(imageUrl) {
-    $scope.post.postImage = imageUrl;
+    $scope.post.images = [imageUrl];
   }
 
   $scope.imageUploadOnError = function(message) {

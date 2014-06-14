@@ -157,24 +157,6 @@ angular.module('users', ['ngTable'])
 
     };
 
-    $scope.uploadImage = function($files) {
-      uploadService.uploadImage($files,
-        function(res, status, headers, config) {
-          // file is uploaded successfully
-          if(res && res.success === 1) {
-            $scope.formData.postImage = res.imageUrl;
-            var previewImage = angular.element( document.querySelector( '.postImage' ) )[0];
-            previewImage.src = res.imageUrl;
-            console.log("Upload image succeeded.");
-          } else {
-            console.log('Upload error:' + res);
-          }
-        },
-        function (res) {
-          console.log('Error: ' + res);
-        });
-    };
-
     $scope.redirectToPreviousPage = function(){
       var retUrl = $routeParams.retUrl ? $routeParams.retUrl : '/';
       $location.url(retUrl);

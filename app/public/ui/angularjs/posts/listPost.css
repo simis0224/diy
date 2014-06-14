@@ -2,6 +2,10 @@
     float: left;
 }
 
-.listPost .topButtonBar button{
+.listPost .topButtonBar button {
     float: right;    
+}
+
+.listPost .postImage {
+    width: 100px;
 }
