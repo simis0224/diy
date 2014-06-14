@@ -44,7 +44,7 @@ module.exports = function(passport) {
                 username: username,
                 password: User.generateHash(password),
                 createdDate: new Date(),
-                lastModifedDate: new Date()
+                lastModifiedDate: new Date()
               }
 
               var newUser = new User(userData);
