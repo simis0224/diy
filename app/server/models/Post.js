@@ -32,8 +32,8 @@ var fields = [
     allowUpdate: true
   },
   {
-    name: 'postImage',
-    type: String,
+    name: 'images',
+    type: [String],
     allowCreate: true,
     allowUpdate: true
   },
