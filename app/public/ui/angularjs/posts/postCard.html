@@ -1,0 +1,7 @@
+<div class="postCard" ng-controller="postCardController">
+    <a href="#/viewPost/{{ post._id }}">
+        <img ng-src="{{ post.images[0] }}" class="postImage"/>
+        <div class="postSubject">{{ post.subject }}</div>
+        <div class="postLocation">{{ post.location }}</div>
+    </a>
+</div>

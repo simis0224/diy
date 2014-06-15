@@ -147,9 +147,6 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
     $location.url(retUrl);
   }
 
-  $scope.queryCities = function(query) {
-    return $http.get('cities.json');
-  };
 }])
 
 .controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',
@@ -216,4 +213,23 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
   };
 
   crudService.get('post', id, onGetSuccess);
+}])
+
+
+.directive('postCard', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      post: '='
+    },
+    templateUrl: '/ui/angularjs/posts/postCard.html'
+  }
+})
+
+.controller('postCardController', [
+  '$scope', '$location', 'cssInjector',
+  function($scope, $location, cssInjector) {
+
+    cssInjector.add("../ui/angularjs/posts/postCard.css");
+
 }]);

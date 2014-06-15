@@ -1,12 +1,7 @@
-<div class="content listPost">
+<div class="gridPost">
     <p>{{ message }}</p>
     <p class="error">{{ errorMessage }}<p>
-    <ul ng-repeat="post in posts" class="post_grid">
-        <div class="post">
-            <a href="#/viewPost/{{ post._id }}">
-                <img ng-src="{{ post.images[0] }}" class="post_image"/>
-                {{ post.subject }} by {{ post.createdBy.username }}
-            </a>
-        </div>
-    </ul>
+    <div ng-repeat="post in posts">
+        <post-card post="post"></post-card>
+    </div>
 </div>
