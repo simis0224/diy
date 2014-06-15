@@ -14,7 +14,7 @@
                 <a href="#/viewPost/{{post._id}}">{{post.subject}}</a>
             </td>
             <td data-title="'主图'">
-                <img class="postImage" src="{{post.images[0]}}"/>
+                <img class="postImage" ng-src="{{post.images[0]}}"/>
             </td>
             <td data-title="'地点'">{{post.location}}</td>
             <td data-title="'创建人'">{{post.createdBy.username}}</td>
