@@ -107,6 +107,21 @@ angular.module('common', ['ui.bootstrap'])
 
     cssInjector.add("../ui/angularjs/common/tagGroup.css");
 
-  }])
+}])
+
+.directive('baiduMap', ['$window', '$q', function($window, $q) {
+  return {
+    restrict: 'E',
+    templateUrl: '/ui/angularjs/common/baiduMap.html'
+  }
+}])
+
+.controller('baiduMapController', [
+  '$scope', '$location', 'cssInjector',
+  function($scope, $location, cssInjector) {
+
+    cssInjector.add("../ui/angularjs/common/baiduMap.css");
+
+}])
 
 

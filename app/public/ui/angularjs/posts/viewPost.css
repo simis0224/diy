@@ -1,9 +1,41 @@
 .viewPost .postImage {
-    max-width: 600px;
-    max-height: 400px;
+    max-width: 500px;
+    /*margin-left: 30px;*/
 }
 
 .viewPost label {
     width: 100%;
+    margin-top: 15px;
 }
+
+.viewPost .leftSection {
+    width: 560px;
+    display: inline-block;
+    background-color: #ffffff;
+    vertical-align:top;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.18);
+    border-radius: 3px;
+    padding: 30px 30px 30px 30px;
+}
+
+.viewPost .postLocation {
+    font-weight: bold;
+}
+
+.viewPost .rightSection {
+    background-color: #ffffff;
+    width: 330px;
+    display: inline-block;
+    vertical-align:top;
+    margin-left: 30px;
+    padding: 15px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.18);
+    border-radius: 3px;
+}
+
+.viewPost .postSummary {
+    margin: 15px 0 15px 0;
+}
+
+
 

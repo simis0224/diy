@@ -1,27 +1,29 @@
-<div class="content viewPost">
+<div class="viewPost">
     <p>{{ message }}<p>
     <p class="error">{{ errorMessage }}<p>
     <div ng-show="post">
-        <h1>{{ post.subject }}</h1>
-        <div>
-            <label>地点</label>
-            {{ post.location }}
+        <div class="leftSection">
+            <h1 class="postSubject">{{ post.subject }}</h1>
+            <div><img class="postImage" ng-src="{{ post.images[0] }}"/></div>
+            <div class="postSummary">
+                {{ post.summary }}
+            </div>
         </div>
-        <div><img class="postImage" ng-src="{{ post.images[0] }}"/></div>
-        <div>
-            {{ post.summary }}
-        </div>
-        <div>
-            <label>地址</label>
-            {{ post.address }}
-        </div>
-        <div>
-            <label>电话</label>
-            {{ post.phone }}
-        </div>
-        <div>
-            <label>标签</label>
-            <tag-group tags="post.tags"></tag-group>
+        <div class="rightSection">
+            <div class="postInfo">
+                <baidu-map></baidu-map>
+                <label>地址</label>
+                <div class="postLocation">{{ post.location }}</div>
+                <div>{{ post.address }}</div>
+            </div>
+            <div class="postInfo">
+                <label>电话</label>
+                {{ post.phone }}
+            </div>
+            <div>
+                <label>标签</label>
+                <tag-group tags="post.tags"></tag-group>
+            </div>
         </div>
     </div>
 </div>
