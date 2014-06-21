@@ -110,9 +110,60 @@ angular.module('common', ['ui.bootstrap'])
 }])
 
 .directive('baiduMap', ['$window', '$q', function($window, $q) {
+
+   const BAIDU_MAP_SCRIPT_SRC = 'http://api.map.baidu.com/api?v=2.0&ak=XC4na07DTIFVoacSkYjEetPr&callback=initMap';
+
+   var initMap = function() {
+     var map = new BMap.Map("allmap");               // 创建Map实例
+     var point = new BMap.Point(116.404, 39.915);    // 创建点坐标
+     map.centerAndZoom(point,15);                    // 初始化地图,设置中心点坐标和地图级别。
+     var marker = new BMap.Marker(point);  // 创建标注
+     map.addOverlay(marker);              // 将标注添加到地图中
+   };
+
+  function loadScript() {
+    var initMapScript = document.createElement('script');
+    initMapScript.text = 'var initMap = ' + initMap;
+    document.body.appendChild(initMapScript);
+
+    var loadMapScript = document.createElement('script'); // use global document since Angular's $document is weak
+    document.body.appendChild(loadMapScript);
+    loadMapScript.src = BAIDU_MAP_SCRIPT_SRC;
+  }
+
+  function lazyloadScript(key) {
+    var deferred = $q.defer();
+    $window.initMap = function () {
+      initialize();
+      deferred.resolve();
+    };
+
+    $( document ).ready(function() {
+      loadScript();
+    });
+    return deferred.promise;
+  }
+
   return {
     restrict: 'E',
-    templateUrl: '/ui/angularjs/common/baiduMap.html'
+    templateUrl: '/ui/angularjs/common/baiduMap.html',
+    link: function (scope, element, attrs) { // function content is optional
+      if ($window.BMap) {
+        initMap();
+        console.log('baidu map already loaded');
+      } else {
+        lazyloadScript().then(function () {
+          console.log('baidu map loading promise resolved');
+          if ($window.BMap) {
+            console.log('baidu map loaded');
+          } else {
+            console.log('baidu map not loaded');
+          }
+        }, function () {
+          console.log('baidu map loading promise rejected');
+        });
+      }
+    }
   }
 }])
 
