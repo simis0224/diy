@@ -131,7 +131,7 @@ angular.module('common', ['ui.bootstrap'])
     loadMapScript.src = BAIDU_MAP_SCRIPT_SRC;
   }
 
-  function lazyloadScript(key) {
+  function lazyloadScript() {
     var deferred = $q.defer();
     $window.initMap = function () {
       initialize();

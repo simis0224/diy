@@ -1,5 +1,4 @@
 var bcrypt   = require('bcrypt-nodejs');
-var mongoose = global.mongoose;
 var validator = require("validator");
 var modelHelper = require('./modelHelper');
 
@@ -37,6 +36,17 @@ var fields = [
   {
     name: 'profileImage',
     type: String,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
+    name: 'weibo',
+    type: {
+      screenName: String,
+      id: String,
+      profileImageUrl: String,
+      accessToken: String
+    },
     allowCreate: true,
     allowUpdate: true
   },

@@ -45,6 +45,16 @@ module.exports = function(app, passport) {
     userController.apiUpdate(req, res, next);
   });
 
+  app.get('/weibo/login', function(req, res) {
+      var user = req.session.user;
+      res.writeHeader(200, { 'Content-type': 'text/html' });
+      if (!user) {
+        res.end("Login with <a href='/login?type=weibo'>Weibo</a>");
+      } else {
+        res.end("Hello " + user.username);
+      }
+  });
+
   /**
    * Upload api
    */
