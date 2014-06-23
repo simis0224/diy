@@ -17,8 +17,8 @@ angular.module('common', ['ui.bootstrap'])
 }])
 
 .controller('navigationHeaderController', [
-    '$scope', '$http', '$location', '$route', '$rootScope', 'authenticateService', 'cssInjector',
-  function($scope, $http, $location, $route, $rootScope, authenticateService, cssInjector) {
+    '$scope', '$http', '$location', '$route', '$rootScope', '$window', 'authenticateService', 'cssInjector',
+  function($scope, $http, $location, $route, $rootScope, $window, authenticateService, cssInjector) {
 
   cssInjector.add("../ui/angularjs/common/navigationHeader.css");
 
@@ -29,13 +29,13 @@ angular.module('common', ['ui.bootstrap'])
 
   $scope.errorMessage = "";
 
-  $scope.redirectToLoginPage = function(){
-    var retUrl = $location.path() === '/login' || $location.path() === '/signup' ? '/' : $location.path();
-    $location.url('/login?retUrl=' + retUrl);
-  }
+  $scope.weiboLogin = function() {
+    $window.setCurrentUser = function(user) {
+      authenticateService.currentUser = user;
+      $route.reload();
+    }
 
-  $scope.redirectToEditUserPage = function(){
-    $location.url('/editUser/' + authenticateService.currentUser.id + '?retUrl=' +  $location.path());
+    $window.open('/weibo/login');
   }
 }])
 

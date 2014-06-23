@@ -1,15 +1,15 @@
-var UserController = require('./controllers/userController');
-var userController = new UserController();
 var User = require('./models/User');
 var userHelper = require('./helpers/userHelper');
+var errors = require('./constants/errors');
 
 
 var weibo = require('weibo');
 weibo.init('weibo', '1342570005', '9c3460205c73bc41e32fbdf29b6b8b27');
 
 var oauth = weibo.oauth({
-  loginPath: '/login',
-  logoutPath: '/logout',
+  loginPath: '/api/oauthLogin',
+  logoutPath: '/api/oauthLogout',
+  callbackPath: '/login/callback',
   blogtypeField: 'type',
   afterLogin: function (req, res, callback) {
     User
@@ -43,14 +43,15 @@ var oauth = weibo.oauth({
               console.error(err);
               return;
             }
-              userHelper.updateCurrentUserInfo(req, user);
+            userHelper.updateCurrentUserInfo(req, user);
+            process.nextTick(callback);
           });
         } else {
           userHelper.updateCurrentUserInfo(req, user);
+          process.nextTick(callback);
         }
 
         console.log(req.session.oauthUser.screen_name, 'login success');
-        process.nextTick(callback);
       });
   },
   beforeLogout: function (req, res, callback) {

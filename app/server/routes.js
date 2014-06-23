@@ -49,9 +49,9 @@ module.exports = function(app, passport) {
       var user = req.session.user;
       res.writeHeader(200, { 'Content-type': 'text/html' });
       if (!user) {
-        res.end("Login with <a href='/login?type=weibo'>Weibo</a>");
+        res.end("<script>window.location.href='/api/oauthLogin?type=weibo'</script>");
       } else {
-        res.end("Hello " + user.username);
+        res.end("<script>var currentUser=JSON.parse('" + JSON.stringify(user) + "');window.opener.setCurrentUser(currentUser);window.close();</script> Hello " + user.username);
       }
   });
 
