@@ -45,15 +45,24 @@ module.exports = function(app, passport) {
     userController.apiUpdate(req, res, next);
   });
 
-  app.get('/weibo/login', function(req, res) {
+  app.get('/auth/weibo',
+    passport.authenticate('weibo'),
+    function(req, res){
+      // The request will be redirected to weibo for authentication, so this
+      // function will not be called.
+    });
+
+  app.get('/auth/weibo/callback',
+    passport.authenticate('weibo', { failureRedirect: '/auth/weibo' }),
+    function(req, res) {
       var user = req.session.user;
       res.writeHeader(200, { 'Content-type': 'text/html' });
       if (!user) {
-        res.end("<script>window.location.href='/api/oauthLogin?type=weibo'</script>");
+        res.end("<script>window.location.href='/auth/weibo'</script>");
       } else {
-        res.end("<script>var currentUser=JSON.parse('" + JSON.stringify(user) + "');window.opener.setCurrentUser(currentUser);window.close();</script> Hello " + user.username);
+        res.end("<script>var currentUser=JSON.parse('" + JSON.stringify(user) + "');window.opener.updateCurrentUser(currentUser);window.close();</script>");
       }
-  });
+    });
 
   /**
    * Upload api

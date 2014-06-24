@@ -34,7 +34,7 @@ var fields = [
     allowUpdate: true
   },
   {
-    name: 'profileImage',
+    name: 'profileImageUrl',
     type: String,
     allowCreate: true,
     allowUpdate: true

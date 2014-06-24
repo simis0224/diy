@@ -30,12 +30,17 @@ angular.module('common', ['ui.bootstrap'])
   $scope.errorMessage = "";
 
   $scope.weiboLogin = function() {
-    $window.setCurrentUser = function(user) {
+    $window.updateCurrentUser = function(user) {
       authenticateService.currentUser = user;
       $route.reload();
+      delete $window.updateCurrentUser;
     }
 
-    $window.open('/weibo/login');
+    $window.open('/auth/weibo', '', 'height=500,width=800,top='+(screen.height-500)/2+',left='+(screen.width-800)/2+',toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no,status=no');
+  }
+
+  $scope.redirectToEditUserPage = function(){
+    $location.url('/editUser/' + authenticateService.currentUser.id + '?retUrl=' +  $location.path());
   }
 }])
 

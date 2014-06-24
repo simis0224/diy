@@ -21,8 +21,6 @@ mongoose.connection.once('open', function callback () {
 });
 global.mongoose = (global.mongoose ? global.mongoose : mongoose.connect(config.mongodb.host + ':' + config.mongodb.port + '/' + MONGODB_NAME));
 
-var oauth = require('./oauth');
-
 app.configure(function() {
 
   // all environments
@@ -33,7 +31,6 @@ app.configure(function() {
   app.use(express.methodOverride());
   app.use(express.cookieParser('diy-site'));
   app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
-  app.use(oauth);
   app.use(passport.initialize());
   app.use(passport.session()); // persistent login sessions
   app.use(require('less-middleware')({ src: __dirname + '/../public' }));

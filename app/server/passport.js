@@ -3,6 +3,7 @@ var User = require('./models/User');
 var traverse = require('traverse');
 var userHelper = require('./helpers/userHelper');
 var errors = require('./constants/errors');
+var WeiboStrategy = require('passport-weibo').Strategy;
 
 module.exports = function(passport) {
 
@@ -90,4 +91,56 @@ module.exports = function(passport) {
           return done(null, user);
         });
     }));
+
+
+  passport.use(new WeiboStrategy({
+      clientID: '1342570005',
+      clientSecret: '9c3460205c73bc41e32fbdf29b6b8b27',
+      callbackURL: "/auth/weibo/callback",
+      authorizationURL: "https://api.weibo.com/oauth2/authorize",
+      tokenURL: "https://api.weibo.com/oauth2/access_token",
+      passReqToCallback: true
+    },
+    function(req, accessToken, refreshToken, profile, done) {
+      User
+        .findOne({ 'weibo.id': profile.id})
+        .exec(function(err, user) {
+          if (err) {
+            console.error(err);
+            return done(errors.INTERNAL_ERROR);
+          }
+
+          if (user) {
+            userHelper.updateCurrentUserInfo(req, user);
+            return done(null, user);
+          } else {
+            var userData = {
+              username: profile.screen_name,
+              profileImageUrl: profile.profile_image_url,
+              weibo: {
+                id: profile.id,
+                screenName: profile.screen_name,
+                profileImageUrl: profile.profile_image_url
+              },
+              createdDate: new Date(),
+              lastModifiedDate: new Date()
+            }
+
+            var newUser = new User(userData);
+
+            newUser.save(function(err, user) {
+              if (err) {
+                // TODO fix validation
+                if (err.name === 'ValidationError') {
+                  err.message = err.errors[Object.keys(err.errors)[0]].message;
+                }
+                return done(err);
+              }
+              userHelper.updateCurrentUserInfo(req, user);
+              done(null, newUser);
+            });
+          }
+        });
+    }
+  ));
 };

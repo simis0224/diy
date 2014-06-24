@@ -20,3 +20,11 @@ div.header {
     margin: 0 auto;
     padding: 15px 0 15px 0;
 }
+
+div.navigationHeader button.loginButton {
+    background-color: rgb(68, 163, 195);
+}
+
+div.navigationHeader button.loginButton:hover {
+    background-color: rgb(57, 132, 157);
+}
