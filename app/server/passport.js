@@ -4,6 +4,7 @@ var traverse = require('traverse');
 var userHelper = require('./helpers/userHelper');
 var errors = require('./constants/errors');
 var WeiboStrategy = require('passport-weibo').Strategy;
+var	config = require('./config/config')();
 
 module.exports = function(passport) {
 
@@ -94,8 +95,8 @@ module.exports = function(passport) {
 
 
   passport.use(new WeiboStrategy({
-      clientID: '1342570005',
-      clientSecret: '9c3460205c73bc41e32fbdf29b6b8b27',
+      clientID: traverse(config).get(['weibo', 'appKey']),
+      clientSecret: traverse(config).get(['weibo', 'appSecret']),
       callbackURL: "/auth/weibo/callback",
       authorizationURL: "https://api.weibo.com/oauth2/authorize",
       tokenURL: "https://api.weibo.com/oauth2/access_token",
