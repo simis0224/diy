@@ -28,6 +28,15 @@
         <div>
             <label>地址</label>
             <input type="text" name="address" value="" ng-model="post.address.street" class="form-control"/>
+            <button type="button" class="btn btn-primary" ng-click="requestGeoLocation()" >获取位置信息</button>
+        </div>
+        <div>
+            <label>经度</label>
+            <input type="text" name="locationX" value="" ng-model="post.address.location.x" class="form-control"/>
+        </div>
+        <div>
+            <label>纬度</label>
+            <input type="text" name="locationY" value="" ng-model="post.address.location.y" class="form-control"/>
         </div>
         <div>
             <label>电话</label>

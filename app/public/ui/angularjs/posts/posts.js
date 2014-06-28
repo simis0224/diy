@@ -117,6 +117,35 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
 
   $scope.post = {};
 
+
+
+  $scope.requestGeoLocation = function(){
+
+    var onRequestGeoLocationSuccess = function (res) {
+      $scope.post.address = $scope.post.address || {};
+      $scope.post.address.location =  $scope.post.address.location || {};
+      $scope.post.address.location.x = res.location.x;
+      $scope.post.address.location.y = res.location.y;
+    }
+
+    var onRequestGeoLocationError = function(res) {}
+
+    $http.get('/api/getGeoLocation?address=' + $scope.post.address.street + '&city=' + $scope.post.address.city)
+      .success(function (res) {
+        if (res && res.success === 1) {
+          console.log(res);
+          onRequestGeoLocationSuccess(res);
+        } else {
+          console.error(res.error);
+          onRequestGeoLocationError(res);
+        }
+      })
+      .error(function (res) {
+        (onError || angular.noop)();
+        console.error(res);
+      });
+  };
+
   $scope.createPost = function () {
 
     var onCreateSuccess = function(res) {

@@ -3,6 +3,9 @@ var userController = new UserController();
 var PostController = require('./controllers/postController');
 var postController = new PostController();
 
+
+var GeoController = require('./controllers/geoController');
+var geoController = new GeoController();
 var AuthController = require('./controllers/authController');
 var authController = new AuthController();
 
@@ -92,6 +95,10 @@ module.exports = function(app, passport) {
 
   app.post('/api/post/delete/:id', isLoggedIn, isAdmin, function(req, res, next) {
     postController.apiDelete(req, res, next);
+  });
+
+  app.get('/api/getGeoLocation', function(req, res) {
+    geoController.apiGetGeoLocation(req, res);
   });
 
   app.get('*', function(req, res) {
