@@ -27,7 +27,7 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
     //write the data at the end
     response.on('end', function(){
 
-      console.log(pageData);
+      console.log('pageData:' + pageData);
 
       res.json({
         success: 1,
