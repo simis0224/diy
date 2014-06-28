@@ -124,17 +124,17 @@ angular.module('common', ['ui.bootstrap'])
     restrict: 'E',
     templateUrl: '/ui/angularjs/common/baiduMap.html',
     scope: {
-      address: '@'
+      coordinates: '@'
     },
     link: function (scope, element, attrs) { // function content is optional
-      attrs.$observe("address", function (addressString) {
-        if (addressString) {
+      attrs.$observe("coordinates", function (coordinatesValue) {
+        if (coordinatesValue) {
 
-          address = JSON.parse(addressString);
+          var coordinates = JSON.parse(coordinatesValue);
 
           var initMap = function() {
             var map = new BMap.Map("allmap");               // 创建Map实例
-            var point = new BMap.Point(address.coordinates.x, address.coordinates.y);    // 创建点坐标
+            var point = new BMap.Point(coordinates.x, coordinates.y);    // 创建点坐标
             map.centerAndZoom(point,15);                    // 初始化地图,设置中心点坐标和地图级别。
             var marker = new BMap.Marker(point);  // 创建标注
             map.addOverlay(marker);              // 将标注添加到地图中
@@ -142,7 +142,7 @@ angular.module('common', ['ui.bootstrap'])
 
           function loadScript() {
             var initMapScript = document.createElement('script');
-            initMapScript.text = 'var address = ' + addressString + ';var initMap = ' + initMap + ';';
+            initMapScript.text = 'var coordinates = ' + coordinatesValue + ';var initMap = ' + initMap + ';';
             document.body.appendChild(initMapScript);
 
             var loadMapScript = document.createElement('script'); // use global document since Angular's $document is weak

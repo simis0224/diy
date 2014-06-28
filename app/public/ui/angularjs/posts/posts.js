@@ -117,20 +117,17 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
 
   $scope.post = {};
 
-
-
   $scope.requestGeoLocation = function(){
 
     var onRequestGeoLocationSuccess = function (res) {
-      $scope.post.address = $scope.post.address || {};
-      $scope.post.address.coordinates =  $scope.post.address.coordinates || {};
-      $scope.post.address.coordinates.x = res.coordinates.x;
-      $scope.post.address.coordinates.y = res.coordinates.y;
+      $scope.post.coordinates =  $scope.post.coordinates || {};
+      $scope.post.coordinates.x = res.coordinates.x;
+      $scope.post.coordinates.y = res.coordinates.y;
     }
 
     var onRequestGeoLocationError = function(res) {}
 
-    $http.get('/api/getGeoLocation?address=' + $scope.post.address.street + '&city=' + $scope.post.address.city)
+    $http.get('/api/getGeoLocation?address=' + $scope.post.address + '&city=' + $scope.city)
       .success(function (res) {
         if (res && res.success === 1) {
           console.log(res);
@@ -207,6 +204,32 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
     }
 
     crudService.update('post', id, $scope.post, onUpdateSuccess, onUpdateError);
+  };
+
+  $scope.requestGeoLocation = function(){
+
+    var onRequestGeoLocationSuccess = function (res) {
+      $scope.post.coordinates =  $scope.post.coordinates || {};
+      $scope.post.coordinates.x = res.coordinates.x;
+      $scope.post.coordinates.y = res.coordinates.y;
+    }
+
+    var onRequestGeoLocationError = function(res) {}
+
+    $http.get('/api/getGeoLocation?address=' + $scope.post.address + '&city=' + $scope.post.city)
+      .success(function (res) {
+        if (res && res.success === 1) {
+          console.log(res);
+          onRequestGeoLocationSuccess(res);
+        } else {
+          console.error(res.error);
+          onRequestGeoLocationError(res);
+        }
+      })
+      .error(function (res) {
+        (onError || angular.noop)();
+        console.error(res);
+      });
   };
 
   $scope.imageUploadOnSuccess = function(imageUrl) {

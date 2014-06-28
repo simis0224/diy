@@ -20,14 +20,22 @@ var fields = [
     allowUpdate: true
   },
   {
+    name: 'city',
+    type: String,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
     name: 'address',
+    type: String,
+    allowCreate: true,
+    allowUpdate: true
+  },
+  {
+    name: 'coordinates',
     type: {
-      street: String,
-      city: String,
-      coordinates: {
-        x: Number,
-        y: Number
-      }
+      x: Number,
+      y: Number
     },
     allowCreate: true,
     allowUpdate: true

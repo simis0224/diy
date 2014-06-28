@@ -11,10 +11,10 @@
         </div>
         <div class="rightSection">
             <div class="postInfo">
-                <baidu-map address="{{post.address}}"></baidu-map>
+                <baidu-map coordinates="{{post.coordinates}}"></baidu-map>
                 <label>地址</label>
                 <div class="postLocation">{{ post.location }}</div>
-                <div>{{ post.address.city }} {{ post.address.street }}</div>
+                <div>{{ post.city }} {{ post.address }}</div>
             </div>
             <div class="postInfo">
                 <label>电话</label>
