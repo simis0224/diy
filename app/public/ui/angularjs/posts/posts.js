@@ -1,4 +1,4 @@
-angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput'])
+angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable', 'ngTagsInput'])
 
 .config(function ($routeProvider) {
   $routeProvider.
@@ -110,8 +110,8 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
 
 }])
 
-.controller('postCreateController', ['$scope', '$http', '$location', '$upload', '$routeParams', 'cssInjector', 'uploadService', 'crudService',
-    function ($scope, $http, $location, $upload, $routeParams, cssInjector, uploadService, crudService) {
+.controller('postCreateController', ['$scope', '$http', '$location', '$upload', '$routeParams', 'cssInjector', 'uploadService', 'crudService', 'geoService',
+    function ($scope, $http, $location, $upload, $routeParams, cssInjector, uploadService, crudService, geoService) {
 
   cssInjector.add("../ui/angularjs/posts/createPost.css");
 
@@ -127,20 +127,8 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
 
     var onRequestGeoLocationError = function(res) {}
 
-    $http.get('/api/getGeoLocation?address=' + $scope.post.address + '&city=' + $scope.city)
-      .success(function (res) {
-        if (res && res.success === 1) {
-          console.log(res);
-          onRequestGeoLocationSuccess(res);
-        } else {
-          console.error(res.error);
-          onRequestGeoLocationError(res);
-        }
-      })
-      .error(function (res) {
-        (onError || angular.noop)();
-        console.error(res);
-      });
+    geoService.getGeoLocation($scope.post.city, $scope.post.address, onRequestGeoLocationSuccess, onRequestGeoLocationError);
+
   };
 
   $scope.createPost = function () {
@@ -175,8 +163,8 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
 
 }])
 
-.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService',
-    function ($scope, $http, $routeParams, $location, cssInjector, uploadService, crudService) {
+.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService', 'geoService',
+    function ($scope, $http, $routeParams, $location, cssInjector, uploadService, crudService, geoService) {
 
   cssInjector.add("../ui/angularjs/posts/editPost.css");
 
@@ -216,20 +204,8 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
 
     var onRequestGeoLocationError = function(res) {}
 
-    $http.get('/api/getGeoLocation?address=' + $scope.post.address + '&city=' + $scope.post.city)
-      .success(function (res) {
-        if (res && res.success === 1) {
-          console.log(res);
-          onRequestGeoLocationSuccess(res);
-        } else {
-          console.error(res.error);
-          onRequestGeoLocationError(res);
-        }
-      })
-      .error(function (res) {
-        (onError || angular.noop)();
-        console.error(res);
-      });
+    geoService.getGeoLocation($scope.post.city, $scope.post.address, onRequestGeoLocationSuccess, onRequestGeoLocationError);
+
   };
 
   $scope.imageUploadOnSuccess = function(imageUrl) {
