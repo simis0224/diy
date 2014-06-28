@@ -29,7 +29,7 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
 
       res.json({
         success: 1,
-        location: {
+        coordinates: {
           x: traverse(JSON.parse(pageData)).get(['result','location','lng']),
           y: traverse(JSON.parse(pageData)).get(['result','location','lat'])
         }

@@ -123,9 +123,9 @@ angular.module('posts', ['uploadService', 'crudService', 'ngTable', 'ngTagsInput
 
     var onRequestGeoLocationSuccess = function (res) {
       $scope.post.address = $scope.post.address || {};
-      $scope.post.address.location =  $scope.post.address.location || {};
-      $scope.post.address.location.x = res.location.x;
-      $scope.post.address.location.y = res.location.y;
+      $scope.post.address.coordinates =  $scope.post.address.coordinates || {};
+      $scope.post.address.coordinates.x = res.coordinates.x;
+      $scope.post.address.coordinates.y = res.coordinates.y;
     }
 
     var onRequestGeoLocationError = function(res) {}
