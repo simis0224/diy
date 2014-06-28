@@ -139,7 +139,7 @@ angular.module('common', ['ui.bootstrap'])
   function lazyloadScript() {
     var deferred = $q.defer();
     $window.initMap = function () {
-      initialize();
+      initMap();
       deferred.resolve();
     };
 
@@ -152,22 +152,29 @@ angular.module('common', ['ui.bootstrap'])
   return {
     restrict: 'E',
     templateUrl: '/ui/angularjs/common/baiduMap.html',
+    scope: {
+      address: '@'
+    },
     link: function (scope, element, attrs) { // function content is optional
-      if ($window.BMap) {
-        initMap();
-        console.log('baidu map already loaded');
-      } else {
-        lazyloadScript().then(function () {
-          console.log('baidu map loading promise resolved');
+      attrs.$observe("address", function (newValue) {
+        if (newValue) {
           if ($window.BMap) {
-            console.log('baidu map loaded');
+            initMap();
+            console.log('baidu map already loaded');
           } else {
-            console.log('baidu map not loaded');
+            lazyloadScript().then(function () {
+              console.log('baidu map loading promise resolved');
+              if ($window.BMap) {
+                console.log('baidu map loaded');
+              } else {
+                console.log('baidu map not loaded');
+              }
+            }, function () {
+              console.log('baidu map loading promise rejected');
+            });
           }
-        }, function () {
-          console.log('baidu map loading promise rejected');
-        });
-      }
+        }
+      });
     }
   }
 }])

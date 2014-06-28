@@ -25,8 +25,12 @@
             <textarea name="summary" rows="4" ng-model="post.summary" cols="50" class="form-control"></textarea>
         </div>
         <div>
+            <label>城市</label>
+            <input type="text" name="address" value="" ng-model="post.address.city" class="form-control"/>
+        </div>
+        <div>
             <label>地址</label>
-            <input type="text" name="address" value="" ng-model="post.address" class="form-control"/>
+            <input type="text" name="address" value="" ng-model="post.address.street" class="form-control"/>
         </div>
         <div>
             <label>电话</label>

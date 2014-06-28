@@ -21,7 +21,14 @@ var fields = [
   },
   {
     name: 'address',
-    type: String,
+    type: {
+      street: String,
+      city: String,
+      coordinates: {
+        x: Number,
+        y: Number
+      }
+    },
     allowCreate: true,
     allowUpdate: true
   },
