@@ -14,6 +14,9 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
     path: '/geocoder?address=' + address + '&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=' + city,
   };
 
+  console.log('host: ' + options.host);
+  console.log('path: ' + options.path);
+
   http.get(options, function(response){
     //do something with chunk
     var pageData = "";
@@ -28,13 +31,20 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
 
       console.log('pageData:' + pageData);
 
-      res.json({
-        success: 1,
-        coordinates: {
-          x: traverse(JSON.parse(pageData)).get(['result','location','lng']),
-          y: traverse(JSON.parse(pageData)).get(['result','location','lat'])
-        }
-      });
+      if (pageData) {
+        res.json({
+          success: 1,
+          coordinates: {
+            x: traverse(JSON.parse(pageData)).get(['result','location','lng']),
+            y: traverse(JSON.parse(pageData)).get(['result','location','lat'])
+          }
+        });
+      } else {
+        res.json({
+          success: 0,
+          error: 'empty pageData!'
+        });
+      }
     });
   }).on("error", function(e){
     console.log("Got error: " + e.message);
