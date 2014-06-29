@@ -18,6 +18,9 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
   console.log('path: ' + options.path);
 
   http.get(options, function(response){
+
+    console.log("Got response: " + response.statusCode);
+
     //do something with chunk
     var pageData = "";
     response.setEncoding('utf8');
