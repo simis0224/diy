@@ -12,7 +12,6 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
   var options = {
     host: 'api.map.baidu.com',
     path: '/geocoder?address=' + address + '&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=' + city,
-    method: 'GET'
   };
 
   http.get(options, function(response){
