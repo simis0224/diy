@@ -11,7 +11,8 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
 
   var options = {
     host: 'api.map.baidu.com',
-    path: '/geocoder?address=' + address + '&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=' + city,
+    //path: '/geocoder?address=' + address + '&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=' + city,
+    path: '/geocoder?address=人民广场&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=上海'
   };
 
   console.log('host: ' + options.host);
