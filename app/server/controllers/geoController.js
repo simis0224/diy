@@ -6,22 +6,20 @@ function GeoController() {}
 
 GeoController.prototype.apiGetGeoLocation = function(req, res) {
 
-  var address = traverse(req).get(['query','address']);
-  var city = traverse(req).get(['query','city']);
+  var params = {};
+  params['address'] = traverse(req).get(['query','address']);
+  params['city'] = traverse(req).get(['query','city']);
+  params['output'] = 'json';
 
   var options = {
     host: 'api.map.baidu.com',
-    //path: '/geocoder?address=' + address + '&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=' + city,
-    path: '/geocoder?address=人民广场&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=上海',
+    path: buildUrl('/geocoder', params),
     method: 'GET'
   };
 
-  console.log('host: ' + options.host);
-  console.log('path: ' + options.path);
-
   http.request(options, function(response){
 
-    console.log("Got response: " + response.statusCode);
+    console.log("Response status: " + response.statusCode);
 
     //do something with chunk
     var pageData = "";
@@ -33,9 +31,6 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
 
     //write the data at the end
     response.on('end', function(){
-
-      console.log('pageData:' + pageData);
-
       if (pageData) {
         res.json({
           success: 1,
@@ -52,6 +47,19 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
       }
     });
   }).end();
+}
+
+function buildUrl(url, parameters){
+  var qs = "";
+  for(var key in parameters) {
+    var value = parameters[key];
+    qs += encodeURIComponent(key) + "=" + encodeURIComponent(value) + "&";
+  }
+  if (qs.length > 0){
+    qs = qs.substring(0, qs.length-1); //chop off last "&"
+    url = url + "?" + qs;
+  }
+  return url;
 }
 
 module.exports = GeoController;
