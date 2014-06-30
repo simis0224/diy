@@ -12,13 +12,14 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
   var options = {
     host: 'api.map.baidu.com',
     //path: '/geocoder?address=' + address + '&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=' + city,
-    path: '/geocoder?address=人民广场&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=上海'
+    path: '/geocoder?address=人民广场&output=json&key=XC4na07DTIFVoacSkYjEetPr&city=上海',
+    method: 'GET'
   };
 
   console.log('host: ' + options.host);
   console.log('path: ' + options.path);
 
-  http.get(options, function(response){
+  http.request(options, function(response){
 
     console.log("Got response: " + response.statusCode);
 
@@ -50,14 +51,7 @@ GeoController.prototype.apiGetGeoLocation = function(req, res) {
         });
       }
     });
-  }).on("error", function(e){
-    console.log("Got error: " + e.message);
-    console.log( e.stack );
-    res.json({
-      success: 0,
-      error: e
-    });
-  });
+  }).end();
 }
 
 module.exports = GeoController;
