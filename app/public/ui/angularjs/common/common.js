@@ -20,8 +20,6 @@ angular.module('common', ['ui.bootstrap'])
     '$scope', '$http', '$location', '$route', '$rootScope', '$window', 'authenticateService', 'cssInjector',
   function($scope, $http, $location, $route, $rootScope, $window, authenticateService, cssInjector) {
 
-  cssInjector.add("../ui/angularjs/common/navigationHeader.css");
-
   $scope.user = {
     username: null,
     password: null
@@ -191,5 +189,27 @@ angular.module('common', ['ui.bootstrap'])
     cssInjector.add("../ui/angularjs/common/baiduMap.css");
 
 }])
+
+ // for anguar-deckgrid
+
+.directive('imageloaded', [
+
+  function () {
+
+    'use strict';
+
+    return {
+      restrict: 'A',
+
+      link: function(scope, element, attrs) {
+        var cssClass = attrs.loadedclass;
+
+        element.bind('load', function (e) {
+          angular.element(element).addClass(cssClass);
+        });
+      }
+    }
+  }
+]);
 
 

@@ -33,3 +33,148 @@ form div {
 .appContent {
     background-color: #f2f2f2;
 }
+
+/* postCard */
+
+.postCard {
+    width: 300px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, .15);
+    margin: 10px;
+    background:#fff url(../../images/spinner.gif) center 30px no-repeat;
+}
+
+.postCard .postImage{
+    width: 298px;
+}
+
+.postCard .postSubject {
+    color: #030303;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.postCard .postLocation {
+    padding: 0 10px 15px 10px;
+}
+
+.postCard a:hover {
+    text-decoration: none;
+}
+
+
+/* navigationHeader */
+
+.navigationHeader .rightLink {
+    float: right;
+}
+
+.navigationHeader {
+    height: 55px;
+    background-color: rgb(138, 202, 223);
+    -webkit-box-shadow: 0 0 10px 2px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0 0 10px 2px rgba(0,0,0,0.26);
+    box-shadow: 0 0 10px 2px rgba(0,0,0,0.26);
+    font-size: 1.2em;
+}
+
+.navigationHeader .link, div.navigationHeader a.link:visited {
+    color: white;
+}
+
+.navigationHeader .header {
+    width: 960px;
+    margin: 0 auto;
+    padding: 15px 0 15px 0;
+}
+
+.navigationHeader button.loginButton {
+    background-color: rgb(68, 163, 195);
+}
+
+.navigationHeader button.loginButton:hover {
+    background-color: rgb(57, 132, 157);
+}
+
+/* gridPost */
+
+.gridPost .grid {
+    display:inline-block
+}
+
+.gridPost .masonryPosts {
+    width: 960px;
+}
+
+/* viewPost */
+
+.viewPost .postImage {
+    max-width: 500px;
+}
+
+.viewPost label {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.viewPost .leftSection {
+    width: 560px;
+    display: inline-block;
+    background-color: #ffffff;
+    vertical-align:top;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.18);
+    border-radius: 3px;
+    padding: 30px 30px 30px 30px;
+}
+
+.viewPost .postLocation {
+    font-weight: bold;
+}
+
+.viewPost .rightSection {
+    background-color: #ffffff;
+    width: 330px;
+    display: inline-block;
+    vertical-align:top;
+    margin-left: 30px;
+    padding: 15px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.18);
+    border-radius: 3px;
+}
+
+.viewPost .postSummary {
+    margin: 15px 0 15px 0;
+}
+
+/* deckgrid */
+
+.deckgrid .animation-fade {
+    opacity:0;
+}
+
+.deckgrid .animation-faded {
+    opacity:1;
+}
+
+.deckgrid .animation-faded {
+    -webkit-transition: opacity 1s linear .2s;
+    -moz-transition: opacity 1s linear .2s;
+    -o-transition: opacity 1s linear .2s;
+    transition: opacity 1s linear .2s;
+}
+
+.deckgrid {
+    padding:10px;
+    width:1000px;
+}
+
+.deckgrid[deckgrid]::before {
+    content: '3 .column.size-1-3';
+    font-size: 0;
+    visibility:hidden;
+}
+
+.deckgrid .column {
+    float:left;
+}

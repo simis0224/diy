@@ -1,7 +1,7 @@
-<div class="postCard" ng-controller="postCardController">
-    <a href="#/viewPost/{{ post._id }}">
-        <img ng-src="{{ post.images[0] }}" class="postImage"/>
-        <div class="postSubject">{{ post.subject }}</div>
-        <div class="postLocation">{{ post.location }}</div>
+<div class="postCard">
+    <a href="#/viewPost/{{ card._id }}">
+        <img ng-src="{{ card.images[0] }}" data-imageloaded class="postImage animation-fade" data-loadedclass="animation-faded"/>
+        <div class="postSubject">{{ card.subject }}</div>
+        <div class="postLocation">{{ card.location }}</div>
     </a>
 </div>

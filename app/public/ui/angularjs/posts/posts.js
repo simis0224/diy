@@ -1,4 +1,4 @@
-angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable', 'ngTagsInput'])
+angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable', 'ngTagsInput', 'akoenig.deckgrid'])
 
 .config(function ($routeProvider) {
   $routeProvider.
@@ -35,8 +35,6 @@ angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable'
 })
 
 .controller('postGridController', ['$scope', '$http', 'cssInjector', 'crudService', function ($scope, $http, cssInjector, crudService) {
-
-  cssInjector.add("../ui/angularjs/posts/gridPost.css");
 
   var onListSuccess = function(res) {
     $scope.posts = res.data;
@@ -225,8 +223,6 @@ angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable'
 .controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService', 'crudService',
     function ($scope, $http, $routeParams, $location, cssInjector, authenticateService, crudService) {
 
-  cssInjector.add("../ui/angularjs/posts/viewPost.css");
-
   var id = $routeParams.id;
 
   $scope.$watch(function() {
@@ -253,11 +249,3 @@ angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable'
     templateUrl: '/ui/angularjs/posts/postCard.html'
   }
 })
-
-.controller('postCardController', [
-  '$scope', '$location', 'cssInjector',
-  function($scope, $location, cssInjector) {
-
-    cssInjector.add("../ui/angularjs/posts/postCard.css");
-
-}]);

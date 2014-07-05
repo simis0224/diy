@@ -101,9 +101,6 @@ module.exports = function(app, passport) {
     geoController.apiGetGeoLocation(req, res);
   });
 
-  app.get('*', function(req, res) {
-    res.sendfile('./public/index.html');
-  });
 }
 
 function isLoggedIn(req, res, next) {
