@@ -34,7 +34,7 @@ angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable'
     });
 })
 
-.controller('postGridController', ['$scope', '$http', 'cssInjector', 'crudService', function ($scope, $http, cssInjector, crudService) {
+.controller('postGridController', ['$scope', '$http', 'crudService', function ($scope, $http, crudService) {
 
   var onListSuccess = function(res) {
     $scope.posts = res.data;
@@ -52,10 +52,8 @@ angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable'
 
 }])
 
-.controller('postListController', ['$scope', '$http', '$location', '$route', 'cssInjector', 'crudService', 'ngTableParams',
-    function ($scope, $http, $location, $route, cssInjector, crudService, ngTableParams) {
-
-  cssInjector.add("../ui/angularjs/posts/listPost.css");
+.controller('postListController', ['$scope', '$http', '$location', '$route', 'crudService', 'ngTableParams',
+    function ($scope, $http, $location, $route, crudService, ngTableParams) {
 
   var onListSuccess = function(res) {
     posts = res.data;
@@ -108,10 +106,8 @@ angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable'
 
 }])
 
-.controller('postCreateController', ['$scope', '$http', '$location', '$upload', '$routeParams', 'cssInjector', 'uploadService', 'crudService', 'geoService',
-    function ($scope, $http, $location, $upload, $routeParams, cssInjector, uploadService, crudService, geoService) {
-
-  cssInjector.add("../ui/angularjs/posts/createPost.css");
+.controller('postCreateController', ['$scope', '$http', '$location', '$upload', '$routeParams', 'uploadService', 'crudService', 'geoService',
+    function ($scope, $http, $location, $upload, $routeParams, uploadService, crudService, geoService) {
 
   $scope.post = {};
 
@@ -161,10 +157,8 @@ angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable'
 
 }])
 
-.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'uploadService', 'crudService', 'geoService',
-    function ($scope, $http, $routeParams, $location, cssInjector, uploadService, crudService, geoService) {
-
-  cssInjector.add("../ui/angularjs/posts/editPost.css");
+.controller('postEditController', ['$scope', '$http', '$routeParams', '$location', 'uploadService', 'crudService', 'geoService',
+    function ($scope, $http, $routeParams, $location, uploadService, crudService, geoService) {
 
   var id = $routeParams.id;
 
@@ -220,8 +214,8 @@ angular.module('posts', ['uploadService', 'crudService', 'geoService', 'ngTable'
   }
 }])
 
-.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'cssInjector', 'authenticateService', 'crudService',
-    function ($scope, $http, $routeParams, $location, cssInjector, authenticateService, crudService) {
+.controller('postDetailController', ['$scope', '$http', '$routeParams', '$location', 'authenticateService', 'crudService',
+    function ($scope, $http, $routeParams, $location, authenticateService, crudService) {
 
   var id = $routeParams.id;
 

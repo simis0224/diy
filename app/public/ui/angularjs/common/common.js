@@ -17,8 +17,8 @@ angular.module('common', ['ui.bootstrap'])
 }])
 
 .controller('navigationHeaderController', [
-    '$scope', '$http', '$location', '$route', '$rootScope', '$window', 'authenticateService', 'cssInjector',
-  function($scope, $http, $location, $route, $rootScope, $window, authenticateService, cssInjector) {
+    '$scope', '$http', '$location', '$route', '$rootScope', '$window', 'authenticateService',
+  function($scope, $http, $location, $route, $rootScope, $window, authenticateService) {
 
   $scope.user = {
     username: null,
@@ -61,10 +61,8 @@ angular.module('common', ['ui.bootstrap'])
 })
 
 .controller('imageUploaderController', [
-  '$scope', '$location', 'uploadService', 'cssInjector',
-  function($scope, $location, uploadService, cssInjector) {
-
-    cssInjector.add("../ui/angularjs/common/imageUploader.css");
+  '$scope', '$location', 'uploadService',
+  function($scope, $location, uploadService) {
 
     $scope.previewImageSrc = '';
 
@@ -103,14 +101,6 @@ angular.module('common', ['ui.bootstrap'])
     templateUrl: '/ui/angularjs/common/tagGroup.html'
   }
 })
-
-.controller('tagGroupController', [
-  '$scope', '$location', 'cssInjector',
-  function($scope, $location, cssInjector) {
-
-    cssInjector.add("../ui/angularjs/common/tagGroup.css");
-
-}])
 
 .directive('baiduMap', ['$window', '$q', function($window, $q) {
 
@@ -180,14 +170,6 @@ angular.module('common', ['ui.bootstrap'])
       });
     }
   }
-}])
-
-.controller('baiduMapController', [
-  '$scope', '$location', 'cssInjector',
-  function($scope, $location, cssInjector) {
-
-    cssInjector.add("../ui/angularjs/common/baiduMap.css");
-
 }])
 
  // for anguar-deckgrid

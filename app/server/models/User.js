@@ -72,14 +72,6 @@ User.schema.path('email').validate(function (value) {
   return validator.isEmail(value);
 }, '错误邮件格式');
 
-User.schema.path('username').validate(function (value) {
-  return value && value.trim().length >= 4;
-}, '用户名长度大于等于4');
-
-User.schema.path('password').validate(function (value) {
-  return value && value.trim().length >= 8;
-}, '密码长度大于等于8');
-
 // methods ======================
 // generating a hash
 function generateHash(password) {
