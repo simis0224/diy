@@ -63,6 +63,7 @@ module.exports = function(app, passport) {
       if (!user) {
         res.end("<script>window.location.href='/auth/weibo'</script>");
       } else {
+        res.write('<head><meta charset="utf-8"/></head>');
         res.end("<script>var currentUser=JSON.parse('" + JSON.stringify(user) + "');window.opener.updateCurrentUser(currentUser);window.close();</script>");
       }
     });
